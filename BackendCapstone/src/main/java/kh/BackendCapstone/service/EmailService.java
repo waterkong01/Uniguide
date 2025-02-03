@@ -1,7 +1,6 @@
 package kh.BackendCapstone.service;
 
 import kh.BackendCapstone.entity.Member;
-import kh.BackendCapstone.entity.SmsAuthToken;
 import kh.BackendCapstone.entity.email_auth_token;
 import kh.BackendCapstone.repository.EmailAuthTokenRepository;
 import kh.BackendCapstone.repository.MemberRepository;

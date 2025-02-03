@@ -1,7 +1,5 @@
 package kh.BackendCapstone.config;
 
-import com.google.auth.oauth2.JwtProvider;
-
 
 import kh.BackendCapstone.dto.TokenDto;
 import kh.BackendCapstone.entity.CustomOAuth2User;

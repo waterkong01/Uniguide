@@ -1,28 +1,26 @@
 package kh.BackendCapstone.jwt;
 
 
-	import io.jsonwebtoken.*;
-	import io.jsonwebtoken.security.Keys;
-	import kh.BackendCapstone.dto.AccessTokenDto;
-	import kh.BackendCapstone.dto.TokenDto;
-	import lombok.extern.slf4j.Slf4j;
-	import org.springframework.beans.factory.annotation.Value;
-	import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-	import org.springframework.security.core.Authentication;
-	import org.springframework.security.core.GrantedAuthority;
-	import org.springframework.security.core.authority.SimpleGrantedAuthority;
-	import org.springframework.security.core.userdetails.User;
-	import org.springframework.security.core.userdetails.UserDetails;
-	import org.springframework.stereotype.Component;
+import io.jsonwebtoken.*;
+import io.jsonwebtoken.security.Keys;
+import kh.BackendCapstone.dto.AccessTokenDto;
+import kh.BackendCapstone.dto.TokenDto;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.stereotype.Component;
 
-	import java.nio.charset.StandardCharsets;
-	import java.security.Key;
-	import java.time.Instant;
-	import java.time.temporal.ChronoUnit;
-	import java.util.Arrays;
-	import java.util.Collection;
-	import java.util.Date;
-	import java.util.stream.Collectors;
+import java.security.Key;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Date;
+import java.util.stream.Collectors;
 
 	// JWT 토큰을 생성 및 검증하며, 토큰에서 회원 정보를 추출하는 클래스
 	@Slf4j
@@ -46,13 +44,13 @@ package kh.BackendCapstone.jwt;
 					.map(GrantedAuthority::getAuthority)
 					.collect(Collectors.joining(","));
 
-			long now = (new java.util.Date()).getTime(); // 현재 시간
+			long now = (new Date()).getTime(); // 현재 시간
 			// 토큰 만료 시간 설정
 			Date accessTokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
 			Date refreshTokenExpiresIn = new Date(now + REFRESH_TOKEN_EXPIRE_TIME);
 
 			// 토큰 생성
-			String accessToken = io.jsonwebtoken.Jwts.builder()
+			String accessToken = Jwts.builder()
 					.setSubject(authentication.getName())
 					.claim(AUTHORITIES_KEY, authorities)
 					.setExpiration(accessTokenExpiresIn)
@@ -60,7 +58,7 @@ package kh.BackendCapstone.jwt;
 					.compact();
 
 			// 리프레시 토큰 생성
-			String refreshToken = io.jsonwebtoken.Jwts.builder()
+			String refreshToken = Jwts.builder()
 					.setExpiration(refreshTokenExpiresIn)
 					.setSubject(authentication.getName())
 					.claim(AUTHORITIES_KEY, authorities)
@@ -83,12 +81,12 @@ package kh.BackendCapstone.jwt;
 					.map(GrantedAuthority::getAuthority)
 					.collect(Collectors.joining(","));
 
-			long now = (new java.util.Date()).getTime(); // 현재 시간
+			long now = (new Date()).getTime(); // 현재 시간
 			// 토큰 만료 시간 설정
 			Date accessTokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME); // 액세스 토큰 만료 시간
 
 			// 토큰 생성
-			String accessToken = io.jsonwebtoken.Jwts.builder()
+			String accessToken = Jwts.builder()
 					.setSubject(authentication.getName())
 					.claim(AUTHORITIES_KEY, authorities)
 					.setExpiration(accessTokenExpiresIn)
@@ -127,9 +125,9 @@ package kh.BackendCapstone.jwt;
 		// 토큰의 유효성 검증
 		public boolean validateToken(String token) {
 			try {
-				io.jsonwebtoken.Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+				Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
 				return true;
-			} catch (SecurityException | io.jsonwebtoken.MalformedJwtException e) {
+			} catch (SecurityException | MalformedJwtException e) {
 				log.info("잘못된 JWT 서명입니다.");
 			} catch (ExpiredJwtException e) {
 				log.info("만료된 JWT 토큰입니다.");
@@ -156,7 +154,7 @@ package kh.BackendCapstone.jwt;
 		//토큰 복호화
 		private Claims parseClaims(String accessToken) {
 			try {
-				return io.jsonwebtoken.Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(accessToken).getBody();
+				return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(accessToken).getBody();
 			} catch (ExpiredJwtException e) {
 				return e.getClaims();
 			}

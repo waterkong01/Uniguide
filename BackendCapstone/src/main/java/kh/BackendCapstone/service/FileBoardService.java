@@ -30,23 +30,23 @@ public class FileBoardService {
 	private final FirebaseUploadService firebaseUploadService;
 	private final UnivRepository univRepository;
 	private final MemberRepository memberRepository;
-	
-	public int getPageSize(int limit, String univName, String univDept, String category) {
+
+	public int getPageSize(int limit, String univName, String univDept, String category, String keywords) {
 		Pageable pageable = PageRequest.of(0, limit);
 		try{
-			Page<FileBoard> page = selectOption(univName, univDept, pageable, category);
+			Page<FileBoard> page = selectOption(univName, univDept, pageable, category, keywords);
 			return page.getTotalPages();
 		} catch (Exception e) {
 			log.error("대학 : {} , 학과 : {} 에 대한 페이지 검색중 에러 : {}", univName, univDept, e.getMessage());
 			return 0;
 		}
 	}
-	
+
 	// 페이지네이션 및 필터링 처리
-	public List<FileBoardResDto> getContents(int page, int limit, String univName, String univDept, String category) {
+	public List<FileBoardResDto> getContents(int page, int limit, String univName, String univDept, String category, String keywords) {
 		Pageable pageable = PageRequest.of(page - 1, limit, Sort.by("univ.univName").ascending());
 		try {
-			Page<FileBoard> fileBoardPage = selectOption(univName, univDept, pageable, category);
+			Page<FileBoard> fileBoardPage = selectOption(univName, univDept, pageable, category, keywords);
 			List<FileBoardResDto> fileBoardResDtoList = convertEntityToDto(fileBoardPage.getContent());
 			return fileBoardResDtoList;
 		} catch (Exception e) {
@@ -55,9 +55,14 @@ public class FileBoardService {
 		}
 	}
 
-	private Page<FileBoard> selectOption(String univName, String univDept, Pageable pageable, String category) {
-//		log.warn("Query Params -> univName: {}, univDept: {}, category: {}", univName, univDept, category);
+	private Page<FileBoard> selectOption(String univName, String univDept, Pageable pageable, String category, String keywords) {
+		// 키워드가 제공되면 키워드를 기준으로 검색
+		if (keywords != null && !keywords.isEmpty()) {
+			// 키워드를 포함하는 파일을 검색
+			return fileBoardRepository.findAllByKeywordsContainingAndFileCategory(keywords, FileCategory.fromString(category), pageable);
+		}
 
+		// 대학명과 학과명만으로 검색
 		if (univName == null || univName.isEmpty()) {
 			return fileBoardRepository.findAllByFileCategory(FileCategory.fromString(category), pageable);
 		}
@@ -82,11 +87,17 @@ public class FileBoardService {
 
 		// 조회된 파일 데이터를 DTO로 변환하여 반환
 		return fileBoards.stream().map(fileBoard -> new FileBoardResDto(
-				fileBoard.getUniv().getUnivName(), // 대학 이름
-				fileBoard.getUniv().getUnivDept(), // 대학 전공(학과)
-				fileBoard.getTitle(),
+				fileBoard.getTitle(), // 파일 제목
 				fileBoard.getPrice(), // 파일 금액
-				fileBoard.getRegDate() // 업로드 날짜
+				fileBoard.getRegDate(), // 업로드 날짜
+				fileBoard.getMainFile(),
+				fileBoard.getPreview(),
+				fileBoard.getKeywords(),
+				fileBoard.getSummary(),
+				fileBoard.getMember().getName(),
+				fileBoard.getUniv().getUnivImg(),
+				fileBoard.getUniv().getUnivName(), // 대학 이름
+				fileBoard.getUniv().getUnivDept() // 대학 전공(학과)
 		)).collect(Collectors.toList());
 	}
 
@@ -108,15 +119,19 @@ public class FileBoardService {
 		String mainFilePath = firebaseUploadService.handleFileUpload(mainFile, folderPath); // Firebase로 파일 업로드
 		// preview 파일이 존재하면 Firebase로 업로드
 		String previewFilePath = (preview != null && !preview.isEmpty()) ? firebaseUploadService.handleFileUpload(preview, folderPath) : null;
+
+		// 파일 경로에서 파일 이름을 추출
 		mainFilePath = convertJSONToPath(mainFilePath);
 		previewFilePath = convertJSONToPath(previewFilePath);
+
 		try {
-			// 엔티티 생성;
+			// 엔티티 생성
 			FileBoard fileBoard = new FileBoard();
 			fileBoard.setTitle(title);
 			fileBoard.setMainFile(mainFilePath);
 			fileBoard.setPreview(previewFilePath); // preview 파일 경로도 저장
 			fileBoard.setSummary(summary);
+
 			fileBoard.setPrice(price);
 			fileBoard.setFileCategory(fileCategory);
 			fileBoard.setKeywords(String.join(", ", keywords)); // List<String>을 문자열로 변환하여 저장
@@ -136,9 +151,10 @@ public class FileBoardService {
 			// DB 저장
 			fileBoardRepository.save(fileBoard);
 		} catch (Exception e) {
-			log.error("JSON 변환중 오류 : {}",e.getMessage());
+			log.error("파일 처리 중 오류 : {}", e.getMessage());
 		}
 	}
+
 
 	private List<FileBoardResDto> convertEntityToDto(List<FileBoard> fileBoardList) {
 		List<FileBoardResDto> fileBoardResDtoList = new ArrayList<>();

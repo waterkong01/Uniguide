@@ -3,7 +3,6 @@ package kh.BackendCapstone.dto.response;
 
 import kh.BackendCapstone.constant.Active;
 import kh.BackendCapstone.constant.Authority;
-import kh.BackendCapstone.entity.Univ;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -13,6 +12,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class PermissionResDto {
 	private Long permissionId;
+	private String univName;
+	private String univDept;
 	private Long memberId;
 	private String name;
 	private String nickname;

@@ -1,14 +1,13 @@
 package kh.BackendCapstone.service;
 
-
 import kh.BackendCapstone.entity.Univ;
 import kh.BackendCapstone.repository.FileBoardRepository;
 import kh.BackendCapstone.repository.UnivRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import java.util.*;
 
+import java.util.*;
 
 @Service
 @Slf4j

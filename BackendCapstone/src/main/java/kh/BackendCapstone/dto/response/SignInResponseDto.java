@@ -1,7 +1,6 @@
 package kh.BackendCapstone.dto.response;
 
 import lombok.Getter;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 @Getter

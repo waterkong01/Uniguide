@@ -8,7 +8,6 @@ import lombok.ToString;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity @Getter @Setter
 @NoArgsConstructor @ToString
@@ -36,8 +35,8 @@ public class FileBoard {
 	private LocalDateTime regDate; // 게시글 등록 일자
 
 	@Column(name = "Keywords")
-	private String Keywords;
-	
+	private String keywords;
+
 	@PrePersist
 	public void prePersist() {
 		regDate = LocalDateTime.now();

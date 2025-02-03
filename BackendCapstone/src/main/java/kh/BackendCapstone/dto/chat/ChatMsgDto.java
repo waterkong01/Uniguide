@@ -1,6 +1,5 @@
 package kh.BackendCapstone.dto.chat;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
 

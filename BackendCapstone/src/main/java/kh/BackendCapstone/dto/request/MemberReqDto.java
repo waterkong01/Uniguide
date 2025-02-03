@@ -3,7 +3,6 @@ package kh.BackendCapstone.dto.request;
 
 import kh.BackendCapstone.constant.Authority;
 import kh.BackendCapstone.entity.Member;
-import kh.BackendCapstone.entity.Univ;
 import lombok.*;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;

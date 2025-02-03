@@ -1,5 +1,5 @@
 		package kh.BackendCapstone.service;
-
+		
 		import kh.BackendCapstone.dto.AccessTokenDto;
 		import kh.BackendCapstone.dto.TokenDto;
 		import kh.BackendCapstone.dto.request.MemberReqDto;
@@ -7,7 +7,6 @@
 		import kh.BackendCapstone.entity.Member;
 		import kh.BackendCapstone.entity.RefreshToken;
 		import kh.BackendCapstone.jwt.TokenProvider;
-
 		import kh.BackendCapstone.repository.MemberRepository;
 		import kh.BackendCapstone.repository.RefreshTokenRepository;
 		import lombok.RequiredArgsConstructor;
@@ -15,15 +14,11 @@
 		import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 		import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 		import org.springframework.security.core.Authentication;
-		import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 		import org.springframework.security.crypto.password.PasswordEncoder;
 		import org.springframework.stereotype.Service;
 		import org.springframework.transaction.annotation.Transactional;
-
+		
 		import javax.servlet.http.HttpSession;
-		import java.util.HashMap;
-		import java.util.Map;
-		import java.util.Optional;
 		// 스프링게 조금 더 낫다
 
 
@@ -143,6 +138,7 @@
 					return true;
 				}).orElse(false); // 회원이 없으면 false 반환
 			}
+			
 
 
 

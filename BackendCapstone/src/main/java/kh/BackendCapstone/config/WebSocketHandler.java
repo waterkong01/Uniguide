@@ -2,7 +2,6 @@ package kh.BackendCapstone.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kh.BackendCapstone.dto.chat.ChatMsgDto;
-import kh.BackendCapstone.dto.chat.ChatRoomResDto;
 import kh.BackendCapstone.service.chat.ChatService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +12,6 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 @RequiredArgsConstructor

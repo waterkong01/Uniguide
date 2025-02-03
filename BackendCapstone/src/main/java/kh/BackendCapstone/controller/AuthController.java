@@ -1,5 +1,5 @@
 	package kh.BackendCapstone.controller;
-
+	
 	import kh.BackendCapstone.dto.AccessTokenDto;
 	import kh.BackendCapstone.dto.TokenDto;
 	import kh.BackendCapstone.dto.request.MemberReqDto;
@@ -10,20 +10,15 @@
 	import kh.BackendCapstone.service.EmailService;
 	import kh.BackendCapstone.service.MemberService;
 	import kh.BackendCapstone.service.SmsService;
-
 	import lombok.RequiredArgsConstructor;
 	import lombok.extern.slf4j.Slf4j;
-	import org.springframework.beans.factory.annotation.Autowired;
 	import org.springframework.http.HttpStatus;
 	import org.springframework.http.ResponseEntity;
 	import org.springframework.security.crypto.password.PasswordEncoder;
 	import org.springframework.web.bind.annotation.*;
-
-	import javax.servlet.http.HttpSession;
-	import java.util.HashMap;
-	import java.util.Map;
-
+	
 	@Slf4j
+	@CrossOrigin(origins = "http://localhost:3000")
 	@RestController
 	@RequestMapping("/auth")
 	@RequiredArgsConstructor
@@ -194,7 +189,7 @@
 				return ResponseEntity.ok(false); // 실패했음을 false로 반환
 			}
 		}
-
+		
 
 	}
 

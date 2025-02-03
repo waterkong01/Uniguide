@@ -1,12 +1,11 @@
 package kh.BackendCapstone.entity.chat;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import kh.BackendCapstone.constant.Active;
 import kh.BackendCapstone.entity.Member;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+
 import javax.persistence.*;
 
 @NoArgsConstructor
