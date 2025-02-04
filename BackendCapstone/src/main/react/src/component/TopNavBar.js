@@ -6,7 +6,7 @@ import MemberModal from "../pages/member/MemberMoal";
 import LoginModal from "../pages/auth/login/LoginModal";
 import SignupModal from "../pages/auth/signup/SingupModal";
 import {useDispatch, useSelector} from "react-redux";
-import {logout, setAccessToken, setRefreshToken, setRole} from "../context/redux/PersistentReducer";
+import {logout} from "../context/redux/PersistentReducer";
 import {
   setModalOpen,
   setLoginModalOpen,
