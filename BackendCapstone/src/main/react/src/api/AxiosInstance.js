@@ -1,18 +1,26 @@
 import axios from "axios";
-import Common from "../util/Common";
 import store from "../context/Store";
-import { logout, setRole } from "../context/redux/PersistentReducer";
-import AuthApi from "./AuthApi";
+import { logout } from "../context/redux/PersistentReducer";
+import Commons from "../util/Common";
+
+
 
 const AxiosInstance = axios.create({
-  baseURL: "",
+  baseURL: Commons.Capstone,
 });
 
-// 요청 인터셉터: 모든 요청에 AccessToken 추가
 AxiosInstance.interceptors.request.use(
   async (config) => {
-    const accessToken = Common.getAccessToken();
-    if (accessToken) {
+    const accessToken = Commons.getAccessToken();
+    if (!accessToken) {
+      console.warn("🔴 Access Token 없음. 대기 중...");
+      const updatedToken = Commons.getAccessToken();
+      if (!updatedToken) {
+        console.warn("🔴 여전히 Access Token 없음. 요청 취소");
+        return Promise.reject(new Error("Access Token 없음"));
+      }
+      config.headers.Authorization = `Bearer ${updatedToken}`;
+    } else {
       config.headers.Authorization = `Bearer ${accessToken}`;
     }
     return config;
@@ -20,38 +28,32 @@ AxiosInstance.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// 응답 인터셉터: 401 Unauthorized 처리
 AxiosInstance.interceptors.response.use(
   response => response,
   async (error) => {
+    const originalRequest = error.config;
+    
     if (error.response && error.response.status === 401) {
       console.warn("🔴 401 Unauthorized 발생! 토큰 갱신 시도...");
-      
-      try {
-        // 토큰 갱신 시도
-        const newToken = await Common.handleUnauthorized();
-        if (newToken) {
-          console.log("🟢 새 토큰으로 요청 재시도");
-          error.config.headers.Authorization = `Bearer ${Common.getAccessToken()}`;
-          return AxiosInstance.request(error.config);
-        }
-      } catch (refreshError) {
-        console.error("🔴 토큰 갱신 실패:", refreshError);
-      }
-      
-      // 로그인 상태 확인
-      try {
-        const rsp = await AuthApi.IsLogin();
-        if (rsp && rsp.data) {
-          console.log("🟢 유저 정보 업데이트:", rsp.data);
-          store.dispatch(setRole(rsp.data));
-        } else {
-          console.log("🔴 로그인 정보 없음, 로그아웃 처리");
-          store.dispatch(logout());
-        }
-      } catch (err) {
-        console.error("🔴 로그인 확인 실패:", err);
+      const refreshToken = Commons.getRefreshToken();
+      if (!refreshToken) {
+        console.warn("🔴 리프레시 토큰 없음. 로그아웃 처리");
         store.dispatch(logout());
+        return Promise.reject(new Error("리프레시 토큰 없음"));
+      }
+      try {
+        const newToken = await Commons.handleUnauthorized();
+        if (!newToken) {
+          console.warn("🔴 새 토큰 갱신 실패. 로그아웃 처리");
+          store.dispatch(logout());
+          return Promise.reject(new Error("새 토큰 갱신 실패"));
+        }
+        originalRequest.headers.Authorization = `Bearer ${newToken}`;
+        return AxiosInstance(originalRequest);
+      } catch (refreshError) {
+        console.error("🔴 토큰 갱신 중 오류 발생. 로그아웃 처리");
+        store.dispatch(logout());
+        return Promise.reject(refreshError);
       }
     }
     return Promise.reject(error);

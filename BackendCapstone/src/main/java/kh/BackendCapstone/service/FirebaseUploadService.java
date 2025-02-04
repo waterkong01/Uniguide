@@ -128,8 +128,6 @@ public class FirebaseUploadService {
 		}
 	}
 	
-	
-	
 	public String getFolderPath(String folderPath, Member member) {
 		folderPath += "/" + member.getMemberId();
 		return folderPath;
