@@ -48,11 +48,16 @@ public class Member {
     @ManyToOne
     @JoinColumn(name = "univ_id")
     private Univ univ;
-        @Enumerated(EnumType.STRING)
-        private Authority authority;
+    @Enumerated(EnumType.STRING)
+    private Authority authority;
+
+    @ManyToOne
+    @JoinColumn(name = "userbank_id")
+    private UserBank userBank;
+
 
     @Builder
-    public Member(String nickName, String email, String pwd, String name, String phone, LocalDateTime regDate, Authority authority, Univ univ) {
+    public Member(String nickName, String email, String pwd, String name, String phone, LocalDateTime regDate, Authority authority, Univ univ, UserBank userBank) {
         this.nickName = nickName;
         this.email = email;
         this.pwd = pwd;
@@ -61,6 +66,7 @@ public class Member {
         this.regDate = regDate;
         this.authority = authority; // Enum 타입
         this.univ = univ;
+        this.userBank = userBank;
     }
   public Member(String userId, String email, String type) {
 				this.userId = userId;

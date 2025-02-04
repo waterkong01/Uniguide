@@ -15,7 +15,7 @@ public class FirebaseUploadController {
 	private final FirebaseUploadService firebaseUploadService;
 	
 	@PostMapping("/upload/test")
-	public String uploadTest(@RequestParam("file") MultipartFile file, @RequestParam("folderPath") String folderPath) {
-		return firebaseUploadService.handleFileUpload(file, folderPath);
+	public String uploadTest(@RequestParam("file") MultipartFile file, @RequestParam("folderPath") String folderPath, @RequestHeader("Authorization") String token) {
+		return firebaseUploadService.getNewPermission(file, folderPath, token);
 	}
 }

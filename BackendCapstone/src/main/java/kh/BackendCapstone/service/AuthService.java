@@ -4,10 +4,14 @@
 		import kh.BackendCapstone.dto.TokenDto;
 		import kh.BackendCapstone.dto.request.MemberReqDto;
 		import kh.BackendCapstone.dto.response.MemberResDto;
+		import kh.BackendCapstone.entity.Bank;
 		import kh.BackendCapstone.entity.Member;
+		import kh.BackendCapstone.entity.Permission;
 		import kh.BackendCapstone.entity.RefreshToken;
 		import kh.BackendCapstone.jwt.TokenProvider;
+		import kh.BackendCapstone.repository.BankRepository;
 		import kh.BackendCapstone.repository.MemberRepository;
+		import kh.BackendCapstone.repository.PermissionRepository;
 		import kh.BackendCapstone.repository.RefreshTokenRepository;
 		import lombok.RequiredArgsConstructor;
 		import lombok.extern.slf4j.Slf4j;
@@ -18,7 +22,8 @@
 		import org.springframework.stereotype.Service;
 		import org.springframework.transaction.annotation.Transactional;
 		
-		import javax.servlet.http.HttpSession;
+		import java.time.LocalDateTime;
+		import java.util.List;
 		// 스프링게 조금 더 낫다
 
 
@@ -32,17 +37,18 @@
 			private final MemberRepository memberRepository;
 			private final PasswordEncoder passwordEncoder;
 			private final TokenProvider tokenProvider;
-			private final HttpSession session;
-
 			private  final RefreshTokenRepository refreshTokenRepository;
+			private  final PermissionRepository permissionRepository;
+			private  final BankRepository bankRepository;
+			private  final  MemberService memberService;
 			//---------------------------- 중복확인 ---------------------------------------------
 			// 회원가입 여부  // 이메일 존재 여부
 			public boolean existEmail(String email) {
 				return memberRepository.existsByEmail(email);
 			}
 			// 닉네임 여부 확인
-			public boolean existNickName(String nickName) {
-				return memberRepository.existsByNickName(nickName);
+			public boolean existNickName(String nickname) {
+				return memberRepository.existsByNickName(nickname);
 			}
 			// 핸드폰 중복 여부 확인
 			public boolean existPhone(String phone) {
@@ -93,7 +99,7 @@
 
 					RefreshToken refreshToken = new RefreshToken();
 					String encodedToken = token.getRefreshToken();
-					refreshToken.setRefreshToken(encodedToken.concat("="));
+					refreshToken.setRefreshToken(encodedToken);
 					refreshToken.setRefreshTokenExpiresIn(token.getRefreshTokenExpiresIn());
 					refreshToken.setMember(member);
 
@@ -109,10 +115,7 @@
 			}
 
 			public AccessTokenDto refreshAccessToken(String refreshToken) {
-				log.info("refreshToken : {}", refreshToken);
 				log.info("일반refreshExist : {}", refreshTokenRepository.existsByRefreshToken(refreshToken));
-
-
 				//DB에 일치하는 refreshToken이 있으면
 				if(refreshTokenRepository.existsByRefreshToken(refreshToken) ) {
 					// refreshToken 검증
@@ -128,6 +131,8 @@
 			}
 
 
+
+
 			@Transactional
 			public boolean updatePassword(String email, String newPassword) {
 				// 이메일로 회원 조회
@@ -141,6 +146,50 @@
 			
 
 
+
+//			public void savePermission(PermissionReqDto permissionReqDto) {
+//				// 1. Member 객체 가져오기
+//				Member member = memberRepository.findById(permissionReqDto.getMemberId())
+//						.orElseThrow(() -> new RuntimeException("Member not found"));
+//
+//				// 2. Univ 객체 가져오기
+//
+//
+//				// 3. Permission 객체 생성
+//				Permission permission = new Permission();
+//				permission.setMember(member); // member_id에 Member 객체 세팅
+//				permission.setPermissionUrl(permissionReqDto.getPermissionUrl()); // permissionUrl 세팅
+//				permission.setRegDate(LocalDateTime.now()); // 등록 날짜 설정
+//
+//				// 4. Permission 객체 저장
+//				permissionRepository.save(permission);
+//			}
+		public boolean savePermission(String token, String permissionUrl) {
+
+		 Long memberId = memberService.getMemberId(token);
+
+
+	Member member = memberRepository.findById(memberId)
+			.orElseThrow(() -> new RuntimeException("Member not found"));
+
+	// 3. Permission 객체 생성
+	Permission permission = new Permission();
+	permission.setMember(member); // member_id에 Member 객체 세팅
+	permission.setPermissionUrl(permissionUrl); // permissionUrl 세팅
+	permission.setRegDate(LocalDateTime.now()); // 등록 날짜 설정
+
+	// 4. Permission 객체 저장
+	permissionRepository.save(permission);
+
+	return true; // 성공적으로 저장되었음을 반환
+}
+
+
+
+			public List<Bank> getAllBanks() {
+				System.out.println();
+				return bankRepository.findAll();
+			}
 
 
 

@@ -1,5 +1,11 @@
 package kh.BackendCapstone.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import kh.BackendCapstone.constant.Active;
+import kh.BackendCapstone.entity.Member;
+import kh.BackendCapstone.entity.Permission;
+import kh.BackendCapstone.repository.PermissionRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
@@ -12,13 +18,17 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.transaction.Transactional;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class FirebaseUploadService {
 
 	private final RestTemplate restTemplate;
-
+	private final MemberService memberService;
+	private final PermissionRepository permissionRepository;
+	
 	/*
     fileUpload 사용 방법 : Flask 부분을 다운받고 구글 드라이브의 firebase 파일 안에  ipsi-firebase-adminsdk.json을 app.py가 있는 디렉토리에 놓는다.
     FirebaseUploadService 에서 handleFileUpload를 사용할 컨트롤러에서 부른다.
@@ -80,4 +90,54 @@ public class FirebaseUploadService {
 			return "파일 업로드 중 오류가 발생했습니다.";
 		}
 	}
+	@Transactional
+	public String getNewPermission(MultipartFile file, String folderPath, String token) {
+		try {
+			// 토큰을 통해 Member 객체를 가져옴
+			Member member = memberService.convertTokenToEntity(token);
+			
+			// 폴더 경로를 동적으로 설정
+			folderPath = getFolderPath(folderPath, member);
+			String fileName = getFileName(member);
+			
+			// Flask API에 파일 업로드 요청을 보내고 응답 받음
+			String rspFlask = handleFileUploadWithName(file, folderPath, fileName);
+			
+			// 응답을 JSON 형식으로 파싱하여 URL 추출
+			ObjectMapper objectMapper = new ObjectMapper();
+			JsonNode jsonResponse = objectMapper.readTree(rspFlask);
+			String message = jsonResponse.get("message").asText();
+			String error = jsonResponse.get("error").asText();
+			String url = jsonResponse.get("url").asText();
+			
+			// 성공적인 파일 업로드 확인
+			if ("File uploaded successfully".equals(message)) {
+				// 파일 업로드가 성공하면 Permission 객체 생성
+				Permission permission = new Permission();
+				permission.setMember(member);
+				permission.setActive(Active.INACTIVE);
+				permission.setPermissionUrl(url); // URL 설정
+				permissionRepository.save(permission);
+				return "파일을 업로드 하는데 성공했습니다.";
+			} else {
+				return "파일을 업로드 하는데 실패했습니다.: " + message + "or" + error;
+			}
+		} catch (Exception e) {
+			log.error("파일 업로드 중 오류 발생: ", e);
+			return "파일 업로드 중 오류가 발생했습니다.";
+		}
+	}
+	
+	
+	
+	public String getFolderPath(String folderPath, Member member) {
+		folderPath += "/" + member.getMemberId();
+		return folderPath;
+	}
+	
+	public String getFileName(Member member) {
+		int permissionSize = permissionRepository.countAllByMember(member);
+		return member.getMemberId() + "_" + permissionSize;
+	}
+	
 }

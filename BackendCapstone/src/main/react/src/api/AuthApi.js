@@ -1,5 +1,6 @@
 import axios from "axios";
 import Commons from "../util/Common";
+import axiosInstance from "./AxiosInstance";
 const Capstone = "";
 axios.defaults.withCredentials = true; // 쿠키를 요청에 포함
 const AuthApi = {
@@ -159,12 +160,9 @@ const AuthApi = {
       },
 	IsLogin: async () => {
 		const accessToken = Commons.getAccessToken();
-		if(!accessToken) return null;
-		return await axios.get( Commons.Capstone + `/member/role`, {
-			headers: {
-				Authorization: `Bearer ${accessToken}`, // ✅ 헤더에 토큰 추가
-			},});
-		},
+		if (!accessToken) return null;
+		return await axiosInstance.get(Commons.Capstone + `/member/role`);
+	}
 }
 
 
