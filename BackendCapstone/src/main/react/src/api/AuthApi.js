@@ -1,6 +1,6 @@
 import axios from "axios";
 import Commons from "../util/Common";
-const Capstone = "http://localhost:8111";
+const Capstone = "";
 axios.defaults.withCredentials = true; // 쿠키를 요청에 포함
 const AuthApi = {
 

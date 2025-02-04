@@ -1,7 +1,7 @@
 import axios from "axios";
 import Commons from "../util/Common";
 
-const baseUrl = Commons.Capstone
+const baseUrl = ""
 const token = localStorage.getItem("accessToken");
 
 // 주는거

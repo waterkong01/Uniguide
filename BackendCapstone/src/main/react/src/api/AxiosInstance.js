@@ -5,7 +5,7 @@ import { logout, setRole } from "../context/redux/PersistentReducer";
 import AuthApi from "./AuthApi";
 
 const AxiosInstance = axios.create({
-  baseURL: Common.KH_DOMAIN,
+  baseURL: "",
 });
 
 // 요청 인터셉터: 모든 요청에 AccessToken 추가
