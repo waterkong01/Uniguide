@@ -4,8 +4,10 @@ import axios from "axios";
 moment.locale("ko"); // 한국 시간 적용
 
 const Commons = {
-  Capstone: "http://localhost:8111",
-  Capstone_URL: "ws://localhost:8111/ws/chat",
+  Capstone: "",
+  // Capstone_URL: "ws://localhost:8111/ws/chat",
+  Capstone_URL: "ws://퍼블릭 IPv4 주소:8111/ws/chat",
+  // Capstone_URL: "ws://도메인/ws/chat",
   timeFromNow: (timestamp) => {
     return moment(timestamp).fromNow();
   },

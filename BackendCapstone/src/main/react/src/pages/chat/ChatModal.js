@@ -35,9 +35,18 @@ const ChatIconBox = styled.div`
     z-index: 990;
     bottom: 30px;
     right: 30px;
+    height: 65px;
+    @media (max-width: 768px) {
+        bottom: 15px;
+        right: 15px;
+        height: 50px;
+    }
 `
 const ChatIcon = styled.img`
     width: 65px;
+    @media (max-width: 768px) {
+        width: 50px;
+    }
 `
 const SelectPage = styled.div`
     width: 100%;
@@ -59,7 +68,7 @@ export const UserAndName = styled.div`
 export const StyledSideMenu = styled.div`
     position: fixed;
     right: 30px;
-    bottom: 50px;
+    bottom: 60px;
     width: 400px;
     //height: 700px;
     aspect-ratio: 4 / 7;
@@ -71,6 +80,29 @@ export const StyledSideMenu = styled.div`
     opacity: ${props => props.isOpen ? "0" : "1"};
     transition: 0.5s ease;
     overflow: hidden;
+    @media (max-height: 950px) {
+        height: calc(100vh - 25vh);
+        max-height: 800px;
+    }
+    @media (max-width: 768px) {
+        right: 15px;
+        bottom: 30px;
+        width: 50%;
+        height: calc(100vh - 180px);
+        max-height: 800px;
+        transform: ${props => props.isOpen ? "translate(0, 0)" : "translateY(-50px)"};
+    }
+    @media (max-width: 700px) {
+        width: 60%;
+    }
+    @media (max-width: 600px) {
+        width: 70%;
+    }
+    @media (max-width: 500px) {
+        left: 50%;
+        width: 90%;
+        transform: ${props => props.isOpen ? "translate(-50%, 0)" : "translate(-50%, -50px)"};
+    }
 `;
 export const StyledMenuItem = styled.li`
     padding: 10px 20px;
@@ -124,9 +156,9 @@ const ChatModal = () => {
             <ChatIconBox onClick={toggleMenu}>
                 {isMenuOpen ? (
                     <ChatIcon src={openIcon} alt="Open"/>
-                    ) : (
+                ) : (
                     <ChatIcon src={closeIcon} alt="Close"/>
-                    )}
+                )}
             </ChatIconBox>
             <StyledSideMenu isOpen={isMenuOpen}>
                 <SelectPage>{renderSelectedPage()}</SelectPage>
