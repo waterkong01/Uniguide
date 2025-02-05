@@ -1,28 +1,21 @@
 import React, { useEffect, useState } from "react";
 
 import { useNavigate,useParams } from "react-router-dom"
+import {fetchUserStatus} from "../../../function/fetchUserStatus";
 
 
 export default function OAuth({onLogin}) {
   const{token,expirationTime} = useParams();
 
   const navigate = useNavigate();
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // 상태 선언
 
   useEffect(()=> {
     if(!token) return;
-
- 
     localStorage.setItem("accessToken", token);
     localStorage.setItem("refresshToken",token);
-
     // 부모 컴포넌트에 로그인 상태 알림
-
-
-    // setIsLoggedIn(true);
-
-
-      navigate("/");
+    fetchUserStatus();
+    navigate("/");
    
   
   // },[token]);

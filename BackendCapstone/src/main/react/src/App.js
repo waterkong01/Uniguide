@@ -28,6 +28,9 @@ import FileUploaderExample from "./example/FileUploaderExample";
 import UploadedEnumPS from './pages/myPage/UploadedEnumPS';
 import UploadedEnumSR from './pages/myPage/UploadedEnumSR';
 import PermissionDetailMain from "./pages/admin/auth/item/PermissionDetailMain";
+import MemberEdit from './pages/member/update/MemberEdit';
+import Permission from './pages/member/info/Permission';
+import Withdrawal from './pages/member/info/Withdrawal';
 import { CheckoutPage } from './paySystem/CheckOut';
 import Store from "./context/Store"
 import {Provider} from "react-redux";
@@ -52,7 +55,7 @@ function App() {
               <Route path="personalStatementWrite/:id?" element={<PersonalStatementWrite />} />
               <Route path='studentRecord' element={<StudentRecord/>}/>
               <Route path='studentRecordDetail' element={<StudentRecordDetail/>}/>
-              
+
               {/* 마이페이지 내비게이션 */}
               <Route path="myPageNavBar" element={<MyPageNavBar />}>
                 <Route path="coverLetterRegister" element={<CoverLetterRegister />} />
@@ -60,13 +63,16 @@ function App() {
                 <Route path="purchasedEnumSR" element={<PurchasedEnumSR />} />
                 <Route path="uploadedEnumPS" element={<UploadedEnumPS/>} />
                 <Route path="uploadedEnumSR" element={<UploadedEnumSR/>} />
+                <Route path="memberEdit" element={<MemberEdit />} />
+                <Route path="permission" element={<Permission />} />
+                <Route path="withdrawal" element={<Withdrawal/>}/>
               </Route>
-              
+
               {/* 테스트 페이지 */}
               <Route path="test/modal" element={<ModalExample />} />
               <Route path="test/accordion" element={<AccordionExample />} />
               <Route path="test/upload" element={<FileUploaderExample/>}/>
-              
+
               {/* 어드민 페이지 */}
               <Route path="admin" element={<PermissionStore><AdminNav /></PermissionStore>}>
                 <Route path="auth" element={<PermissionMain />} />
@@ -74,7 +80,7 @@ function App() {
                 <Route path="member/:searchOption/:searchValue" element={<MemberControlMain/>} />
                 <Route path="board/:category/:search?/:searchOption?" element={<BoardControlMain/>}/>
               </Route>
-              
+
               {/* 게시판 (text Board) */}
               <Route path="post" element={<TextStore><PostLayout /></TextStore>}>
                 <Route path="list/:category/:search?/:searchOption?" element={<PostListMain active="ACTIVE" />} />

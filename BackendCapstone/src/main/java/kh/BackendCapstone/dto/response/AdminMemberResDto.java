@@ -1,7 +1,11 @@
 package kh.BackendCapstone.dto.response;
 
 import kh.BackendCapstone.constant.Authority;
+import kh.BackendCapstone.entity.Bank;
+import kh.BackendCapstone.entity.UserBank;
 import lombok.*;
+
+import java.time.LocalDateTime;
 
 @Getter @Setter @ToString
 @NoArgsConstructor @AllArgsConstructor
@@ -13,4 +17,7 @@ public class AdminMemberResDto {
 	private Authority authority;
 	private String univName;
 	private String univDept;
+	private LocalDateTime regDate;
+	private UserBank bank;
+	private int revenue;
 }

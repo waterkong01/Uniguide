@@ -89,22 +89,9 @@
 					//refreshToken DB에 저장
 					Member member = memberRepository.findByEmail(memberReqDto.getEmail())
 							.orElseThrow(() -> new RuntimeException("존재하지 않는 이메일입니다."));
-
-
-					// 이미 db에 해당 계정으로 저장된 refreshToken 정보가 있다면 삭제
-					log.info("Exists by member: {}", refreshTokenRepository.existsByMember(member));
-					if(refreshTokenRepository.existsByMember(member)) {
-						refreshTokenRepository.deleteByMember(member);
-					}
-
-					RefreshToken refreshToken = new RefreshToken();
-					String encodedToken = token.getRefreshToken();
-					refreshToken.setRefreshToken(encodedToken);
-					refreshToken.setRefreshTokenExpiresIn(token.getRefreshTokenExpiresIn());
-					refreshToken.setMember(member);
-
-					refreshTokenRepository.save(refreshToken);
-
+					
+					refreshTokenSave(member, token);
+					
 					return token;
 
 				} catch (Exception e) {
@@ -142,6 +129,26 @@
 					memberRepository.save(member);
 					return true;
 				}).orElse(false); // 회원이 없으면 false 반환
+			}
+			
+			public void refreshTokenSave(Member member, TokenDto token) {
+				try {
+					// 이미 db에 해당 계정으로 저장된 refreshToken 정보가 있다면 삭제
+					log.info("Exists by member: {}", refreshTokenRepository.existsByMember(member));
+					if(refreshTokenRepository.existsByMember(member)) {
+						refreshTokenRepository.deleteByMember(member);
+					}
+					
+					RefreshToken refreshToken = new RefreshToken();
+					String encodedToken = token.getRefreshToken();
+					refreshToken.setRefreshToken(encodedToken);
+					refreshToken.setRefreshTokenExpiresIn(token.getRefreshTokenExpiresIn());
+					refreshToken.setMember(member);
+					
+					refreshTokenRepository.save(refreshToken);
+				} catch (Exception e) {
+					log.error("리프레시 토큰 저장 실패 : {}", e.getMessage());
+				}
 			}
 			
 

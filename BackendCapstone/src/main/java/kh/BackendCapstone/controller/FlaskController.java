@@ -24,12 +24,12 @@ public class FlaskController {
 	private final FlaskService flaskService;
 	
 	// 대학 정보 업로드 API
-	@PostMapping("/univ")
+	@PostMapping("/public/univ")
 	public ResponseEntity<List<Boolean>> univCsvUpload(@RequestBody List<UnivReqDto> univReqDtoList) {
 		return flaskService.convertCsvToUniv(univReqDtoList);
 	}
 	
-	@PostMapping("/text")
+	@PostMapping("/public/text")
 	public ResponseEntity<List<Boolean>> textCsvUpload(@RequestBody List<TextBoardReqDto> textBoardReqDtoList) {
 		return flaskService.convertCsvToTextBoard(textBoardReqDtoList);
 	}

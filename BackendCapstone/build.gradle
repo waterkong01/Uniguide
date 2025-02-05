@@ -63,6 +63,9 @@ tasks.named('test') {
 tasks.test {
 	enabled = false;
 }
+tasks.withType(JavaCompile).configureEach {
+	options.encoding = 'UTF-8'
+}
 
 def reactDir = "$projectDir/src/main/react" // 리액트 디렉토리
 
