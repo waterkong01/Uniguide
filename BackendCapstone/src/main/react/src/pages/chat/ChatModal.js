@@ -3,8 +3,6 @@ import React, { useContext, useEffect, useState } from "react";
 import AxiosApi from "../../api/AxiosApi";
 import { Link } from "react-router-dom";
 import { useNavigate, Outlet } from "react-router-dom";
-import openIcon from "../../images/chat.png";
-import closeIcon from "../../images/close.png";
 import ChatMenuBar from "../../component/ChatComponent/ChatMenuBar";
 import ChatList from "../../component/ChatComponent/ChatList";
 import OpenChatSearch from "../../component/ChatComponent/OpenChatSearch";
@@ -20,7 +18,7 @@ const sideMenuBackgroundColor = "#eee";
 export const Container = styled.div`
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
+    min-height: 100dvh;
     width: 100%;
     margin: auto;
     position: relative;
@@ -35,9 +33,18 @@ const ChatIconBox = styled.div`
     z-index: 990;
     bottom: 30px;
     right: 30px;
+    height: 65px;
+    @media (max-width: 768px) {
+        bottom: 15px;
+        right: 15px;
+        height: 50px;
+    }
 `
 const ChatIcon = styled.img`
     width: 65px;
+    @media (max-width: 768px) {
+        width: 50px;
+    }
 `
 const SelectPage = styled.div`
     width: 100%;
@@ -59,18 +66,42 @@ export const UserAndName = styled.div`
 export const StyledSideMenu = styled.div`
     position: fixed;
     right: 30px;
-    bottom: 50px;
+    bottom: 60px;
     width: 400px;
+    min-width: 340px;
     //height: 700px;
     aspect-ratio: 4 / 7;
     background-color: #FFF;
     border-radius: 30px;
     box-shadow: 0px 0px 10px 1px rgba(0, 0, 0, 0.5);
-    z-index: ${props => props.isOpen ? "-1000" : "1000"};
+    z-index: ${props => props.isOpen ? "-999" : "999"};
     transform: ${props => props.isOpen ? "translateY(0)" : "translateY(-10%)"};
     opacity: ${props => props.isOpen ? "0" : "1"};
     transition: 0.5s ease;
     overflow: hidden;
+    @media (max-height: 950px) {
+        height: calc(100dvh - 30dvh);
+        max-height: 800px;
+    }
+    @media (max-width: 768px) {
+        right: 15px;
+        bottom: 30px;
+        width: 50%;
+        height: calc(100dvh - 190px);
+        max-height: 800px;
+        transform: ${props => props.isOpen ? "translate(0, 0)" : "translateY(-50px)"};
+    }
+    @media (max-width: 700px) {
+        width: 60%;
+    }
+    @media (max-width: 600px) {
+        width: 70%;
+    }
+    @media (max-width: 500px) {
+        left: 50%;
+        width: 90%;
+        transform: ${props => props.isOpen ? "translate(-50%, 0)" : "translate(-50%, -50px)"};
+    }
 `;
 export const StyledMenuItem = styled.li`
     padding: 10px 20px;
@@ -123,10 +154,10 @@ const ChatModal = () => {
         <Container>
             <ChatIconBox onClick={toggleMenu}>
                 {isMenuOpen ? (
-                    <ChatIcon src={openIcon} alt="Open"/>
-                    ) : (
-                    <ChatIcon src={closeIcon} alt="Close"/>
-                    )}
+                    <ChatIcon src={"https://firebasestorage.googleapis.com/v0/b/ipsi-f2028.firebasestorage.app/o/firebase%2Fchaticon%2Fchat.png?alt=media"} alt="Open"/>
+                ) : (
+                    <ChatIcon src={"https://firebasestorage.googleapis.com/v0/b/ipsi-f2028.firebasestorage.app/o/firebase%2Fchaticon%2Fclose.png?alt=media"} alt="Close"/>
+                )}
             </ChatIconBox>
             <StyledSideMenu isOpen={isMenuOpen}>
                 <SelectPage>{renderSelectedPage()}</SelectPage>

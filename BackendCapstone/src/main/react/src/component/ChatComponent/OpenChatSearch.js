@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import { ChatTitle } from "../ChatComponent/ChatMenuBar";
-import searchIcon from "../../images/search.svg";
 import React, { useContext, useEffect, useState } from "react";
 import ChattingApi from "../../api/ChattingApi";
 import { ChatUl, ChatRoom, ChatName } from "../ChatComponent/ChatList";
@@ -21,9 +20,9 @@ const CreateBtn = styled.button`
     border: 1px solid #777;
     background-color: #FFF;
     &:hover {
-      color: #FFF;
-      background-color: #6154D4;
-      border: 1px solid #6154D4;
+        color: #FFF;
+        background-color: #6154D4;
+        border: 1px solid #6154D4;
     }
 `
 const SearchBox = styled.div`
@@ -47,7 +46,7 @@ const SearchIcon = styled.img`
     filter: grayscale(100%);
     cursor: pointer;
     &:hover {
-      filter: none;
+        filter: none;
     }
 `
 const CreateInputBox = styled.div`
@@ -59,7 +58,7 @@ const CreateInputBox = styled.div`
     align-items: center;
 `
 const Input = styled.input`
-    width: 75%;
+    width: 70%;
     padding: 10px;
     outline-style: none;
     border: none;
@@ -136,8 +135,8 @@ const OpenChatSearch = ({ setSelectedPage }) => {
         try {
             const resp = await ChattingApi.chatList();
             if (resp.status === 200) {
-              const response = await ChattingApi.chatList();
-              setChatRooms(response.data);
+                const response = await ChattingApi.chatList();
+                setChatRooms(response.data);
             }
         } catch (e) {
             console.log(e);
@@ -225,7 +224,7 @@ const OpenChatSearch = ({ setSelectedPage }) => {
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />
-                <SearchIcon src={searchIcon} alt="Search" onClick={handleSearch}/>
+                <SearchIcon src={"https://firebasestorage.googleapis.com/v0/b/ipsi-f2028.firebasestorage.app/o/firebase%2Fchaticon%2Fsearch.svg?alt=media"} alt="Search" onClick={handleSearch}/>
             </SearchBox>
             <ChatUl>
                 {filteredChatRooms.map((room) => (

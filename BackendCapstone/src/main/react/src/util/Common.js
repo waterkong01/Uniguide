@@ -5,7 +5,7 @@ moment.locale("ko"); // 한국 시간 적용
 
 const Commons = {
   Capstone: "",
-  Capstone_URL: "ws://http://3.34.134.28:8111/ws/chat",
+  Capstone_URL: "ws://localhost:8111/ws/chat",
   timeFromNow: (timestamp) => {
     return moment(timestamp).fromNow();
   },
