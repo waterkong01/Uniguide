@@ -29,7 +29,7 @@ public class TextBoardController {
 		return ResponseEntity.ok(isSuccess);
 	}
 	// 글 세부 조회
-	@GetMapping("/find/id/{boardId}")
+	@GetMapping("/public/find/id/{boardId}")
 	public ResponseEntity<TextBoardResDto> findBoardById(@PathVariable("boardId") Long boardId) {
 		TextBoardResDto rsp = textBoardService.findByBoardId(boardId);
 		log.warn("글번호 {} 의 글 내용 조회 : {}", boardId, rsp);
@@ -44,14 +44,14 @@ public class TextBoardController {
 	}
 	
 	// 카테고리별 전체 글 조회
-	@GetMapping("/page/{category}")
+	@GetMapping("/public/page/{category}")
 	public ResponseEntity<Integer> findBoardPageAll(@PathVariable String category, @RequestParam int size, @RequestParam String active) {
 		int pageCount = textBoardService.getBoardPageCount(category, size, active);
 		log.warn("카테고리 : {} 에 대한 페이지당 : {} 페이지 수 : {} 활성화 상태 : {}", category, size, pageCount, active);
 		return ResponseEntity.ok(pageCount);
 	}
 	
-	@GetMapping("/find/{category}")
+	@GetMapping("/public/find/{category}")
 	public ResponseEntity<List<TextBoardListResDto>> findBoardAll(@PathVariable String category, @RequestParam int page, @RequestParam int size, @RequestParam(defaultValue = "desc") String sort, @RequestParam String active) {
 		List<TextBoardListResDto> rsp = textBoardService.findBoardAllByCategory(category, page, size, sort, active);
 		log.warn("카테고리 : {} 전체 글 {}개의 내용 조회 (활성화 상태: {}) : {}", category, rsp.size(), active, rsp);
@@ -59,14 +59,14 @@ public class TextBoardController {
 	}
 	
 	// 카테고리별 제목 검색
-	@GetMapping("/page/title/{category}/{title}")
+	@GetMapping("/public/page/title/{category}/{title}")
 	public ResponseEntity<Integer> findBoardPageByTitle(@PathVariable String category, @PathVariable String title, @RequestParam int size, @RequestParam String active) {
 		int pageCount = textBoardService.getBoardPageCountByTitle(category, title, size, active);
 		log.warn("카테고리 : {} 의 제목 검색 : {} 에대한 페이지당 : {} 페이지 수 : {} 활성화 상태 : {}", category, title, size, pageCount, active);
 		return ResponseEntity.ok(pageCount);
 	}
 	
-	@GetMapping("/find/title/{category}/{title}")
+	@GetMapping("/public/find/title/{category}/{title}")
 	public ResponseEntity<List<TextBoardListResDto>> findBoardByTitle(@PathVariable String category, @PathVariable String title,
 	                                                                  @RequestParam int page, @RequestParam int size, @RequestParam(defaultValue = "desc") String sort, @RequestParam String active) {
 		List<TextBoardListResDto> rsp = textBoardService.findBoardByTitle(category, title, page, size, sort, active);
@@ -75,14 +75,14 @@ public class TextBoardController {
 	}
 	
 	// 카테고리별 닉네임 검색
-	@GetMapping("/page/nickName/{category}/{nickName}")
+	@GetMapping("/public/page/nickName/{category}/{nickName}")
 	public ResponseEntity<Integer> findBoardByNickName(@PathVariable String category, @PathVariable String nickName, @RequestParam int size, @RequestParam String active) {
 		int pageCount = textBoardService.getBoardPageCountByNickName(category, nickName, size, active);
 		log.warn("카테고리 : {} 의 작성자 검색 : {} 에대한 페이지당 : {} 페이지 수 : {} 활성화 상태 : {}", category, nickName, size, pageCount, active);
 		return ResponseEntity.ok(pageCount);
 	}
 	
-	@GetMapping("/find/nickName/{category}/{nickName}")
+	@GetMapping("/public/find/nickName/{category}/{nickName}")
 	public ResponseEntity<List<TextBoardListResDto>> findBoardByNickName(@PathVariable String category, @PathVariable String nickName,
 	                                                                     @RequestParam int page, @RequestParam int size, @RequestParam(defaultValue = "desc") String sort, @RequestParam String active) {
 		List<TextBoardListResDto> rsp = textBoardService.findBoardByNickName(category, nickName, page, size, sort, active);
@@ -91,14 +91,14 @@ public class TextBoardController {
 	}
 	
 	// 카테고리별 제목 및 내용 검색
-	@GetMapping("page/titleOrContent/{category}/{keyword}")
+	@GetMapping("public/page/titleOrContent/{category}/{keyword}")
 	public ResponseEntity<Integer> findBoardPageByTitleOrContent(@PathVariable String category, @PathVariable String keyword, @RequestParam int size, @RequestParam String active) {
 		int pageCount = textBoardService.getBoardPageCountByTitleAndContent(category, keyword, size, active);
 		log.warn("카테고리 : {} 제목과 내용 검색 : {} 에 대한 페이지당 : {} 페이지 수 : {} 활성화 상태 : {}", category, keyword, size, pageCount, active);
 		return ResponseEntity.ok(pageCount);
 	}
 	
-	@GetMapping("/find/titleOrContent/{category}/{keyword}")
+	@GetMapping("/public/find/titleOrContent/{category}/{keyword}")
 	public ResponseEntity<List<TextBoardListResDto>> findBoardByTitleOrContent(@PathVariable String category, @PathVariable String keyword,
 	                                                                           @RequestParam int size, @RequestParam int page, @RequestParam(defaultValue = "desc") String sort, @RequestParam String active) {
 		List<TextBoardListResDto> rsp = textBoardService.findBoardByTitleAndContent(category ,keyword, size, page, sort, active);
@@ -107,13 +107,13 @@ public class TextBoardController {
 	}
 	
 	// 카테고리별 회원 검색
-	@GetMapping("/page/member/{category}/{memberId}")
+	@GetMapping("/public/page/member/{category}/{memberId}")
 	public ResponseEntity<Integer> findBoardByMember(@PathVariable String category, @PathVariable Long memberId, @RequestParam int size, @RequestParam String active) {
 		int pageCount = textBoardService.getBoardPageCountByMember(category, memberId, size, active);
 		log.warn("카테고리 : {} 의 회원 검색 : {} 에대한 페이지당 : {} 페이지 수 : {}", category, memberId, size, pageCount);
 		return ResponseEntity.ok(pageCount);
 	}
-	@GetMapping("/find/member/{category}/{memberId}")
+	@GetMapping("/public/find/member/{category}/{memberId}")
 	public ResponseEntity<List<TextBoardListResDto>> findBoardByMember(@PathVariable String category, @PathVariable Long memberId,
 	                                                                     @RequestParam int page, @RequestParam int size, @RequestParam(defaultValue = "desc") String sort, @RequestParam String activ) {
 		List<TextBoardListResDto> rsp = textBoardService.findBoardByMember(category, memberId, page, size, sort, activ);

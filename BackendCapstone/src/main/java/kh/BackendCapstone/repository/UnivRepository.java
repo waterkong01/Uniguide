@@ -21,9 +21,9 @@ public interface UnivRepository extends JpaRepository<Univ, Long> {
 
 	// 특정 대학 이름을 기준으로 하나의 대학 정보 조회 (학과 목록을 포함)
 	List<Univ> findByUnivName(String univName);
-	
+
 	@Query("SELECT DISTINCT e.univName FROM Univ e")
 	List<String> findDistinctColumn();
-	
+
 	Optional<Univ> findByUnivId(Long univId);
 }

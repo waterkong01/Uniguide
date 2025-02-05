@@ -155,6 +155,8 @@ public class AdminService {
 		return textBoardRepository.findByActiveAndTextCategory(Active.INACTIVE, TextCategory.fromString(category), pageable).getTotalPages();
 	}
 	
+	
+	
 	public PermissionResDto convertEntityToDto(Permission permission) {
 		PermissionResDto dto = new PermissionResDto();
 		dto.setPermissionId(permission.getPermissionId());
@@ -197,6 +199,9 @@ public class AdminService {
 		dto.setEmail(member.getEmail());
 		dto.setUnivDept(member.getUniv().getUnivDept());
 		dto.setUnivName(member.getUniv().getUnivName());
+		dto.setRegDate(member.getRegDate());
+		dto.setBank(member.getUserBank());
+		dto.setRevenue(member.getRevenue());
 		return dto;
 	}
 	
