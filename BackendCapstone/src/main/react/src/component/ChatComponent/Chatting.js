@@ -1,8 +1,5 @@
 import React, { useEffect, useState, useRef, useContext, useCallback } from "react";
 import styled from "styled-components";
-import backIcon from "../../images/back.svg";
-import exitIcon from "../../images/exit.svg";
-import sendIcon from "../../images/send_color.png";
 import { OverlayContainer, OverlayContent, BtnBox } from "../ChatComponent/OpenChatSearch";
 import { useNavigate, useParams } from "react-router-dom";
 import Commons from "../../util/Common";
@@ -31,7 +28,7 @@ const ChattingIcon = styled.img`
     width: 25px;
     filter: brightness(0);
     &:hover {
-      filter: none;
+        filter: none;
     }
 `
 const SendButton = styled.img`
@@ -62,7 +59,7 @@ const MessagesContainer = styled.div`
     }
     &::-webkit-scrollbar-track {
         background: #FFF;
-        border-radius: 10px; 
+        border-radius: 10px;
     }
 `;
 
@@ -85,7 +82,7 @@ const Message = styled.div`
     border-radius: 20px;
     background-color: ${(props) => (props.isSender ? "#ECE1FF" : "#E0E0E0")};
     border: ${(props) =>
-        props.isSender ? "1px solid #ECE1FF" : "1px solid #E0E0E0"};
+            props.isSender ? "1px solid #ECE1FF" : "1px solid #E0E0E0"};
 `;
 
 const Sender = styled.div`
@@ -108,16 +105,16 @@ const MsgInput = styled.textarea`
     max-height: 100px;
     overflow-y: auto;
     &::-webkit-scrollbar {
-    width: 10px;
+        width: 10px;
     }
     &::-webkit-scrollbar-thumb {
-    height: 30%;
-    background: #9f8fe4;
-    border-radius: 10px;
+        height: 30%;
+        background: #9f8fe4;
+        border-radius: 10px;
     }
     &::-webkit-scrollbar-track {
-    background: #FFF;
-    border-radius: 10px;
+        background: #FFF;
+        border-radius: 10px;
     }
 `;
 
@@ -245,10 +242,10 @@ const Chatting = ({ setSelectedPage }) => {
         // 메시지 전송
         ws.current.send(
             JSON.stringify({
-              type: "CLOSE",
-              roomId: roomId,
-              sender: sender,
-              message: inputMsg,  
+                type: "CLOSE",
+                roomId: roomId,
+                sender: sender,
+                message: inputMsg,
             })
         );
         ws.current.close();
@@ -320,7 +317,7 @@ const Chatting = ({ setSelectedPage }) => {
             alert("error : 이전 대화내용을 불러오지 못했습니다.");
         }
     };
-    
+
     // UTC -> KST 변환
     const getKSTDate = () => {
         const date = new Date();
@@ -328,7 +325,7 @@ const Chatting = ({ setSelectedPage }) => {
         const offset = 9 * 60 * 60 * 1000; // 9시간을 밀리초로 변환
         return new Date(date.getTime() + offset);
     };
-    
+
     // 메시지 전송
     const onClickMsgSend = () => {
         //웹소켓 연결되어 있을 때 정보 보내기
@@ -358,7 +355,7 @@ const Chatting = ({ setSelectedPage }) => {
                 console.log("메시지가 비어있습니다.");
             }
         } else {
-        alert("채팅 연결에 실패.");
+            alert("채팅 연결에 실패.");
         }
     };
 
@@ -386,9 +383,9 @@ const Chatting = ({ setSelectedPage }) => {
     return (
         <ChattingRoomBg>
             <ChattingTitle>
-                <ChattingIcon src={backIcon} alt="Back" onClick={onClickExit} />
+                <ChattingIcon src={"https://firebasestorage.googleapis.com/v0/b/ipsi-f2028.firebasestorage.app/o/firebase%2Fchaticon%2Fback.svg?alt=media"} alt="Back" onClick={onClickExit} />
                 {roomName}
-                <ChattingIcon src={exitIcon} alt="Exit" onClick={ExitChatRoom} />
+                <ChattingIcon src={"https://firebasestorage.googleapis.com/v0/b/ipsi-f2028.firebasestorage.app/o/firebase%2Fchaticon%2Fexit.svg?alt=media"} alt="Exit" onClick={ExitChatRoom} />
             </ChattingTitle>
             <MessagesContainer ref={ChatContainerRef}>
                 {chatList?.map((chat, index) => {
@@ -427,7 +424,7 @@ const Chatting = ({ setSelectedPage }) => {
                     onKeyUp={onEnterKey}
                 />
                 <SendButton
-                    src={sendIcon} alt="Send"
+                    src={"https://firebasestorage.googleapis.com/v0/b/ipsi-f2028.firebasestorage.app/o/firebase%2Fchaticon%2Fsend_color.png?alt=media"} alt="Send"
                     onClick={onClickMsgSend}
                     disabled={!inputMsg.trim()}
                 />
