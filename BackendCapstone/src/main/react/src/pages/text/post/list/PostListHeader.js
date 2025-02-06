@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import { styled } from 'styled-components';
 import { TextField, IconButton } from '@mui/material';
 import { Search } from '@mui/icons-material';
@@ -6,6 +6,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { TextContext } from "../../../../context/TextStore";
 import { Dropdown } from "../../../../styles/SmallComponents";
 import RejectModal from "../../../../component/Modal/RejectModal";
+import TextBoardApi from "../../../../api/TextBoardApi";
 
 // 전체 컨테이너 스타일링
 const HeaderContainer = styled.div`
@@ -91,8 +92,16 @@ const PostListHeader = () => {
 	const navigate = useNavigate();
 	const [reject, setReject] = useState(false);
 	const [error, setError] = useState("");
-	const { category, option } = useParams();
+	const { category, option, search } = useParams();
 	const [nickName, setNickName] = useState("");
+	
+	useEffect(() => {
+		const fetchNickName = async () => {
+			const rsp = await TextBoardApi.getAuthor(search)
+			console.log(rsp)
+			setNickName(rsp.data)
+		}
+	}, [option, search]);
 	
 	// 검색어 변경
 	const onSearchChange = (event) => {
@@ -140,7 +149,7 @@ const PostListHeader = () => {
 	
 	return (
 		<HeaderContainer>
-			<Title>{option === "member" && nickName  + categoryTitle.find(title => title.value === category)?.label || "기본 제목"  }</Title>
+			<Title>{option === "member" && (nickName + "의")  + categoryTitle.find(title => title.value === category)?.label || "기본 제목"  }</Title>
 			<RightContainer>
 				{/* 드롭다운 */}
 				<DropdownContainer>

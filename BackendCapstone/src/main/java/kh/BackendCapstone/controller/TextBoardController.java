@@ -173,4 +173,10 @@ public class TextBoardController {
 		boolean isSuccess = textBoardService.deleteComment(commentReqDto, token);
 		return ResponseEntity.ok(isSuccess);
 	}
+	
+	@GetMapping("/public/author/{id}")
+	public ResponseEntity<String> getAuthor(@PathVariable("id") Long id) {
+		String author = textBoardService.getAuthor(id);
+		return ResponseEntity.ok(author);
+	}
 }

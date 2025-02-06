@@ -144,13 +144,15 @@ const TextBoardApi = {
 	},
 	
 	deleteComment: async (boardId, commentId) => {
-		const token = localStorage.getItem("accessToken");
 		const comment = {
 			commentId: commentId,
 			boardId: boardId,
 		}
 		console.log(`글번호 : ${boardId} 의 댓글번호 : ${commentId} 삭제`)
 		return await axiosInstance.post(baseUrl + `/board/delete/comment`, comment)
+	},
+	getAuthor: async (id) => {
+		return await axios.get(baseUrl + `/board/public/author/${id}`)
 	}
 }
 
