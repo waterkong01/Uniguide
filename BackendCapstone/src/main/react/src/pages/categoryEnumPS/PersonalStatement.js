@@ -565,7 +565,6 @@ const replaceMiddleChar = (str) => {
                 </option>
               ))}
             </Dropdown>
-
             <Dropdown
               onChange={handleDeptChange}
               value={selectedDept}
