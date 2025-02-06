@@ -96,7 +96,7 @@ public class AdminController {
 		return adminService.convertCsvToTextBoard(file, token);
 	}
 	
-	@PostMapping("/csv/textBoard")
+	@PostMapping("/csv/bank")
 	public ResponseEntity<List<Boolean>> uploadBank(@RequestParam("file") MultipartFile file,
 	                                                     @RequestHeader("Authorization") String token) {
 		return adminService.convertCsvToBank(file, token);

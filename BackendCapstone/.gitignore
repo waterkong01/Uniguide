@@ -66,3 +66,4 @@ src/main/react/yarn-error.log*
 # Resources
 src/main/resources/static/static
 
+src/main/react/firebase.js
