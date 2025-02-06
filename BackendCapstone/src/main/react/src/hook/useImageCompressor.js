@@ -15,8 +15,8 @@ const useImageCompressor = () => {
 					const canvas = document.createElement("canvas");
 					const ctx = canvas.getContext("2d");
 					
-					canvas.width = img.width / 1.25;
-					canvas.height = img.height / 1.25;
+					canvas.width = img.width / 1.5;
+					canvas.height = img.height / 1.5;
 					ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 					
 					const imageType = img.src.includes("png") ? "image/png" : "image/jpeg";

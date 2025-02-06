@@ -23,16 +23,16 @@ import java.util.List;
 public class FlaskController {
 	private final FlaskService flaskService;
 	
-	// 대학 정보 업로드 API
-	@PostMapping("/public/univ")
-	public ResponseEntity<List<Boolean>> univCsvUpload(@RequestBody List<UnivReqDto> univReqDtoList) {
-		return flaskService.convertCsvToUniv(univReqDtoList);
-	}
-	
-	@PostMapping("/public/text")
-	public ResponseEntity<List<Boolean>> textCsvUpload(@RequestBody List<TextBoardReqDto> textBoardReqDtoList) {
-		return flaskService.convertCsvToTextBoard(textBoardReqDtoList);
-	}
+//	// 대학 정보 업로드 API
+//	@PostMapping("/public/univ")
+//	public ResponseEntity<List<Boolean>> univCsvUpload() {
+//		return flaskService.convertCsvToUniv();
+//	}
+//
+//	@PostMapping("/public/text")
+//	public ResponseEntity<List<Boolean>> textCsvUpload() {
+//		return flaskService.convertCsvToTextBoard();
+//	}
 	
 	
 	

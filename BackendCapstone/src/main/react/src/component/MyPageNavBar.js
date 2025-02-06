@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import {useEffect, useState} from "react";
 import {useSelector} from "react-redux";
 import RejectModal from "./Modal/RejectModal";
+import {fetchUserStatus} from "../function/fetchUserStatus";
 
 const Background = styled.div`
   width: 100%;
@@ -122,6 +123,10 @@ const MyPageNavBar = () => {
       setReject({value: true, label: "해당 기능은 로그인 후 사용 가능 합니다."})
     }
   }, [role]);
+  
+  useEffect(() => {
+    fetchUserStatus();
+  }, []);
 
   return (
     <>

@@ -32,17 +32,27 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
         
         Member member = null;
         String userId = null;
+        String name = null;
+        String phone = null;
         String email = "email@email.com";
         String type  = null;
-        
+        String nickName = null;
+
         if (oauthClientName.equals("kakao")) {
             userId = "kakao" + oAuth2User.getAttributes().get("id");
             type = "kakao";
+            name = (String) oAuth2User.getAttributes().get("nickname");
+            nickName = "kakao_" + oAuth2User.getAttributes().get("id");
+
+
         } else if (oauthClientName.equals("naver")) {
             Map<String, String> responseMap = (Map<String, String>) oAuth2User.getAttributes().get("response");
             userId = "naver_" + responseMap.get("id").substring(0, 14);
+            name = responseMap.get("nickname");
+            phone = responseMap.get("mobile");
             email = responseMap.get("email");
             type = "naver";
+            nickName = "naver_" + responseMap.get("id").substring(0, 14);
         }
         
         // 중복 체크: userId나 email로 이미 존재하는 회원이 있는지 확인
@@ -54,8 +64,7 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
             return new CustomOAuth2User(userId); // 이미 존재하는 사용자 정보 반환
         }
         
-        member = new Member(userId, email, type);
-        // 중복이 없으면 회원을 저장
+        member = new Member(userId, email, type,phone,name,nickName);
         memberRepository.save(member);
         return new CustomOAuth2User(userId); // 저장된 사용자 정보 반환
     }

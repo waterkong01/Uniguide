@@ -121,6 +121,7 @@ const PostCreateMain = () => {
 
 const TitleContainer = styled(Box)`
 		margin-top: 50px;
+		margin-bottom: 200px;
     width: 100%;
     display: flex;
     justify-content: center;
@@ -177,10 +178,9 @@ const styles = {
 	},
 };
 const Title = styled.div`
-		width: 100%;
+		width: 90%;
     font-size: 24px;
     font-weight: bold;
-		margin-left: 100px;
 		margin-top: 50px;
 		display: flex;
 `;

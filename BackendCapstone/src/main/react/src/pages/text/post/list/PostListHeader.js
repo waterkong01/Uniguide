@@ -1,10 +1,10 @@
-import React, {useContext, useState} from 'react';
+import React, { useContext, useState } from 'react';
 import { styled } from 'styled-components';
-import {TextField, Select, MenuItem, InputLabel, FormControl, Button, IconButton} from '@mui/material';
+import { TextField, IconButton } from '@mui/material';
 import { Search } from '@mui/icons-material';
-import {useNavigate, useParams} from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { TextContext } from "../../../../context/TextStore";
-import {Dropdown} from "../../../../styles/SmallComponents";
+import { Dropdown } from "../../../../styles/SmallComponents";
 import RejectModal from "../../../../component/Modal/RejectModal";
 
 // 전체 컨테이너 스타일링
@@ -12,15 +12,25 @@ const HeaderContainer = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin: 20px 0;
+    margin: 20px 10px;
     padding: 0 20px;
     width: 100%;
+
+    @media (max-width: 768px) {
+        flex-direction: column;
+        align-items: flex-start;
+    }
 `;
 
 // 왼쪽 제목
 const Title = styled.div`
     font-size: 24px;
     font-weight: bold;
+    margin-bottom: 10px;
+
+    @media (max-width: 768px) {
+        margin-bottom: 15px;
+    }
 `;
 
 // 검색 입력 스타일링
@@ -31,9 +41,12 @@ const SearchContainer = styled.div`
     padding: 5px 15px;
     border-radius: 50px;
     margin-right: 20px;
-    min-width: 200px;
-		width: 60%;
-		flex-grow: 1;
+    width: 60%;
+
+    @media (max-width: 768px) {
+        width: 100%;
+        margin-right: 0;
+    }
 `;
 
 // 검색 아이콘
@@ -46,38 +59,55 @@ const RightContainer = styled.div`
     display: flex;
     align-items: center;
     min-width: 500px;
-		width: 60%;
+    width: 60%;
+
+    @media (max-width: 768px) {
+        width: 100%;
+		    min-width: 0;
+        flex-direction: column;
+        align-items: flex-start;
+    }
 `;
 
 const DropdownContainer = styled.div`
-	display: flex;
-	width: 20%;
-`
-export const categoryTitle =[
-	{value: "faq", label: "FAQ"},
-	{value: "default", label: "게시판"},
-	{value: "review", label: "이용후기"},
-]
+    display: flex;
+    width: 20%;
+    margin-right: 10px;
+
+    @media (max-width: 768px) {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+`;
+
+export const categoryTitle = [
+	{ value: "faq", label: "FAQ" },
+	{ value: "default", label: "게시판" },
+	{ value: "review", label: "이용후기" },
+];
 
 const PostListHeader = () => {
 	const { searchQuery, setSearchQuery, searchOption, setSearchOption, sortOption, setSortOption, setPage } = useContext(TextContext);
 	const navigate = useNavigate();
 	const [reject, setReject] = useState(false);
 	const [error, setError] = useState("");
-	const {category} = useParams()
+	const { category, option } = useParams();
+	const [nickName, setNickName] = useState("");
+	
 	// 검색어 변경
 	const onSearchChange = (event) => {
 		setSearchQuery(event.target.value);
 	};
+	
 	// 검색 버튼 클릭
 	const onSearchClick = () => {
 		if (searchOption === null || searchOption === "") {
-			setError("검색 조건이 선택되지 않았습니다.")
+			setError("검색 조건이 선택되지 않았습니다.");
 			setReject(true);
-			return
+			return;
 		}
 		if (searchQuery === null || searchQuery === "") {
-			setError("검색창에 아무값도 없습니다.")
+			setError("검색창에 아무값도 없습니다.");
 			setReject(true);
 			return;
 		}
@@ -92,25 +122,25 @@ const PostListHeader = () => {
 	
 	const onChangeSearchOption = (event) => {
 		setSearchOption(event.target.value);
-	}
+	};
 	
 	const sortOptions = [
-		{value: 'desc', label: '최신순'},
-		{value: 'asc', label: '오래된순'},
-	]
-	const searchOptions = (category !== "faq") ? [
-		{value: "title", label: "제목"},
-		{value: "nickName", label: "작성자"},
-		{value: "titleAndContent", label: "제목 + 내용"},
-	] : [
-		{value: "title", label: "제목"},
-		{value: "titleAndContent", label: "제목 + 내용"},
-	]
+		{ value: 'desc', label: '최신순' },
+		{ value: 'asc', label: '오래된순' },
+	];
 	
+	const searchOptions = category !== "faq" ? [
+		{ value: "title", label: "제목" },
+		{ value: "nickName", label: "작성자" },
+		{ value: "titleAndContent", label: "제목 + 내용" },
+	] : [
+		{ value: "title", label: "제목" },
+		{ value: "titleAndContent", label: "제목 + 내용" },
+	];
 	
 	return (
 		<HeaderContainer>
-			<Title>{categoryTitle.find(title => title.value === category)?.label || "기본 제목"}</Title>
+			<Title>{option === "member" && nickName  + categoryTitle.find(title => title.value === category)?.label || "기본 제목"  }</Title>
 			<RightContainer>
 				{/* 드롭다운 */}
 				<DropdownContainer>
@@ -130,11 +160,11 @@ const PostListHeader = () => {
 						variant="standard"
 						value={searchQuery}
 						onChange={onSearchChange}
-						sx = {{flexGrow: 1}}
+						sx={{ flexGrow: 1 }}
 					/>
-					<IconButton onClick={onSearchClick}><SearchIcon/></IconButton>
+					<IconButton onClick={onSearchClick}><SearchIcon /></IconButton>
 				</SearchContainer>
-				{/* 드롭다운 */}
+				{/* 정렬 드롭다운 */}
 				<DropdownContainer>
 					<Dropdown value={sortOption} onChange={onSortChange}>
 						<option value="">정렬 순서</option>
@@ -146,7 +176,7 @@ const PostListHeader = () => {
 					</Dropdown>
 				</DropdownContainer>
 			</RightContainer>
-			<RejectModal open={reject} message={error} onClose={() => setReject(false)}></RejectModal>
+			<RejectModal open={reject} message={error} onClose={() => setReject(false)} />
 		</HeaderContainer>
 	);
 };

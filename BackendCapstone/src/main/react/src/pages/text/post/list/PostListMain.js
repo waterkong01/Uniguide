@@ -16,7 +16,7 @@ const PostListMain = ({active}) => {
 	// context에서 상태 가져오기
 	const { size, page, setPage, postList, setPostList, maxPage, setMaxPage, setSearchQuery, setSearchOption, sortOption } = useContext(TextContext);
 	const navigator = useNavigate();
-	const { category, search, searchOption } = useParams(); // URL 파라미터에서 검색어와 검색옵션 가져오기
+	const { category, search, option } = useParams(); // URL 파라미터에서 검색어와 검색옵션 가져오기
 	const role = useSelector(state => state.persistent.role);
 	const [confirm, setConfirm] = useState({});
 	const dispatch = useDispatch();
@@ -101,12 +101,12 @@ const PostListMain = ({active}) => {
 				setCurrentPage={setPage}
 			/>
 			{
-				(category !== "faq" || role === "ROLE_ADMIN") &&
+				(category !== "faq" || role === "ROLE_ADMIN") && (role !== "REST_USER" && role === "") &&
 				<ButtonContainer>
 					<div></div>
 					<Tooltip title="글 작성">
-						<IconButton onClick={onClickCreate}>
-							<CreateIcon/>
+						<IconButton onClick={onClickCreate} >
+							<CreateIcon sx={{color: "#6154D4"}}/>
 						</IconButton>
 					</Tooltip>
 				</ButtonContainer>

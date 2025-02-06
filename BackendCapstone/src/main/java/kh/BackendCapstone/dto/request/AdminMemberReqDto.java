@@ -7,6 +7,7 @@ import lombok.*;
 @NoArgsConstructor @AllArgsConstructor
 public class AdminMemberReqDto {
 	private Long memberId;
-	private Authority authority;
+	private String authority;
 	private Long univId;
+	private int withdraw;
 }

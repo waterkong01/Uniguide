@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Typography, Box } from "@mui/material";
 import AuthApi from "../../../api/AuthApi";
 import axios from "axios";
+import Commons from "../../../util/Common";
 
 const Permission = () => {
   const [uploadStatus, setUploadStatus] = useState("");
@@ -43,7 +44,7 @@ const Permission = () => {
   
     try {
       const token = localStorage.getItem("accessToken");
-      const response = await axios.post("http://localhost:8111/firebase/upload", formData, {
+      const response = await axios.post(Commons.Capstone + "/firebase/upload", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${token}`,

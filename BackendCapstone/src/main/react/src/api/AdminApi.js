@@ -33,6 +33,26 @@ const AdminApi = {
 	getMemberDetails: (memberId) => {
 		console.log(`${memberId}의 회원 세부 내용 확인`)
 		return axiosInstance.get(baseUrl + `/admin/member/details/${memberId}`);
+	},
+	editMember(memberId, univId, authority, withdrawal) {
+		console.log(`${memberId}의 정보 변경 : ${univId}-${authority}-${withdrawal}`);
+		const member ={
+			memberId: memberId,
+			authority: authority,
+			withdrawal: withdrawal,
+			univId: univId,
+		}
+		return axiosInstance.post(baseUrl + `/admin/member/edit`, member)
+	},
+	uploadCsv: (file, type) => {
+		switch (type) {
+			case 'univ.csv':
+				return axiosInstance.post(baseUrl + `/admin/csv/univ`, file);
+			case 'textboard.csv':
+				return axiosInstance.post(baseUrl + `/admin/csv/textBoard`, file);
+			default:
+				return null
+		}
 	}
 }
 export default AdminApi;

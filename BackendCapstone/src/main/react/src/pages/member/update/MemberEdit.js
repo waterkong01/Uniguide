@@ -60,6 +60,7 @@ const MemberEdit = () => {
             univDept: memberData.univ?.univDept || "업로드 권한 확인에서 재학증명서를 등록해주세요",
             bankName: memberData.bankName || "",
             bankAccount: memberData.bankAccount || "",
+            userId : memberData.userId
           });
         } else {
           throw new Error("회원 정보가 존재하지 않습니다.");
@@ -91,12 +92,17 @@ const MemberEdit = () => {
   };
 
   const handlePasswordEdit = () => {
-    setOpenPasswordModal(true);
+    if(memberInfo.userId !==null) {
+      alert("소셜로그인 회원은 비밀번호 변경이 불가능합니다");
+    }
+    else {
+      setOpenPasswordModal(true);
+    }
   };
 
   const handleCurrentPasswordSubmit = async () => {
     try {
-      
+
       const isValidPassword = await AuthApi.checkCurrentPassword(currentPassword);
       if (isValidPassword) {
         setOpenPasswordModal(false);
@@ -183,314 +189,132 @@ const MemberEdit = () => {
   };
 
   return (
-    <Container maxWidth="md" sx={{ mt: 4, mb: 4 }}>
-      <Box sx={{ backgroundColor: "white", p: 4, borderRadius: 2 }}>
-        <Typography variant="h4" sx={{ mb: 4, fontWeight: "bold", color: "#5f53d3" }}>
-          회원 정보 수정
-        </Typography>
-  
-        {/* 이름 */}
-        <Box sx={{ mb: 3 }}>
-          <Typography variant="h6" sx={{ mb: 1, color: "#333" }}>
-            이름
+      <Container maxWidth="md" sx={{ mt: 4, mb: 4 }}>
+        <Box sx={{ backgroundColor: "white", p: 4, borderRadius: 2 }}>
+          <Typography variant="h4" sx={{ mb: 4, fontWeight: "bold", color: "#5f53d3" }}>
+            회원 정보 수정
           </Typography>
-          <Typography variant="body1" sx={{ color: "#555" }}>
-            {memberInfo.name}
-          </Typography>
-          <Divider sx={{ mt: 1 }} />
-        </Box>
-  
-        {/* 닉네임 */}
-        <Box sx={{ mb: 3 }}>
-          <Typography variant="h6" sx={{ mb: 1, color: "#333" }}>
-            닉네임
-          </Typography>
-          <Grid container spacing={2} alignItems="center">
-            <Grid item xs={12} sm={8}>
-              <Typography variant="body1" sx={{ color: "#555" }}>
-                {memberInfo.nickName}
-              </Typography>
-            </Grid>
-            <Grid item xs={12} sm={4}>
-              <Button
-                variant="contained"
-                onClick={() => setOpenNickNameModal(true)}
-                fullWidth
-                sx={{
-                  backgroundColor: "#5f53d3",
-                  color: "#fff",
-                  "&:hover": { backgroundColor: "#4a3fb5" },
-                }}
-              >
-                닉네임 수정
-              </Button>
-            </Grid>
-          </Grid>
-          <Divider sx={{ mt: 1 }} />
-        </Box>
 
-        <Modal
-          open={openNickNameModal}
-          onClose={() => {
-            setOpenNickNameModal(false);
-            setInputNickName("");
-            setNickNameMessage("");
-            setIsNickName(false);
-          }}
-          closeAfterTransition
-          BackdropComponent={Backdrop}
-          BackdropProps={{ timeout: 500 }}
-        >
-          <Fade in={openNickNameModal}>
-            <Box
-              sx={{
-                position: "absolute",
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -50%)",
-                backgroundColor: "white",
-                padding: "20px",
-                borderRadius: "8px",
-                boxShadow: 24,
-                width: { xs: "90%", sm: "300px" },
-                textAlign: "center",
+          {/* 이름 */}
+          <Box sx={{ mb: 3 }}>
+            <Typography variant="h6" sx={{ mb: 1, color: "#333" }}>
+              이름
+            </Typography>
+            <Typography variant="body1" sx={{ color: "#555" }}>
+              {memberInfo.name}
+            </Typography>
+            <Divider sx={{ mt: 1 }} />
+          </Box>
+
+          {/* 닉네임 */}
+          <Box sx={{ mb: 3 }}>
+            <Typography variant="h6" sx={{ mb: 1, color: "#333" }}>
+              닉네임
+            </Typography>
+            <Grid container spacing={2} alignItems="center">
+              <Grid item xs={12} sm={8}>
+                <Typography variant="body1" sx={{ color: "#555" }}>
+                  {memberInfo.nickName}
+                </Typography>
+              </Grid>
+              <Grid item xs={12} sm={4}>
+                <Button
+                    variant="contained"
+                    onClick={() => setOpenNickNameModal(true)}
+                    fullWidth
+                    sx={{
+                      backgroundColor: "#5f53d3",
+                      color: "#fff",
+                      "&:hover": { backgroundColor: "#4a3fb5" },
+                    }}
+                >
+                  닉네임 수정
+                </Button>
+              </Grid>
+            </Grid>
+            <Divider sx={{ mt: 1 }} />
+          </Box>
+
+          <Modal
+              open={openNickNameModal}
+              onClose={() => {
+                setOpenNickNameModal(false);
+                setInputNickName("");
+                setNickNameMessage("");
+                setIsNickName(false);
               }}
-            >
-              <Typography variant="h6" sx={{ mb: 2 }}>
-                닉네임 수정
-              </Typography>
-              <TextField
-                label="새 닉네임"
-                value={inputNickName}
-                onChange={handleNickNameChange}
-                fullWidth
-                sx={{ mb: 2 }}
-              />
-              <Typography
-                variant="body2"
-                sx={{ color: isNickName ? "green" : "red", mb: 2 }}
+              closeAfterTransition
+              BackdropComponent={Backdrop}
+              BackdropProps={{ timeout: 500 }}
+          >
+            <Fade in={openNickNameModal}>
+              <Box
+                  sx={{
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    backgroundColor: "white",
+                    padding: "20px",
+                    borderRadius: "8px",
+                    boxShadow: 24,
+                    width: { xs: "90%", sm: "300px" },
+                    textAlign: "center",
+                  }}
               >
-                {nickNameMessage}
-              </Typography>
-              <Button
-                onClick={handleNickNameSubmit}
-                variant="contained"
-                fullWidth
-                disabled={!isNickName}
-                sx={{
-                  backgroundColor: "#5f53d3",
-                  color: "#fff",
-                  "&:hover": { backgroundColor: "#4a3fb5" },
-                }}
-              >
-                변경
-              </Button>
-            </Box>
-          </Fade>
-        </Modal>
+                <Typography variant="h6" sx={{ mb: 2 }}>
+                  닉네임 수정
+                </Typography>
+                <TextField
+                    label="새 닉네임"
+                    value={inputNickName}
+                    onChange={handleNickNameChange}
+                    fullWidth
+                    sx={{ mb: 2 }}
+                />
+                <Typography
+                    variant="body2"
+                    sx={{ color: isNickName ? "green" : "red", mb: 2 }}
+                >
+                  {nickNameMessage}
+                </Typography>
+                <Button
+                    onClick={handleNickNameSubmit}
+                    variant="contained"
+                    fullWidth
+                    disabled={!isNickName}
+                    sx={{
+                      backgroundColor: "#5f53d3",
+                      color: "#fff",
+                      "&:hover": { backgroundColor: "#4a3fb5" },
+                    }}
+                >
+                  변경
+                </Button>
+              </Box>
+            </Fade>
+          </Modal>
 
-  
-        {/* 비밀번호 */}
-        <Box sx={{ mb: 3 }}>
-          <Typography variant="h6" sx={{ mb: 1, color: "#333" }}>
-            비밀번호
-          </Typography>
-          <Grid container spacing={2} alignItems="center">
-            <Grid item xs={12} sm={8}>
-              <TextField
-                type="password"
-                value={"********"}
-                InputProps={{ readOnly: true }}
-                fullWidth
-                sx={{ height: "56px", display: "flex", alignItems: "center" }}
-              />
-            </Grid>
-            <Grid item xs={12} sm={4}>
-              <Button
-                variant="contained"
-                onClick={handlePasswordEdit}
-                fullWidth
-                sx={{
-                  height: "56px",
-                  backgroundColor: "#5f53d3",
-                  color: "#fff",
-                  "&:hover": { backgroundColor: "#4a3fb5" },
-                }}
-              >
-                비밀번호 수정
-              </Button>
-            </Grid>
-          </Grid>
-         
-        </Box>
-        <Modal
-          open={openPasswordModal}
-          onClose={() => setOpenPasswordModal(false)}
-          closeAfterTransition
-        >
-          <Fade in={openPasswordModal}>
-            <Box
-              sx={{
-                position: "absolute",
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -50%)",
-                backgroundColor: "white",
-                padding: "20px",
-                borderRadius: "8px",
-                boxShadow: 24,
-                width: { xs: "90%", sm: "300px" },
-                textAlign: "center",
-              }}
-            >
-              <Typography variant="h6" sx={{ mb: 2 }}>
-                현재 비밀번호 입력
-              </Typography>
-              <TextField
-                type="password"
-                value={currentPassword}
-                onChange={(e) => setCurrentPassword(e.target.value)}
-                fullWidth
-                sx={{ mb: 2 }}
-              />
-              <Button
-                onClick={handleCurrentPasswordSubmit}
-                variant="contained"
-                fullWidth
-                sx={{
-                  backgroundColor: "#5f53d3",
-                  color: "#fff",
-                  "&:hover": { backgroundColor: "#4a3fb5" },
-                }}
-              >
-                확인
-              </Button>
-            </Box>
-          </Fade>
-        </Modal>
 
-        {/* 새로운 비밀번호 입력 모달 */}
-        <Modal
-          open={openNewPasswordModal}
-          onClose={() => {
-            setOpenNewPasswordModal(false);
-            setNewPassword("");
-            setConfirmPassword("");
-          }}
-          closeAfterTransition
-          BackdropComponent={Backdrop}
-          BackdropProps={{ timeout: 500 }}
-        >
-          <Fade in={openNewPasswordModal}>
-            <Box
-              sx={{
-                position: "absolute",
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -50%)",
-                backgroundColor: "white",
-                padding: "20px",
-                borderRadius: "8px",
-                boxShadow: 24,
-                width: { xs: "90%", sm: "300px" },
-                textAlign: "center",
-              }}
-            >
-              <Typography variant="h6" sx={{ mb: 2 }}>
-                새로운 비밀번호 입력
-              </Typography>
-              <TextField
-                type="password"
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-                fullWidth
-                sx={{ mb: 2 }}
-              />
-              <TextField
-                type="password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                fullWidth
-                sx={{ mb: 2 }}
-              />
-              <Button
-                onClick={handleNewPasswordSubmit}
-                variant="contained"
-                fullWidth
-                sx={{
-                  backgroundColor: "#5f53d3",
-                  color: "#fff",
-                  "&:hover": { backgroundColor: "#4a3fb5" },
-                }}
-              >
-                변경
-              </Button>
-            </Box>
-          </Fade>
-        </Modal>
-
-  
-        {/* 대학교, 학과, 은행 정보 (유저가 'ROLE_UNIV'일 경우만 표시) */}
-        <Divider sx={{ mt: 1 }} />
-        {memberInfo.authority === "ROLE_UNIV" && (
-          <>
-            {/* 대학교 */}
-            <Box sx={{ mb: 3 }}>
-              <Typography variant="h6" sx={{ mb: 1, color: "#333" }}>
-                대학교
-              </Typography>
-              <Typography variant="body1" sx={{ color: "#555" }}>
-                {memberInfo.univ}
-              </Typography>
-              <Divider sx={{ mt: 1 }} />
-            </Box>
-  
-            {/* 학과 */}
-            <Box sx={{ mb: 3 }}>
-              <Typography variant="h6" sx={{ mb: 1, color: "#333" }}>
-                학과
-              </Typography>
-              <Typography variant="body1" sx={{ color: "#555" }}>
-                {memberInfo.univDept}
-              </Typography>
-              <Divider sx={{ mt: 1 }} />
-            </Box>
-  
-            {/* 은행 정보 */}
-            <Box sx={{ mb: 3 }}>
-              <Typography variant="h6" sx={{ mb: 1, color: "#333" }}>
-                은행 정보
-              </Typography>
-              <Grid container spacing={2} alignItems="center">
-                <Grid item xs={12} sm={4}>
-                  <FormControl fullWidth sx={{ height: "56px" }}>
-                    <InputLabel shrink>은행 선택</InputLabel>
-                    <Select
-                      value={memberInfo.bankName}
-                      onChange={handleBankNameChange}
-                      sx={{ height: "56px", display: "flex", alignItems: "center" }}
-                    >
-                      {bankList.map((bank) => (
-                        <MenuItem key={bank.bankId} value={bank.bankName}>
-                          {bank.bankName}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </Grid>
-                <Grid item xs={12} sm={5}>
-                  <TextField
-                    label="계좌번호"
-                    value={memberInfo.bankAccount}
-                    onChange={handleBankAccountChange}
+          {/* 비밀번호 */}
+          <Box sx={{ mb: 3 }}>
+            <Typography variant="h6" sx={{ mb: 1, color: "#333" }}>
+              비밀번호
+            </Typography>
+            <Grid container spacing={2} alignItems="center">
+              <Grid item xs={12} sm={8}>
+                <TextField
+                    type="password"
+                    value={"********"}
+                    InputProps={{ readOnly: true }}
                     fullWidth
                     sx={{ height: "56px", display: "flex", alignItems: "center" }}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={3}>
-                  <Button
+                />
+              </Grid>
+              <Grid item xs={12} sm={4}>
+                <Button
                     variant="contained"
-                    onClick={handleBankAccountEdit}
+                    onClick={handlePasswordEdit}
                     fullWidth
                     sx={{
                       height: "56px",
@@ -498,17 +322,199 @@ const MemberEdit = () => {
                       color: "#fff",
                       "&:hover": { backgroundColor: "#4a3fb5" },
                     }}
-                  >
-                    변경
-                  </Button>
-                </Grid>
+                >
+                  비밀번호 수정
+                </Button>
               </Grid>
-              <Divider sx={{ mt: 1 }} />
-            </Box>
-          </>
-        )}
-      </Box>
-    </Container>
+            </Grid>
+
+          </Box>
+          <Modal
+              open={openPasswordModal}
+              onClose={() => setOpenPasswordModal(false)}
+              closeAfterTransition
+          >
+            <Fade in={openPasswordModal}>
+              <Box
+                  sx={{
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    backgroundColor: "white",
+                    padding: "20px",
+                    borderRadius: "8px",
+                    boxShadow: 24,
+                    width: { xs: "90%", sm: "300px" },
+                    textAlign: "center",
+                  }}
+              >
+                <Typography variant="h6" sx={{ mb: 2 }}>
+                  현재 비밀번호 입력
+                </Typography>
+                <TextField
+                    type="password"
+                    value={currentPassword}
+                    onChange={(e) => setCurrentPassword(e.target.value)}
+                    fullWidth
+                    sx={{ mb: 2 }}
+                />
+                <Button
+                    onClick={handleCurrentPasswordSubmit}
+                    variant="contained"
+                    fullWidth
+                    sx={{
+                      backgroundColor: "#5f53d3",
+                      color: "#fff",
+                      "&:hover": { backgroundColor: "#4a3fb5" },
+                    }}
+                >
+                  확인
+                </Button>
+              </Box>
+            </Fade>
+          </Modal>
+
+          {/* 새로운 비밀번호 입력 모달 */}
+          <Modal
+              open={openNewPasswordModal}
+              onClose={() => {
+                setOpenNewPasswordModal(false);
+                setNewPassword("");
+                setConfirmPassword("");
+              }}
+              closeAfterTransition
+              BackdropComponent={Backdrop}
+              BackdropProps={{ timeout: 500 }}
+          >
+            <Fade in={openNewPasswordModal}>
+              <Box
+                  sx={{
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    backgroundColor: "white",
+                    padding: "20px",
+                    borderRadius: "8px",
+                    boxShadow: 24,
+                    width: { xs: "90%", sm: "300px" },
+                    textAlign: "center",
+                  }}
+              >
+                <Typography variant="h6" sx={{ mb: 2 }}>
+                  새로운 비밀번호 입력
+                </Typography>
+                <TextField
+                    type="password"
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    fullWidth
+                    sx={{ mb: 2 }}
+                />
+                <TextField
+                    type="password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    fullWidth
+                    sx={{ mb: 2 }}
+                />
+                <Button
+                    onClick={handleNewPasswordSubmit}
+                    variant="contained"
+                    fullWidth
+                    sx={{
+                      backgroundColor: "#5f53d3",
+                      color: "#fff",
+                      "&:hover": { backgroundColor: "#4a3fb5" },
+                    }}
+                >
+                  변경
+                </Button>
+              </Box>
+            </Fade>
+          </Modal>
+
+
+          {/* 대학교, 학과, 은행 정보 (유저가 'ROLE_UNIV'일 경우만 표시) */}
+          <Divider sx={{ mt: 1 }} />
+          {memberInfo.authority === "ROLE_UNIV" && (
+              <>
+                {/* 대학교 */}
+                <Box sx={{ mb: 3 }}>
+                  <Typography variant="h6" sx={{ mb: 1, color: "#333" }}>
+                    대학교
+                  </Typography>
+                  <Typography variant="body1" sx={{ color: "#555" }}>
+                    {memberInfo.univ}
+                  </Typography>
+                  <Divider sx={{ mt: 1 }} />
+                </Box>
+
+                {/* 학과 */}
+                <Box sx={{ mb: 3 }}>
+                  <Typography variant="h6" sx={{ mb: 1, color: "#333" }}>
+                    학과
+                  </Typography>
+                  <Typography variant="body1" sx={{ color: "#555" }}>
+                    {memberInfo.univDept}
+                  </Typography>
+                  <Divider sx={{ mt: 1 }} />
+                </Box>
+
+                {/* 은행 정보 */}
+                <Box sx={{ mb: 3 }}>
+                  <Typography variant="h6" sx={{ mb: 1, color: "#333" }}>
+                    은행 정보
+                  </Typography>
+                  <Grid container spacing={2} alignItems="center">
+                    <Grid item xs={12} sm={4}>
+                      <FormControl fullWidth sx={{ height: "56px" }}>
+                        <InputLabel shrink>은행 선택</InputLabel>
+                        <Select
+                            value={memberInfo.bankName}
+                            onChange={handleBankNameChange}
+                            sx={{ height: "56px", display: "flex", alignItems: "center" }}
+                        >
+                          {bankList.map((bank) => (
+                              <MenuItem key={bank.bankId} value={bank.bankName}>
+                                {bank.bankName}
+                              </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                    </Grid>
+                    <Grid item xs={12} sm={5}>
+                      <TextField
+                          label="계좌번호"
+                          value={memberInfo.bankAccount}
+                          onChange={handleBankAccountChange}
+                          fullWidth
+                          sx={{ height: "56px", display: "flex", alignItems: "center" }}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={3}>
+                      <Button
+                          variant="contained"
+                          onClick={handleBankAccountEdit}
+                          fullWidth
+                          sx={{
+                            height: "56px",
+                            backgroundColor: "#5f53d3",
+                            color: "#fff",
+                            "&:hover": { backgroundColor: "#4a3fb5" },
+                          }}
+                      >
+                        변경
+                      </Button>
+                    </Grid>
+                  </Grid>
+                  <Divider sx={{ mt: 1 }} />
+                </Box>
+              </>
+          )}
+        </Box>
+      </Container>
   );
 };
 

@@ -12,7 +12,10 @@ import kh.BackendCapstone.service.AuthService;
 import kh.BackendCapstone.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
@@ -20,6 +23,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
+
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -33,12 +39,24 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
                                         Authentication authentication) throws IOException, ServletException {
         log.warn("authentication 확인 : {}",authentication);
         CustomOAuth2User oAuth2User = (CustomOAuth2User) authentication.getPrincipal();
-        
-        TokenDto tokenDto = tokenProvider.generateTokenDto(authentication);
-        
-        Member member = memberRepository.findByUserId(authentication.getName())
+
+
+        String userId = oAuth2User.getName(); // OAuth2 ID (예: 구글 ID, 네이버 ID)
+
+// DB에서 userId로 회원 정보 조회
+        Member member = memberRepository.findByUserId(userId)
                 .orElseThrow(() -> new RuntimeException("해당 회원이 존재하지 않습니다."));
-        
+
+// memberId와 role 가져오기
+        String memberId = String.valueOf(member.getMemberId()); // Member 테이블의 PK
+        String authority = member.getAuthority().name(); // 예: "ROLE_USER", "ROLE_ADMIN"
+
+// 새로운 Authentication 객체 생성 (Spring Security용)
+        List<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(authority));
+        Authentication newAuth = new UsernamePasswordAuthenticationToken(memberId, null, authorities);
+
+// JWT 생성 (memberId와 role을 포함)
+        TokenDto tokenDto = tokenProvider.generateTokenDto(newAuth);
         log.info("Exists by member: {}", refreshTokenRepository.existsByMember(member));
         if(refreshTokenRepository.existsByMember(member)) {
             refreshTokenRepository.deleteByMember(member);
@@ -59,6 +77,6 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         long expirationTime = tokenDto.getAccessTokenExpiresIn() / 1000; // 밀리초를 초로 변환
 
         // 프론트엔드로 리다이렉트하면서 토큰과 만료 시간을 전달
-        response.sendRedirect("http://localhost:8111/auth/oauth-response/" + token + "/" + expirationTime);
+        response.sendRedirect("http://uniguide.shop/auth/oauth-response/" + token + "/" + expirationTime);
     }
 }

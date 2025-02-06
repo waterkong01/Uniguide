@@ -66,12 +66,10 @@ const KakaoButton = styled.button`
   }
 `;
 
-
 const LogoImg = styled.img`
     width: 25px;
     cursor: pointer;
 `
-
 
 // 모달 콘텐츠
 const ModalContent = styled.div`
@@ -188,7 +186,7 @@ const LoginModal = ({ closeModal }) => {
   const onSnsSignInButtonClickHandler = (type) => {
     window.location.href = SNS_SIGN_IN_URL(type);
   };
-  const DOMAIN = 'http://localhost:8111'; // 도메인 수정
+  const DOMAIN = 'http://uniguide.shop'; // 도메인 수정
   const API_DOMAIN = `${DOMAIN}/api/v1`;
   const SNS_SIGN_IN_URL = (type) => `${API_DOMAIN}/auth/oauth2/${type}`;
 

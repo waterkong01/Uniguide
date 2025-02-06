@@ -3,11 +3,10 @@ import TopNavBar from "../component/TopNavBar";
 import ChatModal from "../pages/chat/ChatModal";
 import MobileTopNavBar from "../component/MobileTopNavBar";
 import {useEffect} from "react";
-import {useDispatch} from "react-redux";
 import {fetchUserStatus} from "../function/fetchUserStatus";
 import {useLocation} from "react-router-dom";
 
-
+const isMobileWeb = typeof navigator !== "undefined" && /Mobi|Android/i.test(navigator.userAgent);
 
 const Background = styled.div`
   width: 100%;
@@ -33,19 +32,12 @@ const Mobile = styled.div`
   display: none;
 
   @media (max-width: 768px) {
-    display: flex;
+    display: ${isMobileWeb ? "flex" : "none"};
   }
 `;
 
 
 const Layout = () => {
-  const pathName = useLocation();
-  
-  useEffect(() => {
-    fetchUserStatus();
-  }, [pathName]);
-  
-  
   
   return (
     <Background>

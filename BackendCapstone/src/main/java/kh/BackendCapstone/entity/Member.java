@@ -68,8 +68,11 @@ public class Member {
         this.univ = univ;
         this.userBank = userBank;
     }
-  public Member(String userId, String email, String type) {
+  public Member(String userId, String email, String type,String phone,String name,String nickName) {
 				this.userId = userId;
+                this.phone = phone;
+                this.name = name;
+                this.nickName = nickName;
 				this.pwd = "password";
 				this.email = email;
 				this.type = type;

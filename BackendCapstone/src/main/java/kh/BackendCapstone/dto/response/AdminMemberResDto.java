@@ -18,6 +18,8 @@ public class AdminMemberResDto {
 	private String univName;
 	private String univDept;
 	private LocalDateTime regDate;
-	private UserBank bank;
+	private String bankName;
+	private String bankAccount;
+	private Long withdrawal;
 	private int revenue;
 }

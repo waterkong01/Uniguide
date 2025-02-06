@@ -14,13 +14,22 @@ const data = [
 	{ label: "권한", id: "authority", select: true},
 	{ label: "상태", id: "active" },
 	{ label: "등록 날짜", id: "regDate" },
-	{ label: "활성화 날짜", id: "activeDate" },
+	{ label: "은행 이름", id: "bankName" },
+	{ label: "계좌 번호", id: "bankAccount" },
+	{ label: "출금 요구 금액", id: "withdrawal"}
 ];
 
-const PermissionDetailDesc = () => {
-	const { member, setMember } = useContext(PermissionContext);
+const authorityList = [
+	{ value: "ROLE_ADMIN", label : "관리자 계정"},
+	{ value: "ROLE_UNIV", label: "대학생 회원"},
+	{ value: "ROLE_USER", label: "일반 회원"},
+	{ value: "REST_USER", label: "휴면 회원"},
+]
+
+const MemberItemDetail = () => {
+	const { member, setUniv, univList, setUnivList, setAuthority, univNameList, univ } = useContext(PermissionContext);
 	const [selectedUniv, setSelectedUniv] = useState("");
-	const [selectedAuthority, setSelectedAuthority] = useState("");
+	
 	
 	
 	
@@ -32,7 +41,6 @@ const PermissionDetailDesc = () => {
 					const rsp = await AdminApi.getDeptList(selectedUniv);
 					if (rsp.status === 200) {
 						setUnivList(rsp.data); // 컨텍스트 업데이트
-						
 					}
 				} else {
 					setUnivList([]); // 대학교 선택 해제 시 학과 목록 초기화
@@ -41,7 +49,6 @@ const PermissionDetailDesc = () => {
 				console.error("학과 목록 가져오기 오류:", error);
 			}
 		};
-		
 		fetchDeptList();
 	}, [selectedUniv]);
 	
@@ -54,6 +61,10 @@ const PermissionDetailDesc = () => {
 		setUniv(e.target.value);
 	}
 	
+	const onChangeAuthority = (e) => {
+		setAuthority(e.target.value);
+	}
+	
 	return (
 		<Paper elevation={3} sx={{ padding: 3, maxWidth: 400, margin: "auto" }}>
 			<Typography variant="h6" gutterBottom>
@@ -61,7 +72,7 @@ const PermissionDetailDesc = () => {
 			</Typography>
 			<Stack spacing={2}>
 				{data.map((item, index) => {
-					const value = permission[item.id] || "정보 없음";
+					const value = member[item.id] || "정보 없음";
 					
 					return item.select ? (
 						<Box
@@ -77,7 +88,7 @@ const PermissionDetailDesc = () => {
 								{item.label}
 							</Typography>
 							{item.id === "univName" ? (
-								<Dropdown onChange={onChangeUniv} value={selectedUniv}>
+								<Dropdown onChange={onChangeUniv} value={selectedUniv || member.univName}>
 									<option value="">대학교 선택</option>
 									{univNameList.map((univ, index) => (
 										<option key={index} value={univ}>
@@ -86,7 +97,8 @@ const PermissionDetailDesc = () => {
 									))}
 								</Dropdown>
 							) : (
-								<Dropdown onChange={onChangeDept} disabled={!selectedUniv}>
+								item.id === "univDept" ? (
+								<Dropdown onChange={onChangeDept} disabled={!selectedUniv} value={univ || member.univDept}>
 									<option value="">학과 선택</option>
 									{univList.map((dept, index) => (
 										<option key={index} value={dept.univId}>
@@ -94,7 +106,21 @@ const PermissionDetailDesc = () => {
 										</option>
 									))}
 								</Dropdown>
-							)}
+							) : (
+								item.id === "authority" ? (
+										<Dropdown onChange={onChangeAuthority} value={member.authority}>
+											<option value="">권한 선택</option>
+											{authorityList.map((auth, index) => (
+												<option key={index} value={auth.value}>
+													{auth.label}
+												</option>
+											))}
+										</Dropdown>
+								) :
+									(
+										<div>잘못된 코딩!!!!!!</div>
+									)
+								))}
 						</Box>
 					) : (
 						<Box
@@ -119,6 +145,6 @@ const PermissionDetailDesc = () => {
 	);
 };
 
-export default PermissionDetailDesc;
+export default MemberItemDetail;
 
 
