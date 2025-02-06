@@ -25,6 +25,14 @@ public class ReviewController {
         return ResponseEntity.ok(responseDto);
     }
 
+    // 자료 게시물 댓글 삭제
+    @DeleteMapping("/deleteReview/{reviewId}")
+    public ResponseEntity<String> deleteReview(@PathVariable Long reviewId) {
+        reviewService.deleteReview(reviewId);
+        return ResponseEntity.ok("댓글이 삭제되었습니다.");
+    }
+
+
     // 자료 게시물 댓글 조회 (페이지네이션 추가)
     @GetMapping("/readReview")
     public ResponseEntity<Page<ReviewResDto>> getReview(@RequestParam Long fileId,
