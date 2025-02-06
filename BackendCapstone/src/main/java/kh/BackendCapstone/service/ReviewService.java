@@ -76,4 +76,12 @@ public class ReviewService {
         // 응답 반환
         return responseDto;
     }
+
+    // 리뷰 삭제
+    public void deleteReview(Long reviewId) {
+        Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 댓글이 존재하지 않습니다. reviewId: " + reviewId));
+
+        reviewRepository.delete(review);
+    }
 }
