@@ -83,10 +83,11 @@ public class FileBoardService {
 
 	public List<FileBoardResDto> getUploadedData(Long memberId, FileCategory fileCategory) {
 		// 파일 카테고리와 회원 ID를 기준으로 업로드된 파일들을 조회합니다.
-		List<FileBoard> fileBoards = fileBoardRepository.findByMember_MemberIdAndFileCategory(memberId, fileCategory);
+		List<FileBoard> fileBoards = fileBoardRepository.findByMember_MemberIdAndFileCategory(memberId, fileCategory, Sort.by(Sort.Order.desc("regDate")));
 
 		// 조회된 파일 데이터를 DTO로 변환하여 반환
 		return fileBoards.stream().map(fileBoard -> new FileBoardResDto(
+				fileBoard.getFileId(),
 				fileBoard.getTitle(), // 파일 제목
 				fileBoard.getPrice(), // 파일 금액
 				fileBoard.getRegDate(), // 업로드 날짜
@@ -172,7 +173,7 @@ public class FileBoardService {
 			fileBoardResDto.setMainFile(fileBoard.getMainFile());
 			fileBoardResDto.setPreview(fileBoard.getPreview());
 			fileBoardResDto.setPrice(fileBoard.getPrice());
-			fileBoardResDto.setFileBoardId(fileBoard.getFileId());
+			fileBoardResDto.setFileId(fileBoard.getFileId());
 			fileBoardResDto.setFileTitle(fileBoard.getTitle());
 			fileBoardResDto.setFileCategory(fileBoard.getFileCategory());
 			fileBoardResDto.setRegDate(fileBoard.getRegDate());

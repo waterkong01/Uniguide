@@ -114,12 +114,12 @@ const DocumentsApi = {
   },
 
 // Detail화면 댓글 목록 가져오기 (페이지네이션 추가)
-getReview: async (fileBoardId, page = 0, size = 5) => {
+getReview: async (fileId, page = 0, size = 5) => {
   try {
     // 댓글을 가져오기 위한 GET 요청
     const response = await axios.get(baseUrl + `/review/readReview`, {
       params: {
-        fileBoardId, // 아이템의 fileBoardId를 쿼리 파라미터로 전송
+        fileId, // 아이템의 fileId를 쿼리 파라미터로 전송
         page,         // 페이지 번호 추가
         size,         // 페이지 크기 추가
       },
@@ -148,6 +148,17 @@ getReview: async (fileBoardId, page = 0, size = 5) => {
     console.log(reviewWithMemberIdData);
     try {
       const response = await axios.post(baseUrl + `/review/inputReview`, reviewWithMemberIdData);
+      return response;
+    } catch (error) {
+      console.error("댓글 저장 중 오류 발생:", error);
+      throw error;
+    }
+  },
+
+  // Detail화면 댓글 삭제
+  deleteReview: async (reviewId) => {
+    try {
+      const response = await axios.delete(baseUrl + `/review/deleteReview/${reviewId}`);
       return response;
     } catch (error) {
       console.error("댓글 저장 중 오류 발생:", error);
