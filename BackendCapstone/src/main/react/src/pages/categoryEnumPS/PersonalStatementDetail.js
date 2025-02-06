@@ -344,8 +344,7 @@ const PersonalStatementDetail = () => {
   const [confirm, setConfirm] = useState({});
   const [info, setInfo] = useState({});
   const dispatch = useDispatch();
-
-
+  
 
   // 리뷰 페이지네이션 상태 관리
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지 번호

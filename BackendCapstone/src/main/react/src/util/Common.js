@@ -1,7 +1,8 @@
 import moment from "moment"; // 시간을 경과 시간 형태로 표시
 import "moment/locale/ko";
 import axios from "axios";
-import AxiosInstance from "../api/AxiosInstance";
+import axiosInstance from "../api/AxiosInstance";
+
 moment.locale("ko"); // 한국 시간 적용
 
 const Commons = {
@@ -78,13 +79,13 @@ const Commons = {
   getTokenByMemberId: async () => {
     const accessToken = Commons.getAccessToken();
     try {
-      return await AxiosInstance.get(Commons.Capstone + `/auth/getMemberId`);
+      return await axiosInstance.get(Commons.Capstone + `/auth/getMemberId`);
     } catch (e) {
       if (e.response.status === 401) {
         await Commons.handleUnauthorized();
         const newToken = Commons.getAccessToken();
         if (newToken !== accessToken) {
-          return await AxiosInstance.get(Commons.Capstone + `/auth/getMemberId`);
+          return await axiosInstance.get(Commons.Capstone + `/auth/getMemberId`);
         }
       }
     }
@@ -92,8 +93,7 @@ const Commons = {
 
   // 로그인 여부 확인 함수
   isLoggedIn: () => {
-    const role = localStorage.getItem("role")
-    return role !== "REST_USER" && role !== ""
+    return localStorage.getItem("accessToken");
   },
 };
 

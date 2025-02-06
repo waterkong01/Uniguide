@@ -30,8 +30,11 @@ const PersistentReducer = createSlice({
 			localStorage.removeItem("refreshToken");
 			localStorage.removeItem("role");
 		},
+		isLogin: (state) => {
+			return state.role !== "REST_USER" && state.role !== "";
+		}
 	},
 });
 
-export const { setAccessToken, setRefreshToken, setRole, logout } = PersistentReducer.actions;
+export const { setAccessToken, setRefreshToken, setRole, logout, isLogin } = PersistentReducer.actions;
 export default PersistentReducer.reducer;
