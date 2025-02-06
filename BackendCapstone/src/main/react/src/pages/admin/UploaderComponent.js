@@ -11,6 +11,7 @@ const UploaderComponent = ({type}) => {
 	
 	// 🔹 파일 업로드 API
 	const handleUpload = async () => {
+		console.log(selectedFile);
 		if (!selectedFile) {
 			setReject("파일을 올리고 클릭해 주세요");
 			return;

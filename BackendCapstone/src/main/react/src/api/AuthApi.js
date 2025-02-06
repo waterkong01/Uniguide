@@ -1,6 +1,6 @@
 import axios from "axios";
 import Commons from "../util/Common";
-import axiosInstance from "./AxiosInstance";
+import AxiosInstance from "./AxiosInstance";
 
 const Capstone = Commons.Capstone;
 axios.defaults.withCredentials = true; // 쿠키를 요청에 포함
@@ -153,7 +153,7 @@ const AuthApi = {
 				throw new Error("토큰이 존재하지 않습니다.");
 			}
 			// 회원 정보 요청
-			const response = await axiosInstance.get(`${Capstone}/member/details`, );
+			const response = await AxiosInstance.get(`${Capstone}/member/details`, );
 			
 			return response.data
 			
@@ -217,7 +217,7 @@ const AuthApi = {
 	
 	
 	isLogin: async () => {
-		return await axiosInstance.get(Capstone + `/member/role`)
+		return await AxiosInstance.get(Capstone + `/member/role`)
 	},
 	
 	savePermission: async (permissionUrl) => {

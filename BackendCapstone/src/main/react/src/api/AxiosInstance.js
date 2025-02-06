@@ -6,7 +6,7 @@ import Commons from "../util/Common";
 
 
 const AxiosInstance = axios.create({
-  baseURL: Commons.Capstone,
+  baseURL: ""
 });
 
 AxiosInstance.interceptors.request.use(

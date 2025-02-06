@@ -1,6 +1,6 @@
 import axios from "axios";
 import Commons from "../util/Common";
-import axiosInstance from "./AxiosInstance";
+import AxiosInstance from "./AxiosInstance";
 const Capstone = "";
 
 // return 값을 반환할때 객체를 풀어서 반환하지말고 component 개별적으로 객체를 풀어서 사용할 것
@@ -49,7 +49,7 @@ const PsWriteApi = {
             }));
             console.log(psContentsReqDtoList);
 
-            const response = await axiosInstance.post(Capstone + `/write/save/${psWriteId}`, {
+            const response = await AxiosInstance.post(Capstone + `/write/save/${psWriteId}`, {
                 psWriteReqDto: psWriteReqDto,
                 psContentsReqDtoList: psContentsReqDtoList
             });
@@ -60,14 +60,14 @@ const PsWriteApi = {
         }
     },
     loadPsWrite : async (psWriteId) => {
-        return await axiosInstance.get(Capstone + `/write/load/${psWriteId}`)
+        return await AxiosInstance.get(Capstone + `/write/load/${psWriteId}`)
     },
     newPsWrite : async () => {
-        return await axiosInstance.get(Capstone + `/write/make`)
+        return await AxiosInstance.get(Capstone + `/write/make`)
     },
 
     getPsList : async () => {
-        return await axiosInstance.get(Capstone + `/write/list/get`)
+        return await AxiosInstance.get(Capstone + `/write/list/get`)
     },
 
     delPs: async (psWriteId) => {

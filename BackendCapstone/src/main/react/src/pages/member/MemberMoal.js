@@ -178,7 +178,7 @@ const MemberModal = ({ isOpen, closeModal, handleModalLinkClick, isAdmin }) => {
             마이페이지
           </ModalTextLink>
           {isAdmin && (
-            <ModalTextLink onClick={() => { navigate("/admin");closeModal();}}>
+            <ModalTextLink onClick={() => { navigate("/admin/main");closeModal();}}>
               관리자 페이지
             </ModalTextLink>
           )}

@@ -4,7 +4,7 @@ import UploaderComponent from "./UploaderComponent";
 import {PermissionContext} from "../../context/admin/PermissionStore";
 
 const AdminMain = () => {
-	
+	const typeList = ["univ.csv", "textboard.csv", "bank.csv"]
 	const { setPage } = useContext(PermissionContext);
 	
 	useEffect(() => {
@@ -13,8 +13,9 @@ const AdminMain = () => {
 	
 	return (
 		<BackGround>
-			<UploaderComponent type="univ.csv"/>
-			<UploaderComponent type="textboard.csv"/>
+			{typeList.map((type, index) => (
+				<UploaderComponent type={type} key={index} />
+				))}
 		</BackGround>
 	);
 };

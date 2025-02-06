@@ -40,6 +40,7 @@ public class AdminService {
 	private final UserBankRepository userBankRepository;
 	private final MemberService memberService;
 	private final UnivService univService;
+	private final BankRepository bankRepository;
 	
 	public PermissionResDto getPermission(Long id) {
 		try {
@@ -175,6 +176,7 @@ public class AdminService {
 				// CSV 파일 파싱 시작
 				BufferedReader reader = new BufferedReader(new InputStreamReader(csvFile.getInputStream()));
 				String line;
+				reader.readLine();
 				while ((line = reader.readLine()) != null) {
 					String[] values = line.split(","); // CSV 파일에서 쉼표로 구분된 값들
 					
@@ -236,6 +238,7 @@ public class AdminService {
 			// CSV 파싱
 			try (BufferedReader reader = new BufferedReader(new InputStreamReader(csvFile.getInputStream()))) {
 				String line;
+				reader.readLine();
 				while ((line = reader.readLine()) != null) {
 					// CSV 파일 한 줄씩 파싱 (쉼표 기준으로 split)
 					String[] values = line.split(",");
@@ -251,6 +254,58 @@ public class AdminService {
 							resultList.add(true);
 						} catch (Exception e) {
 							log.error("CSV 파일에서 텍스트 보드 정보 처리 중 오류 발생: {} (오류 메시지: {})", line, e.getMessage(), e);
+							resultList.add(false);
+						}
+					}
+				}
+				// 일부라도 실패했다면 로그를 남기고, 성공/실패 결과를 반환
+				long failedCount = resultList.stream().filter(success -> !success).count();
+				if (failedCount > 0) {
+					log.error("{}개의 텍스트 보드 정보 저장 실패", failedCount);
+				}
+				return ResponseEntity.ok(resultList);
+			} catch (IOException e) {
+				log.error("CSV 파일 읽기 중 오류 발생: {}", e.getMessage(), e);
+				return ResponseEntity.status(500).body(null); // 500 Internal Server Error
+			}
+			
+		} catch (Exception e) {
+			log.error("전체 오류 발생: {}", e.getMessage(), e);
+			return ResponseEntity.status(500).body(null); // 500 Internal Server Error
+		}
+	}
+	
+	@Transactional
+	public ResponseEntity<List<Boolean>> convertCsvToBank(MultipartFile csvFile, String token) {
+		List<Boolean> resultList = new ArrayList<>();
+		try {
+			Member member = memberService.convertTokenToEntity(token);
+			if (!member.getAuthority().equals(Authority.ROLE_ADMIN)) {
+				log.error("권한이 없습니다.");
+				return ResponseEntity.status(403).body(null); // 403 Forbidden
+			}
+			
+			// CSV 파일이 비었는지 확인
+			if (csvFile.isEmpty()) {
+				log.error("업로드된 CSV 파일이 없습니다.");
+				return ResponseEntity.badRequest().body(null); // 400 Bad Request
+			}
+			
+			// CSV 파싱
+			try (BufferedReader reader = new BufferedReader(new InputStreamReader(csvFile.getInputStream()))) {
+				String line;
+				reader.readLine();
+				while ((line = reader.readLine()) != null) {
+					// CSV 파일 한 줄씩 파싱 (쉼표 기준으로 split)
+					String[] values = line.split(",");
+					if (values.length >= 3) {
+						try {
+							Bank bank = new Bank();
+							bank.setBankName(values[0].trim());
+							bankRepository.save(bank);
+							resultList.add(true);
+						} catch (Exception e) {
+							log.error("CSV 파일에서 은행 정보 처리 중 오류 발생: {} (오류 메시지: {})", line, e.getMessage(), e);
 							resultList.add(false);
 						}
 					}

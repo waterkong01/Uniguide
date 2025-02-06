@@ -1,6 +1,6 @@
 import axios from "axios";
 import Commons from "../util/Common";
-import axiosInstance from "./AxiosInstance";
+import AxiosInstance from "./AxiosInstance";
 
 
 const baseUrl = Commons.Capstone
@@ -65,7 +65,7 @@ const TextBoardApi = {
 			textCategory: category,
 		}
 		console.log(`글 작성을 위한 api : ${JSON.stringify(req)}`)
-		return await axiosInstance.post(baseUrl + "/board/create", (req), )
+		return await AxiosInstance.post(baseUrl + "/board/create", (req), )
 	},
 	
 	// 글 수정을 위한 api
@@ -78,14 +78,14 @@ const TextBoardApi = {
 			textId: boardId,
 		}
 		console.log(`글번호 : ${boardId}를 위한 글 수정을 위한 api : ${JSON.stringify(req)}`)
-		return await axiosInstance.post(baseUrl + `/board/update`, req)
+		return await AxiosInstance.post(baseUrl + `/board/update`, req)
 	},
 	
 	// 글 삭제를 위한 api
 	deleteTextBoard: async (boardId) => {
 		const token = localStorage.getItem("accessToken");
 		console.log(`글번호 : ${boardId}를 위한 글 삭제을 위한 api`)
-		return await  axiosInstance.delete(baseUrl + `/board/delete/${boardId}/`, )
+		return await  AxiosInstance.delete(baseUrl + `/board/delete/${boardId}/`, )
 	},
 	
 	detailTextBoard: async (boardId) => {
@@ -96,12 +96,12 @@ const TextBoardApi = {
 	detailTextBoardForEdit : async (boardId) => {
 		const token = localStorage.getItem("accessToken");
 		console.log(`글번호 : ${boardId}를 위한 글 수정을 위해 받아오는 api 요청자`)
-		return await  axiosInstance.get(baseUrl + `/board/load/id/${boardId}`)
+		return await  AxiosInstance.get(baseUrl + `/board/load/id/${boardId}`)
 	},
 	isAuthor: async (boardId) => {
 		const token = localStorage.getItem("accessToken");
 		console.log(`글번호 : ${boardId}의 작성자인지 확인하는 메서드`)
-		return await axiosInstance.get(baseUrl + `/board/isAuthor/${boardId}`)
+		return await AxiosInstance.get(baseUrl + `/board/isAuthor/${boardId}`)
 	},
 	
 	getComments: async (boardId, page, size, isLoggedIn) => {
@@ -109,7 +109,7 @@ const TextBoardApi = {
 			? `${baseUrl}/board/list/comment/${boardId}`
 			: `${baseUrl}/board/list/comment/public/${boardId}`; // 비로그인 유저용 API
 		
-		const axiosSel = isLoggedIn ? axios : axiosInstance
+		const axiosSel = isLoggedIn ? axios : AxiosInstance
 		console.log(`글번호 : ${boardId}의 댓글 리스트 조회 ${page}-${size}`);
 		return await axiosSel.get(url, {
 			params: { page, size },
@@ -130,7 +130,7 @@ const TextBoardApi = {
 			content: content,
 			boardId: boardId,
 		}
-		return await axiosInstance.post(baseUrl + `/board/create/comment`, comment)
+		return await AxiosInstance.post(baseUrl + `/board/create/comment`, comment)
 	},
 	updateComment: async (boardId, commentId, content) => {
 		const token = localStorage.getItem("accessToken");
@@ -140,7 +140,7 @@ const TextBoardApi = {
 			boardId: boardId,
 			commentId: commentId,
 		}
-		return await axiosInstance.post(baseUrl + `/board/update/comment`, comment)
+		return await AxiosInstance.post(baseUrl + `/board/update/comment`, comment)
 	},
 	
 	deleteComment: async (boardId, commentId) => {
@@ -149,7 +149,7 @@ const TextBoardApi = {
 			boardId: boardId,
 		}
 		console.log(`글번호 : ${boardId} 의 댓글번호 : ${commentId} 삭제`)
-		return await axiosInstance.post(baseUrl + `/board/delete/comment`, comment)
+		return await AxiosInstance.post(baseUrl + `/board/delete/comment`, comment)
 	},
 	getAuthor: async (id) => {
 		return await axios.get(baseUrl + `/board/public/author/${id}`)
