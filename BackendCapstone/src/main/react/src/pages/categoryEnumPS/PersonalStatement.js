@@ -565,7 +565,6 @@ const replaceMiddleChar = (str) => {
                 </option>
               ))}
             </Dropdown>
-
             <Dropdown
               onChange={handleDeptChange}
               value={selectedDept}
@@ -582,8 +581,8 @@ const replaceMiddleChar = (str) => {
                 <option value="">선택된 대학에 학과가 없습니다</option>
               )}
             </Dropdown>
+           <DropdownSearchButton onClick={handleDropdownSearch} disabled={!!keywords} />
           </DropdownContainer>
-          <DropdownSearchButton onClick={handleDropdownSearch} disabled={!!keywords} />
           <KeyWordSearchContainer>
             <KeywordSearchInput  placeholder="키워드를 검색하세요" onChange={handleKeywordChange} disabled={!!selectedUniv}/>
             <KeywordSearchButton onClick={handleKeywordSearch} disabled={!!selectedUniv}/>

@@ -301,6 +301,25 @@ const ReviewContent = styled.div`
   text-align: start;
 `;
 
+const ReviewDelete = styled.button`
+  width: 10%;
+  height: 30px;
+  border-radius: 10px;
+  margin-top: 5px;
+  border: none;
+  background-color:red;
+  color: white;
+  font-size: clamp(1rem, 1vw, 2.5rem);
+
+  &:hover {
+    opacity: 0.8;
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+`;
+
 const ReviewLine = styled.div`
   width: 100%;
   margin-top: 1%;
@@ -678,9 +697,10 @@ const handleDeleteButton = async (reviewId) => {
                 가격: {formatPrice(item.price)}원
                 <FileDownloadButton
                   onClick={() => {
-                    handleFileDowloadClick(item.preview);
+                  handleFileDowloadClick(item.preview);
                   }}
-                >
+                  disabled={!item.preview} // preview 파일이 없으면 버튼 비활성화
+                  >
                   미리보기
                 </FileDownloadButton>
                 {verifyPurchasedFileIds(item, purchasedFileIds) && (
@@ -734,7 +754,12 @@ const handleDeleteButton = async (reviewId) => {
                   <ReviewTime>{reviewDateTime(reviewItem.reviewRegDate)}</ReviewTime>
                 </ReviewListTop>
                 <ReviewListBottom>
-                  <ReviewContent>{reviewItem.reviewContent}</ReviewContent>
+                    <ReviewContent>{reviewItem.reviewContent}</ReviewContent>
+                    {userId === reviewItem.memberId && (
+                    <ReviewDelete onClick={() => handleDeleteButton(reviewItem.reviewId, reviewItem.memberId)}>
+                    삭제
+                    </ReviewDelete>
+                    )}
                 </ReviewListBottom>
                 <ReviewLine />
               </ReviewListBox>
