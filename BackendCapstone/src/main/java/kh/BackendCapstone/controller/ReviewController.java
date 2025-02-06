@@ -27,12 +27,12 @@ public class ReviewController {
 
     // 자료 게시물 댓글 조회 (페이지네이션 추가)
     @GetMapping("/readReview")
-    public ResponseEntity<Page<ReviewResDto>> getReview(@RequestParam Long fileBoardId,
+    public ResponseEntity<Page<ReviewResDto>> getReview(@RequestParam Long fileId,
                                                         @RequestParam int page,
                                                         @RequestParam int size) {
         try {
             // fileBoardId를 이용하여 댓글 목록을 페이지네이션 처리하여 가져옵니다.
-            Page<ReviewResDto> response = reviewService.getReviewByFileBoardId(fileBoardId, page, size);
+            Page<ReviewResDto> response = reviewService.getReviewByFileBoardId(fileId, page, size);
 
             if (response.isEmpty()) {
                 return ResponseEntity.noContent().build(); // 댓글이 없으면 204 No Content 반환

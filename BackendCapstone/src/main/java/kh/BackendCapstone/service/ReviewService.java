@@ -54,7 +54,7 @@ public class ReviewService {
     public ReviewResDto saveReview(ReviewReqDto requestDto) {
         Member member = memberRepository.findById(requestDto.getMemberId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 회원이 존재하지 않습니다."));
-        FileBoard fileBoard = fileBoardRepository.findById(requestDto.getFileBoardId())
+        FileBoard fileBoard = fileBoardRepository.findById(requestDto.getFileId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시물이 존재하지 않습니다."));
 
         Review review = Review.builder()

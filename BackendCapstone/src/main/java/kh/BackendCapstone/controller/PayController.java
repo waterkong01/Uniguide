@@ -22,10 +22,10 @@ public class PayController {
     // 결제 정보를 저장하는 메서드
     @PostMapping("/save")
     public PayReqDto savePay(
-            @RequestParam Long fileBoardId,
+            @RequestParam Long fileId,
             @RequestParam Long memberId,
             @RequestParam String orderId) { // orderId를 추가로 받음
-        return payService.savePay(fileBoardId, memberId, orderId); // service에 전달
+        return payService.savePay(fileId, memberId, orderId); // service에 전달
     }
 
     // 결제 완료 처리 메서드 (orderId로 결제 완료 처리)

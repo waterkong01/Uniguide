@@ -42,6 +42,13 @@ const Search = styled.div`
   justify-content: space-between;
   align-items: center;
   gap: calc(6px + 1vw); /* 드롭다운 간의 간격을 20px로 설정 */
+
+   @media (max-width:768px) {
+      flex-direction: column;
+      justify-content: end;
+      align-items: end;
+      margin-right: 3%;
+    }
 `;
 
 const DropdownContainer = styled.div`
@@ -113,8 +120,22 @@ const DropdownSearchButton = styled.button`
   }
 `;
 
-const KeywordSerarchInput = styled.input`
-  width: 30%;
+const KeyWordSearchContainer = styled.div`
+  width: 70%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: calc(6px + 1vw); /* 드롭다운 간의 간격을 20px로 설정 */
+
+  @media (max-width : 768px) {
+    right: 0;
+    justify-content: end;
+    align-items: end;
+}
+`;
+
+const KeywordSearchInput = styled.input`
+  width: 70%;
   height: 30px;
   font-size: large;
   border: 3px solid #6154D4;
@@ -124,7 +145,7 @@ const KeywordSerarchInput = styled.input`
 `;
 
 const KeywordSearchButton = styled.button`
-  width: 40px;
+  width: 30px;
   aspect-ratio: 1 / 1;
   min-width: 30px;
   min-height: 30px;
@@ -471,7 +492,7 @@ const PersonalStatement = () => {
     setFilteredItems(filtered);
     setCurrentPage(1); // 검색 시 첫 페이지로 리셋
   };
- 
+
   // "KeyWord 검색" 버튼 클릭 핸들러
   const handleKeywordSearch = () => {
     console.log(keywords);
@@ -504,7 +525,7 @@ const PersonalStatement = () => {
   const handleKeywordChange = (e) => {
     setKeywords(e.target.value);
   };
-  
+
 // 이름 가운제 * 변경 관련련
 const replaceMiddleChar = (str) => {
   if (!str || typeof str !== "string") {
@@ -563,8 +584,10 @@ const replaceMiddleChar = (str) => {
             </Dropdown>
           </DropdownContainer>
           <DropdownSearchButton onClick={handleDropdownSearch} disabled={!!keywords} />
-          <KeywordSerarchInput  placeholder="키워드를 검색하세요" onChange={handleKeywordChange} disabled={!!selectedUniv}/>
-          <KeywordSearchButton onClick={handleKeywordSearch} disabled={!!selectedUniv}/>
+          <KeyWordSearchContainer>
+            <KeywordSearchInput  placeholder="키워드를 검색하세요" onChange={handleKeywordChange} disabled={!!selectedUniv}/>
+            <KeywordSearchButton onClick={handleKeywordSearch} disabled={!!selectedUniv}/>
+          </KeyWordSearchContainer>
         </Search>
       </Top>
       <Line />

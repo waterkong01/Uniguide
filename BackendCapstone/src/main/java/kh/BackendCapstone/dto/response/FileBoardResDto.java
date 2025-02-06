@@ -24,7 +24,7 @@ public class FileBoardResDto {
     private String memberName; // 이름
     private String memberEmail; // 이메일 추가
     private int price; // 가격
-    private Long fileBoardId; // 파일보드 ID 추가
+    private Long fileId; // 파일보드 ID 추가
     private String fileTitle; // 파일 제목
     private FileCategory fileCategory;
     private LocalDateTime regDate; // 작성일
@@ -36,10 +36,11 @@ public class FileBoardResDto {
     private String keywords; // 키워드
 
 
-    public FileBoardResDto(String fileTitle, int price, LocalDateTime regDate, String mainFile, String preview, String keywords,
+    public FileBoardResDto(Long fileId, String fileTitle, int price, LocalDateTime regDate, String mainFile, String preview, String keywords,
                            String summary, String memberName, String univImg ,String univName, String univDept) {
 
         // fileBoard TB
+        this.fileId = fileId;
         this.fileTitle = fileTitle;
         this.price = price;
         this.regDate = regDate;
