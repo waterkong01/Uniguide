@@ -7,6 +7,7 @@ import MemberInfoModal from "../../component/Modal/CursorModal";
 import ConfirmModal from "../../component/Modal/ConfirmModal";
 import {setLoginModalOpen} from "../../context/redux/ModalReducer";
 import CursorModal from "../../component/Modal/CursorModal";
+import Commons from "../../util/Common";
 
 const Background = styled.div`
   width: 100%;
@@ -250,7 +251,7 @@ const BottomButton = styled.button`
   &:active {
     transform: scale(0.95);
   }
-  
+
 
   @media (max-width:768px) {
     width: 15%;
@@ -338,11 +339,12 @@ const PersonalStatementDetail = () => {
   const [review, setReview] = useState([]); // 댓글
   const [inputReview, setInputReview] = useState(""); // 입력 값 상태 관리
   const { item, purchasedFileIds, myUploadedFile, myPurchasedFile } = location.state || {}; // 전달받은 데이터
+  const [userId, setUserId] = useState(""); // 로그인한 사용자 ID
   const role = useSelector(state => state.persistent.role);
   const [confirm, setConfirm] = useState({});
   const [info, setInfo] = useState({});
   const dispatch = useDispatch();
-  
+
 
 
   // 리뷰 페이지네이션 상태 관리
@@ -378,10 +380,10 @@ const PersonalStatementDetail = () => {
 
 
   useEffect(() => {
-    if (item?.fileBoardId) {
+    if (item?.fileId) {
       const fetchReview = async () => {
         try {
-          const response = await DocumentsApi.getReview(item.fileBoardId, currentPage, itemsPerPage);
+          const response = await DocumentsApi.getReview(item.fileId, currentPage, itemsPerPage);
           setReview(response.data.content ? response.data.content : []); // 빈 배열로 초기화
           setTotalPages(response.data.totalPages); // totalPages가 없으면 1로 설정
         } catch (error) {
@@ -390,43 +392,105 @@ const PersonalStatementDetail = () => {
       };
       fetchReview();
     }
-  }, [item?.fileBoardId, currentPage, inputReview, itemsPerPage]);
-  
-  // 댓글 저장 함수
-  const handleSubmit = async () => {
-      if (!inputReview.trim()) {
-      alert("댓글을 입력해주세요.");
-      return;
+  }, [item?.fileId, currentPage, itemsPerPage]);
+
+// 댓글 저장 함수
+const handleSubmit = async () => {
+  if (!inputReview.trim()) {
+    alert("댓글을 입력해주세요.");
+    return;
+  }
+
+  try {
+    const response = await DocumentsApi.postReview({
+      fileId: item.fileId,
+      reviewContent: inputReview,
+    });
+
+    if (response.status === 200) {
+      // 댓글을 등록한 후, 리뷰 목록을 다시 불러옴
+      setReview((prevReview) => [
+        ...prevReview,
+        { reviewContent: inputReview, reviewId: response.data.reviewId, memberName: "현재 사용자" } // 실제 사용자명 및 reviewId 추가
+      ]);
+      setInputReview(""); // 입력창 초기화
+
+      // 댓글 목록을 다시 가져오는 fetchReview 함수 호출
+      const fetchReview = async () => {
+        try {
+          const response = await DocumentsApi.getReview(item.fileId, currentPage, itemsPerPage);
+          setReview(response.data.content ? response.data.content : []); // 빈 배열로 초기화
+          setTotalPages(response.data.totalPages); // totalPages 갱신
+        } catch (error) {
+          console.error("댓글을 불러오는 중 오류 발생:", error);
+        }
+      };
+      fetchReview(); // 댓글 갱신을 위한 호출
     }
+  } catch (error) {
+    console.error("댓글 저장 중 오류 발생:", error);
+    alert("댓글 저장에 실패했습니다.");
+  }
+};
 
-    try {
-      const response = await DocumentsApi.postReview({
-        fileBoardId: item.fileBoardId,
-        reviewContent: inputReview,
-      });
+ // 로그인 현재 사용 유저ID 가져오기기
+  useEffect(() => {
+    // 로그인 상태 확인 및 사용자 ID 가져오기
+    const fetchUserId = async () => {
+      const isLoggedIn = Commons.isLoggedIn(); // 로그인 여부 확인
+      let memberId = 0; // 기본값은 0으로 설정
 
-      if (response.status === 200) {
-        setReview((prevReview) => [
-          ...prevReview,
-          { reviewContent: inputReview },
-        ]); // UI에 즉시 반영
-        setInputReview(""); // 입력창 초기화
+      if (isLoggedIn) {
+        try {
+          const response = await Commons.getTokenByMemberId();
+          if (response && response.data) {
+            memberId = response.data; // memberId를 백엔드에서 가져옴
+            setUserId(memberId); // 상태에 memberId 저장
+          } else {
+            console.error("로그인 상태이지만 memberId를 가져오지 못했습니다.");
+          }
+        } catch (error) {
+          console.error("회원 ID를 가져오는 중 오류 발생:", error);
+        }
+      } else {
+        console.log("로그인되지 않은 상태입니다.");
       }
-    } catch (error) {
-      console.error("댓글 저장 중 오류 발생:", error);
-      alert("댓글 저장에 실패했습니다.");
+    };
+
+    fetchUserId(); // 로그인 ID 가져오기 함수 호출
+  }, []); // 빈 배열을 넣어 한 번만 실행되도록 설정
+
+
+ // 댓글 삭제 함수
+const handleDeleteButton = async (reviewId) => {
+  if (!window.confirm("정말로 이 댓글을 삭제하시겠습니까?")) return;
+
+  try {
+    const response = await DocumentsApi.deleteReview(reviewId);
+
+    if (response.status === 200) {
+      setReview((prevReview) =>
+        prevReview.filter((reviewItem) => reviewItem.reviewId !== reviewId)
+      );
+    } else {
+      console.error("댓글 삭제 실패");
     }
-  };
-  
+  } catch (error) {
+    console.error("댓글 삭제 중 오류 발생:", error);
+    alert("댓글 삭제에 실패했습니다.");
+  }
+};
+
+
   // console.log("Selected Item:", item);
   // console.log("Purchased File IDs:", purchasedFileIds);
-
+  // 파일 구매 확인
   const verifyPurchasedFileIds = (item, purchasedFileIds) => {
      // 마이페이지에서 Page전환 했을시 1, TopNavBar에서 Page 전환시 조건문 진행행
      if (myUploadedFile !== 1 && myPurchasedFile !== 1) {
-      // purchasedFileIds 배열이 비어 있지 않고 item.fileBoardId와 일치하는 파일 ID가 있는지 확인
+      // purchasedFileIds 배열이 비어 있지 않고 item.fileId와 일치하는 파일 ID가 있는지 확인
       for (let i = 0; i < purchasedFileIds.length; i++) {
-        if (item.fileBoardId === purchasedFileIds[i].fileId) {
+        if (item.fileId === purchasedFileIds[i].fileId) {
           // 파일 ID가 일치하면 purchased 값이 true인지 확인하여 true 또는 false 반환
           return purchasedFileIds[0].purchased; // purchased 값이 true이면 true, false이면 false 반환
         }
@@ -491,7 +555,7 @@ const PersonalStatementDetail = () => {
     console.log("선택된 상품:", productData);
     // 결제 로직 추가
     const productItem = {
-      fileBoardId: productData.fileBoardId, // 상품 ID
+      fileId: productData.fileId, // 상품 ID
       fileTitle: productData.fileTitle, // 상품명명
       univName: productData.univName, // 대학명
       univDept: productData.univDept, // 학과명
@@ -513,7 +577,7 @@ const PersonalStatementDetail = () => {
     : typeof item?.keywords === "string"
       ? item.keywords.replace(/[\[\]"\s,]/g, "")
       : "";
-  
+
   // 날짜만 추출하는 로직
   const titleDate = (dateTime) => {
     return dateTime ? dateTime.split("T")[0] : ""; // dateTime이 null이면 빈 문자열 반환
@@ -540,7 +604,7 @@ const PersonalStatementDetail = () => {
     const middleIndex = Math.floor(len / 2);
     return str.slice(0, middleIndex) + "*" + str.slice(middleIndex + 1);
   };
-  
+
   const onChangeComment = (e) => {
     if(role === "REST_USER" || role === "" ) {
       setConfirm({value: true, label: "해당기능은 로그인 후 가능합니다. \n로그인 하시겠습니까?"});
@@ -556,7 +620,7 @@ const PersonalStatementDetail = () => {
     {label: "올린 자소서 보기", value: "ps"},
     {label: "올린 생기부 보기", value: "sr"}
   ]
-  
+
   const onOption = (value) => {
     switch (value) {
       case "text":
@@ -579,14 +643,14 @@ const PersonalStatementDetail = () => {
         break;
     }
   }
-  
+
   const onClickName = (event) => {
     // 역할이 "REST_USER" 또는 빈 문자열인 경우 반환
     if (role === "REST_USER" || role === "") return;
-    
+
     // 클릭한 위치를 받아오기
     const { clientX, clientY } = event;
-    
+
     // setInfo 호출 시 클릭한 위치 정보도 포함시키기
     setInfo({
       value: true,
@@ -659,7 +723,7 @@ const PersonalStatementDetail = () => {
               />
               <BottomButton onClick={handleSubmit}>등록</BottomButton>
             </BottomUploadBox>
-          
+
              {/* 리뷰 리스트 렌더링 */}
              {review && review.length === 0 ? (
               <ReviewListBox>댓글이 없습니다.</ReviewListBox>

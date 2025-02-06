@@ -13,6 +13,7 @@ import kh.BackendCapstone.repository.MemberRepository;
 import kh.BackendCapstone.repository.PayRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -138,7 +139,7 @@ public class PayService {
     // 내가 구매한 자료 가져오기
     public List<PayResDto> getPurchasedData(Long memberId, FileCategory fileCategory, String status) {
         // fileCategory(를) "PERSONAL_STATEMENT", "STUDENT_RECORD" 파라미터로 받는 방식으로 처리
-        List<Pay> pays = payRepository.findByMember_MemberIdAndFileBoard_FileCategoryAndStatus(memberId, fileCategory, status);
+        List<Pay> pays = payRepository.findByMember_MemberIdAndFileBoard_FileCategoryAndStatus(memberId, fileCategory, status, Sort.by(Sort.Order.desc("regDate")));
 
         return pays.stream().map(pay -> new PayResDto(
                 pay.getPayId(),
