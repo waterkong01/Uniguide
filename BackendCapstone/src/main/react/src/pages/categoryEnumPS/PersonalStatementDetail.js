@@ -363,7 +363,6 @@ const PersonalStatementDetail = () => {
   const [confirm, setConfirm] = useState({});
   const [info, setInfo] = useState({});
   const dispatch = useDispatch();
-  
 
   // 리뷰 페이지네이션 상태 관리
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지 번호
@@ -519,7 +518,7 @@ const handleDeleteButton = async (reviewId) => {
   };
 
   // 구매 후 파일 다운로드 로직직
-  const handleFileDowloadClick = async (fileUrl) => {
+  const handleFileDownloadClick = async (fileUrl) => {
     console.log("Item preview URL:", fileUrl);
     if (!fileUrl) {
       alert("파일 URL이 제공되지 않았습니다.");
@@ -697,7 +696,7 @@ const handleDeleteButton = async (reviewId) => {
                 가격: {formatPrice(item.price)}원
                 <FileDownloadButton
                   onClick={() => {
-                  handleFileDowloadClick(item.preview);
+                  handleFileDownloadClick(item.preview);
                   }}
                   disabled={!item.preview} // preview 파일이 없으면 버튼 비활성화
                   >
@@ -706,7 +705,7 @@ const handleDeleteButton = async (reviewId) => {
                 {verifyPurchasedFileIds(item, purchasedFileIds) && (
                   <FileDownloadButton
                     onClick={() => {
-                      handleFileDowloadClick(item.mainFile);
+                      handleFileDownloadClick(item.mainFile);
                     }}
                   >
                     다운로드

@@ -42,9 +42,11 @@ public class ReviewService {
 
         // Page<Review>를 Page<ReviewResDto>로 변환하여 반환
         return reviewPage.map(review -> new ReviewResDto(
+                review.getReviewId(),
                 review.getReviewContent(),
                 review.getReviewRegDate(),
-                review.getMember().getName()
+                review.getMember().getName(),
+                review.getMember().getMemberId()
         ));
     }
 
@@ -71,7 +73,7 @@ public class ReviewService {
         responseDto.setReviewContent(review.getReviewContent());
         responseDto.setReviewRegDate(review.getReviewRegDate());
         responseDto.setMemberId(member.getMemberId());
-        responseDto.setFileBoardId(fileBoard.getFileId());
+        responseDto.setFileId(fileBoard.getFileId());
 
         // 응답 반환
         return responseDto;

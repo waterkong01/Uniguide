@@ -503,7 +503,7 @@ const StudentRecordDetail = () => {
   };
 
   // 구매 후 파일 다운로드 로직직
-  const handleFileDowloadClick = async (fileUrl) => {
+  const handleFileDownloadClick = async (fileUrl) => {
     console.log("Item preview URL:", fileUrl);
     if (!fileUrl) {
       alert("파일 URL이 제공되지 않았습니다.");
@@ -628,7 +628,7 @@ const StudentRecordDetail = () => {
                 가격: {formatPrice(item.price)}원
                 <FileDownloadButton
                  onClick={() => {
-                 handleFileDowloadClick(item.preview);
+                 handleFileDownloadClick(item.preview);
                  }}
                  disabled={!item.preview} // preview 파일이 없으면 버튼 비활성화
                  >
@@ -637,7 +637,7 @@ const StudentRecordDetail = () => {
                 {verifyPurchasedFileIds(item, purchasedFileIds) && (
                   <FileDownloadButton
                     onClick={() => {
-                      handleFileDowloadClick(item.mainFile);
+                      handleFileDownloadClick(item.mainFile);
                     }}
                   >
                     다운로드
