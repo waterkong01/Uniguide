@@ -32,7 +32,7 @@ const Mobile = styled.div`
   display: none;
 
   @media (max-width: 768px) {
-    display: ${isMobileWeb ? "flex" : "none"};
+    display: flex;
   }
 `;
 
