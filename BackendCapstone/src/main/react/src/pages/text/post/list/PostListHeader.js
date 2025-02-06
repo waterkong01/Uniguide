@@ -101,6 +101,7 @@ const PostListHeader = () => {
 			console.log(rsp)
 			setNickName(rsp.data)
 		}
+		fetchNickName();
 	}, [option, search]);
 	
 	// 검색어 변경
@@ -149,7 +150,7 @@ const PostListHeader = () => {
 	
 	return (
 		<HeaderContainer>
-			<Title>{option === "member" && (nickName + "의")  + categoryTitle.find(title => title.value === category)?.label || "기본 제목"  }</Title>
+			<Title>{option === "member" && (nickName + "의")  } {categoryTitle.find(title => title.value === category)?.label || "기본 제목"  }</Title>
 			<RightContainer>
 				{/* 드롭다운 */}
 				<DropdownContainer>

@@ -1,5 +1,6 @@
 import axios from "axios";
 import Commons from "../util/Common";
+import AxiosInstance from "./AxiosInstance";
 
 const baseUrl = Commons.Capstone;
 
@@ -19,6 +20,7 @@ const DocumentsApi = {
     univDept = "",
     keywords = "",
     fileCategory = "ps",
+    id,
   ) => {
     try {
       // 로그인 상태 확인
@@ -37,7 +39,7 @@ const DocumentsApi = {
       }
   
       // API 요청에 필요한 파라미터 설정
-      const response = await axios.get(baseUrl + `/file/psList`, {
+      const response = await axios.get(baseUrl + `/file/psList/${id}`, {
         params: {
           page, // 현재 페이지 번호
           limit, // 페이지당 항목 수
@@ -70,6 +72,7 @@ const DocumentsApi = {
     univDept = "",
     keywords = "",
     fileCategory = "sr",
+    id
   ) => {
     try {
       // 로그인 상태 확인
@@ -80,6 +83,7 @@ const DocumentsApi = {
       if (isLoggedIn) {
         const res = await Commons.getTokenByMemberId();
         if (res && res.data) {
+          console.log(res)
           memberId = res.data; // memberId를 백엔드에서 가져옴
         } else {
           console.error("로그인 상태이지만 memberId를 가져오지 못했습니다.");
@@ -88,7 +92,7 @@ const DocumentsApi = {
       }
   
       // API 요청에 필요한 파라미터 설정
-      const response = await axios.get(baseUrl + `/file/srList`, {
+      const response = await axios.get(baseUrl + `/file/srList/${id}`, {
         params: {
           page, // 현재 페이지 번호
           limit, // 페이지당 항목 수
@@ -224,6 +228,10 @@ getReview: async (fileId, page = 0, size = 5) => {
       throw error;
     }
   },
+  
+  getFileBoard: async (id, isLogin) => {
+    return isLogin ? await AxiosInstance.get( `/file/board/${id}`) : await axios.get(baseUrl + `/file/board/public/${id}`);
+  }
 };
 
 export default DocumentsApi;

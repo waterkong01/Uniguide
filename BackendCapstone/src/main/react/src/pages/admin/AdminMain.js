@@ -1,5 +1,5 @@
 import { BackGround } from "../../styles/GlobalStyle";
-import {useContext, useEffect, useRef, useState} from "react";
+import {useContext, useEffect} from "react";
 import UploaderComponent from "./UploaderComponent";
 import {PermissionContext} from "../../context/admin/PermissionStore";
 

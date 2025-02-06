@@ -2,7 +2,8 @@ import { BackGround } from "../../styles/GlobalStyle";
 import { Box, Button, Typography } from "@mui/material";
 import { useRef, useState } from "react";
 import AdminApi from "../../api/AdminApi";
-import RejectModal from "../../component/RejectModal";
+import RejectModal from "../../component/Modal/RejectModal";
+
 
 const UploaderComponent = ({type}) => {
 	const [reject, setReject] = useState("");

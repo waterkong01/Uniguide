@@ -34,6 +34,7 @@ public class FileBoardResDto {
     private String preview;
     private String summary;
     private String keywords; // 키워드
+    private boolean purchase;
 
 
     public FileBoardResDto(Long fileId, String fileTitle, int price, LocalDateTime regDate, String mainFile, String preview, String keywords,

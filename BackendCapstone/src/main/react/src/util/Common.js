@@ -77,23 +77,12 @@ const Commons = {
   },
 
   getTokenByMemberId: async () => {
-    const accessToken = Commons.getAccessToken();
-    try {
-      return await axiosInstance.get(Commons.Capstone + `/auth/getMemberId`);
-    } catch (e) {
-      if (e.response.status === 401) {
-        await Commons.handleUnauthorized();
-        const newToken = Commons.getAccessToken();
-        if (newToken !== accessToken) {
-          return await axiosInstance.get(Commons.Capstone + `/auth/getMemberId`);
-        }
-      }
-    }
+    return await axiosInstance.get( `/member/memberId`);
   },
 
   // 로그인 여부 확인 함수
   isLoggedIn: () => {
-    return localStorage.getItem("accessToken");
+    return localStorage.getItem("accessToken") || false;
   },
 };
 

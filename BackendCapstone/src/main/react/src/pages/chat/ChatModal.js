@@ -10,6 +10,11 @@ import ChatBot from "../../component/ChatComponent/ChatBot";
 import Chatting from "../../component/ChatComponent/Chatting";
 import ChatRoomCreate from "../../component/ChatComponent/ChatRoomCreate";
 import ChatStore, { ChatContext } from "../../context/ChatStore";
+import Commons from "../../util/Common";
+import RejectModal from "../../component/Modal/RejectModal";
+import ConfirmModal from "../../component/Modal/ConfirmModal";
+import {setLoginModalOpen} from "../../context/redux/ModalReducer";
+import {useDispatch} from "react-redux";
 
 const defaultBackgroundColor = "#9aa06";
 const sideMenuBackgroundColor = "#eee";
@@ -123,14 +128,20 @@ export const StyledLink = styled(Link)`
 const ChatModal = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(true);    // Side Bar 메뉴 열고 닫기
     const {selectedPage, setSelectedPage, roomId} = useContext(ChatContext);
+    const [confirm, setConfirm] = useState("");
+    const dispatch = useDispatch();
 
     const toggleMenu = () => {
-        if (isMenuOpen) {
-            setTimeout(() => {
-                setSelectedPage("chatList");
-            }, 100);
+        if (Commons.isLoggedIn()){
+            if (isMenuOpen) {
+                setTimeout(() => {
+                    setSelectedPage("chatList");
+                }, 100);
+            }
+            setIsMenuOpen(!isMenuOpen);
+            return
         }
-        setIsMenuOpen(!isMenuOpen);
+        setConfirm("로그인 후에 가능합니다 \n 로그인 하시겠습니까?")
     };
 
     const renderSelectedPage = () => {
@@ -167,6 +178,7 @@ const ChatModal = () => {
             <main className="body">
                 <Outlet />
             </main>
+            <ConfirmModal open={confirm} onConfirm={() => dispatch(setLoginModalOpen(true))} message={confirm} onCancel={() => setConfirm("")} />
         </Container>
     );
 };

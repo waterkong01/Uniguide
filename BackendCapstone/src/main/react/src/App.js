@@ -52,11 +52,11 @@ function App() {
           <Routes>
             {/* 메인 레이아웃 적용 */}
             <Route path="/" element={<ChatStore><Layout/></ChatStore>}>
-              <Route path="personalStatement" element={<PersonalStatement />} />
-              <Route path="personalStatementDetail" element={<PersonalStatementDetail />} />
+              <Route path="personalStatement/:id?" element={<PersonalStatement />} />
+              <Route path="personalStatementDetail/:id" element={<PersonalStatementDetail type="ps" />} />
               <Route path="personalStatementWrite/:id?" element={<PersonalStatementWrite />} />
-              <Route path='studentRecord' element={<StudentRecord/>}/>
-              <Route path='studentRecordDetail' element={<StudentRecordDetail/>}/>
+              <Route path='studentRecord/:id?' element={<StudentRecord/>}/>
+              <Route path='studentRecordDetail/:id' element={<PersonalStatementDetail type="sr"/>}/>
 
               {/* 마이페이지 내비게이션 */}
               <Route path="myPageNavBar" element={<MyPageNavBar />}>
