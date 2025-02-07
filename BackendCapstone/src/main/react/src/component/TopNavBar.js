@@ -1,12 +1,12 @@
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import ModalLoginPage from "../pages/auth/login/ModalLoginPage";
 import MemberModal from "../pages/member/MemberMoal";
 import LoginModal from "../pages/auth/login/LoginModal";
 import SignupModal from "../pages/auth/signup/SingupModal";
 import {useDispatch, useSelector} from "react-redux";
-import {logout, setAccessToken, setRefreshToken, setRole} from "../context/redux/PersistentReducer";
+import {logout} from "../context/redux/PersistentReducer";
 import {
   setModalOpen,
   setLoginModalOpen,
@@ -14,6 +14,7 @@ import {
   setIsMaterialModalOpen
 } from "../context/redux/ModalReducer";
 import RejectModal from "./Modal/RejectModal";
+
 
 
 const Background = styled.div`
@@ -111,12 +112,12 @@ const TopNavBar = () => {
   const isLoginModalOpen = useSelector((state) => state.modal.isLoginModalOpen);
   const isSignupModalOpen = useSelector((state) => state.modal.isSignupModalOpen);
   const isModalOpen = useSelector((state) => state.modal.isModalOpen);
-
+  
   const materialOpenModal = () => dispatch(setIsMaterialModalOpen(true)); // 입시자료 모달창 ON
   const materialCloseModal = () => dispatch(setIsMaterialModalOpen(false)); // 입시자료 모달창 OFF
   
-  
-  
+  const IMG_URL = ["https://firebasestorage.googleapis.com/v0/b/ipsi-f2028.firebasestorage.app/o/firebase%2Flogo%2Flogo.png?alt=media"
+    , "https://firebasestorage.googleapis.com/v0/b/ipsi-f2028.firebasestorage.app/o/firebase%2Flogo%2FProfile_Purple.png?alt=media"]
   
   // 입시자료 클릭 시 모달 닫고 페이지 전환
   const handleMaterialNavigate = (path) => {
@@ -161,7 +162,7 @@ const TopNavBar = () => {
       <Background>
         <Left>
           <img
-            src="https://firebasestorage.googleapis.com/v0/b/ipsi-f2028.firebasestorage.app/o/firebase%2Flogo%2Flogo.png?alt=media"
+            src={IMG_URL[0]}
             alt="Logo"
             onClick={() => navigate("/")}
           />
@@ -173,7 +174,7 @@ const TopNavBar = () => {
         </Left>
         <Right>
           <img
-            src="https://firebasestorage.googleapis.com/v0/b/ipsi-f2028.firebasestorage.app/o/firebase%2Fprofile%2FProfile_Purple.png?alt=media"
+            src={IMG_URL[1]}
             alt="Profile"
             onClick={handleImageClick}
           />

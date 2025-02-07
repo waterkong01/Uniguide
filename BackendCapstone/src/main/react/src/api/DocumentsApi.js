@@ -1,5 +1,6 @@
 import axios from "axios";
 import Commons from "../util/Common";
+import AxiosInstance from "./AxiosInstance";
 
 const baseUrl = Commons.Capstone;
 
@@ -19,6 +20,7 @@ const DocumentsApi = {
     univDept = "",
     keywords = "",
     fileCategory = "ps",
+    id,
   ) => {
     try {
       // 로그인 상태 확인
@@ -37,7 +39,7 @@ const DocumentsApi = {
       }
   
       // API 요청에 필요한 파라미터 설정
-      const response = await axios.get(baseUrl + `/file/psList`, {
+      const response = await axios.get(baseUrl + `/file/psList/${id}`, {
         params: {
           page, // 현재 페이지 번호
           limit, // 페이지당 항목 수
@@ -70,6 +72,7 @@ const DocumentsApi = {
     univDept = "",
     keywords = "",
     fileCategory = "sr",
+    id
   ) => {
     try {
       // 로그인 상태 확인
@@ -80,6 +83,7 @@ const DocumentsApi = {
       if (isLoggedIn) {
         const res = await Commons.getTokenByMemberId();
         if (res && res.data) {
+          console.log(res)
           memberId = res.data; // memberId를 백엔드에서 가져옴
         } else {
           console.error("로그인 상태이지만 memberId를 가져오지 못했습니다.");
@@ -88,7 +92,7 @@ const DocumentsApi = {
       }
   
       // API 요청에 필요한 파라미터 설정
-      const response = await axios.get(baseUrl + `/file/srList`, {
+      const response = await axios.get(baseUrl + `/file/srList/${id}`, {
         params: {
           page, // 현재 페이지 번호
           limit, // 페이지당 항목 수
@@ -114,12 +118,12 @@ const DocumentsApi = {
   },
 
 // Detail화면 댓글 목록 가져오기 (페이지네이션 추가)
-getReview: async (fileBoardId, page = 0, size = 5) => {
+getReview: async (fileId, page = 0, size = 5) => {
   try {
     // 댓글을 가져오기 위한 GET 요청
     const response = await axios.get(baseUrl + `/review/readReview`, {
       params: {
-        fileBoardId, // 아이템의 fileBoardId를 쿼리 파라미터로 전송
+        fileId, // 아이템의 fileId를 쿼리 파라미터로 전송
         page,         // 페이지 번호 추가
         size,         // 페이지 크기 추가
       },
@@ -148,6 +152,17 @@ getReview: async (fileBoardId, page = 0, size = 5) => {
     console.log(reviewWithMemberIdData);
     try {
       const response = await axios.post(baseUrl + `/review/inputReview`, reviewWithMemberIdData);
+      return response;
+    } catch (error) {
+      console.error("댓글 저장 중 오류 발생:", error);
+      throw error;
+    }
+  },
+
+  // Detail화면 댓글 삭제
+  deleteReview: async (reviewId) => {
+    try {
+      const response = await axios.delete(baseUrl + `/review/deleteReview/${reviewId}`);
       return response;
     } catch (error) {
       console.error("댓글 저장 중 오류 발생:", error);
@@ -213,6 +228,10 @@ getReview: async (fileBoardId, page = 0, size = 5) => {
       throw error;
     }
   },
+  
+  getFileBoard: async (id, isLogin) => {
+    return isLogin ? await AxiosInstance.get( `/file/board/${id}`) : await axios.get(baseUrl + `/file/board/public/${id}`);
+  }
 };
 
 export default DocumentsApi;

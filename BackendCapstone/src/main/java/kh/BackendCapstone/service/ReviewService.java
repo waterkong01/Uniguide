@@ -42,9 +42,11 @@ public class ReviewService {
 
         // Page<Review>를 Page<ReviewResDto>로 변환하여 반환
         return reviewPage.map(review -> new ReviewResDto(
+                review.getReviewId(),
                 review.getReviewContent(),
                 review.getReviewRegDate(),
-                review.getMember().getName()
+                review.getMember().getName(),
+                review.getMember().getMemberId()
         ));
     }
 
@@ -54,7 +56,7 @@ public class ReviewService {
     public ReviewResDto saveReview(ReviewReqDto requestDto) {
         Member member = memberRepository.findById(requestDto.getMemberId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 회원이 존재하지 않습니다."));
-        FileBoard fileBoard = fileBoardRepository.findById(requestDto.getFileBoardId())
+        FileBoard fileBoard = fileBoardRepository.findById(requestDto.getFileId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시물이 존재하지 않습니다."));
 
         Review review = Review.builder()
@@ -71,9 +73,17 @@ public class ReviewService {
         responseDto.setReviewContent(review.getReviewContent());
         responseDto.setReviewRegDate(review.getReviewRegDate());
         responseDto.setMemberId(member.getMemberId());
-        responseDto.setFileBoardId(fileBoard.getFileId());
+        responseDto.setFileId(fileBoard.getFileId());
 
         // 응답 반환
         return responseDto;
+    }
+
+    // 리뷰 삭제
+    public void deleteReview(Long reviewId) {
+        Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 댓글이 존재하지 않습니다. reviewId: " + reviewId));
+
+        reviewRepository.delete(review);
     }
 }

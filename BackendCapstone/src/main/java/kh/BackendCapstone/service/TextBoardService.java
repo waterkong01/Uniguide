@@ -232,8 +232,6 @@ public class TextBoardService {
 		}
 	}
 	
-	
-	
 	// 게시글 수정
 	@Transactional
 	public boolean updateBoard(TextBoardReqDto textBoardReqDto, String token) {
@@ -405,6 +403,17 @@ public class TextBoardService {
 		} catch (Exception e) {
 			log.error("페이지 조회중 오류 : {}",e.getMessage());
 			return -1;
+		}
+	}
+	
+	public String getAuthor(Long memberId) {
+		try{
+			Member member = memberRepository.findByMemberId(memberId)
+				.orElseThrow(() -> new RuntimeException("해당 회원이 존재하지 않습니다."));
+			return member.getNickName();
+		} catch (Exception e) {
+			log.error("저자 닉네임 조회중 에러 : {}",e.getMessage());
+			return null;
 		}
 	}
 	

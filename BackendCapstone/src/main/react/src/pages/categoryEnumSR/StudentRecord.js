@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { useState, useEffect } from "react";
 import DocumentsApi from "../../api/DocumentsApi";
-import { useNavigate } from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 
 const Background = styled.div`
   width: 100%;
@@ -42,6 +42,13 @@ const Search = styled.div`
   justify-content: space-between;
   align-items: center;
   gap: calc(6px + 1vw); /* 드롭다운 간의 간격을 20px로 설정 */
+
+   @media (max-width:768px) {
+      flex-direction: column;
+      justify-content: end;
+      align-items: end;
+      margin-right: 3%;
+    }
 `;
 
 const DropdownContainer = styled.div`
@@ -113,8 +120,22 @@ const DropdownSearchButton = styled.button`
   }
 `;
 
-const KeywordSerarchInput = styled.input`
-  width: 30%;
+const KeyWordSearchContainer = styled.div`
+  width: 70%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: calc(6px + 1vw); /* 드롭다운 간의 간격을 20px로 설정 */
+
+  @media (max-width : 768px) {
+    right: 0;
+    justify-content: end;
+    align-items: end;
+}
+`;
+
+const KeywordSearchInput = styled.input`
+  width: 70%;
   height: 30px;
   font-size: large;
   border: 3px solid #6154D4;
@@ -124,7 +145,7 @@ const KeywordSerarchInput = styled.input`
 `;
 
 const KeywordSearchButton = styled.button`
-  width: 40px;
+  width: 30px;
   aspect-ratio: 1 / 1;
   min-width: 30px;
   min-height: 30px;
@@ -319,12 +340,14 @@ const StudentRecord = () => {
   const [contentsError, setContentsError] = useState(null); // 자소서 데이터 에러 상태
   const [purchasedFileIds, setPurchasedFileIds] = useState([]); // 해당 유저가 구매한 자료 현황
   const [keywords, setKeywords] = useState(""); // 키워드 검색 밸류
-
+  
+  const {id} = useParams()
+  
   // 페이지네이션 상태 관리
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지 번호
   const [itemsPerPage, setItemsPerPage] = useState(12); // 페이지당 항목 수
   const [totalPages, setTotalPages] = useState(0); // 전체 페이지 수
-  
+
   // 페이지네이션 로직: 현재 페이지에 맞는 항목 가져오기
   const indexOfFirstItem = 0;
   const currentItems = filteredItems.slice(
@@ -409,6 +432,8 @@ const StudentRecord = () => {
         params.univName,
         params.univDept,
         params.keywords,
+        "sr",
+        id || 0
       );
 
       console.log(response);
@@ -497,14 +522,14 @@ const StudentRecord = () => {
   }
 
   const handleTopClick = (selectedData) => {
-    navigate("/StudentRecordDetail", { state: { item: selectedData, purchasedFileIds : purchasedFileIds } } );
+    navigate(`/StudentRecordDetail/${selectedData.fileId}`);
   };
 
     // 입력시 Dropdown 검색 disabled
     const handleKeywordChange = (e) => {
       setKeywords(e.target.value);
     };
-    
+
 
   // 이름 가운제 * 변경 관련련
 const replaceMiddleChar = (str) => {
@@ -535,9 +560,9 @@ const formatPrice = (price) => {
     <Background>
       <Top>
         <Title>생활기록부</Title>
-        <Search>
+        { id || <Search>
           <DropdownContainer>
-            <Dropdown onChange={handleUnivChange} value={selectedUniv} disabled={!!keywords} >
+            <Dropdown onChange={handleUnivChange} value={selectedUniv} disabled={!!keywords}>
               <option value="">대학명</option>
               {uniqueUnivNames.map((univName, index) => (
                 <option key={index} value={univName}>
@@ -545,7 +570,7 @@ const formatPrice = (price) => {
                 </option>
               ))}
             </Dropdown>
-
+            
             <Dropdown
               onChange={handleDeptChange}
               value={selectedDept}
@@ -562,11 +587,13 @@ const formatPrice = (price) => {
                 <option value="">선택된 대학에 학과가 없습니다</option>
               )}
             </Dropdown>
+            <DropdownSearchButton onClick={handleDropdownSearch} disabled={!!keywords}/>
           </DropdownContainer>
-          <DropdownSearchButton onClick={handleDropdownSearch} disabled={!!keywords} />
-          <KeywordSerarchInput  placeholder="키워드를 검색하세요" onChange={handleKeywordChange} disabled={!!selectedUniv}/>
-          <KeywordSearchButton onClick={handleKeywordSearch} disabled={!!selectedUniv}/>
-        </Search>
+          <KeyWordSearchContainer>
+            <KeywordSearchInput placeholder="키워드를 검색하세요" onChange={handleKeywordChange} disabled={!!selectedUniv}/>
+            <KeywordSearchButton onClick={handleKeywordSearch} disabled={!!selectedUniv}/>
+          </KeyWordSearchContainer>
+        </Search>}
       </Top>
       <Line />
       <Contents>

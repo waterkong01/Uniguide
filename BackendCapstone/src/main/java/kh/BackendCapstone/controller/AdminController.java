@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -83,7 +84,23 @@ public class AdminController {
 		return ResponseEntity.ok(page);
 	}
 	
+	@PostMapping("/csv/univ")
+	public ResponseEntity<List<Boolean>> uploadUniv(@RequestParam("file") MultipartFile file,
+	                                                @RequestHeader("Authorization") String token) {
+		return adminService.convertCsvToUniv(file, token);
+	}
 	
+	@PostMapping("/csv/textBoard")
+	public ResponseEntity<List<Boolean>> uploadTextBoard(@RequestParam("file") MultipartFile file,
+	                                                     @RequestHeader("Authorization") String token) {
+		return adminService.convertCsvToTextBoard(file, token);
+	}
+	
+	@PostMapping("/csv/bank")
+	public ResponseEntity<List<Boolean>> uploadBank(@RequestParam("file") MultipartFile file,
+	                                                     @RequestHeader("Authorization") String token) {
+		return adminService.convertCsvToBank(file, token);
+	}
 	
 	
 }

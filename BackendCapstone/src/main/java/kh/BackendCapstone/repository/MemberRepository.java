@@ -12,19 +12,20 @@ import java.util.Optional;
 @Repository
 public interface MemberRepository extends JpaRepository<Member, Long> {
 	boolean existsByEmail(String email);
-
+	
 	boolean existsByPhone(String phone);
-
-
+	
 	Optional<Member> findByEmail(String email);
-
+	
+	Optional<Member> findByUserId(String userId);
+	
 	boolean existsByNickName(String nickName);
-
-
+	
+	
 	Optional<Member> findByNickName(String nickName);
-
+	
 	Optional<Member> findById(Long id);
-
+	
 	Optional<Member> findByAuthority(Authority authority);
 	
 	Optional<Member> findEmailByPhone(String phone);

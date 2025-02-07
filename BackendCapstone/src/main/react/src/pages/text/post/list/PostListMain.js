@@ -16,31 +16,31 @@ const PostListMain = ({active}) => {
 	// context에서 상태 가져오기
 	const { size, page, setPage, postList, setPostList, maxPage, setMaxPage, setSearchQuery, setSearchOption, sortOption } = useContext(TextContext);
 	const navigator = useNavigate();
-	const { category, search, searchOption } = useParams(); // URL 파라미터에서 검색어와 검색옵션 가져오기
+	const { category, search, option } = useParams(); // URL 파라미터에서 검색어와 검색옵션 가져오기
 	const role = useSelector(state => state.persistent.role);
 	const [confirm, setConfirm] = useState({});
 	const dispatch = useDispatch();
 
-	// URL에서 search와 searchOption을 추출하고, context 상태를 업데이트
+	// URL에서 search와 option을 추출하고, context 상태를 업데이트
 	useEffect(() => {
 		if (search) {
 			setSearchQuery(search); // 상태 업데이트
 		}
-		if (searchOption) {
-			setSearchOption(searchOption); // 상태 업데이트
+		if (option) {
+			setSearchOption(option); // 상태 업데이트
 		}
-	}, [search, searchOption]);
+	}, [search, option]);
 	
 	// 페이지와 검색어에 따라 MaxPage 요청
 	useEffect(() => {
 		const fetchMaxPage = async () => {
 			try {
-				const rsp = searchOption
-					? searchOption === "title"
+				const rsp = option
+					? option === "title"
 						? await TextBoardApi.getAllTextBoardPageByTitle(search, category, size, active)
-						: searchOption === "nickName"
+						: option === "nickName"
 							? await TextBoardApi.getAllTextBoardPageByNickName(search, category, size, active)
-							: searchOption === "member" ?
+							: option === "member" ?
 								await TextBoardApi.getAllTextBoardPageByMember(search, category, size, active)
 								:await TextBoardApi.getAllTextBoardPageByTitleOrContent(search, category, size, active)
 					: await TextBoardApi.getAllTextBoardPage(category, size, active);
@@ -57,12 +57,12 @@ const PostListMain = ({active}) => {
 	useEffect(() => {
 		const fetchPostList = async () => {
 			try {
-				const rsp = searchOption
-					? searchOption === "title"
+				const rsp = option
+					? option === "title"
 						? await TextBoardApi.getAllTextBoardListByTitle(search, category, page, size, active, sortOption || "desc")
-						: searchOption === "nickName"
+						: option === "nickName"
 							? await TextBoardApi.getAllTextBoardListByNickName(search, category, page, size, active, sortOption || "desc")
-							: searchOption === "member" ?
+							: option === "member" ?
 								await  TextBoardApi.getAllTextBoardListByMember(search, category, page, size, active, sortOption || "desc")
 								:await TextBoardApi.getAllTextBoardListByTitleOrContent(search, category, page, size, active, sortOption || "desc")
 					: await TextBoardApi.getAllTextBoardList(category, page, size, active, sortOption || "desc");
@@ -101,12 +101,12 @@ const PostListMain = ({active}) => {
 				setCurrentPage={setPage}
 			/>
 			{
-				(category !== "faq" || role === "ROLE_ADMIN") &&
+				(category !== "faq" || role === "ROLE_ADMIN") && (role !== "REST_USER" && role !== "") &&
 				<ButtonContainer>
 					<div></div>
 					<Tooltip title="글 작성">
-						<IconButton onClick={onClickCreate}>
-							<CreateIcon/>
+						<IconButton onClick={onClickCreate} >
+							<CreateIcon sx={{color: "#6154D4"}}/>
 						</IconButton>
 					</Tooltip>
 				</ButtonContainer>

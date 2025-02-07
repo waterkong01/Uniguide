@@ -68,7 +68,6 @@
 				Authentication authentication = tokenProvider.getAuthentication(jwt);
 				SecurityContextHolder.getContext().setAuthentication(authentication);
 			}
-
 			filterChain.doFilter(request, response);
 		}
 	}

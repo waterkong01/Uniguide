@@ -9,6 +9,7 @@ import kh.BackendCapstone.entity.Member;
 import kh.BackendCapstone.entity.Univ;
 import kh.BackendCapstone.repository.FileBoardRepository;
 import kh.BackendCapstone.repository.MemberRepository;
+import kh.BackendCapstone.repository.PayRepository;
 import kh.BackendCapstone.repository.UnivRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service @Slf4j
@@ -30,11 +32,13 @@ public class FileBoardService {
 	private final FirebaseUploadService firebaseUploadService;
 	private final UnivRepository univRepository;
 	private final MemberRepository memberRepository;
-
-	public int getPageSize(int limit, String univName, String univDept, String category, String keywords) {
+	private final MemberService memberService;
+	private final PayRepository payRepository;
+	
+	public int getPageSize(int limit, String univName, String univDept, String category, String keywords, Long id) {
 		Pageable pageable = PageRequest.of(0, limit);
 		try{
-			Page<FileBoard> page = selectOption(univName, univDept, pageable, category, keywords);
+			Page<FileBoard> page = selectOption(univName, univDept, pageable, category, keywords, id);
 			return page.getTotalPages();
 		} catch (Exception e) {
 			log.error("대학 : {} , 학과 : {} 에 대한 페이지 검색중 에러 : {}", univName, univDept, e.getMessage());
@@ -43,10 +47,10 @@ public class FileBoardService {
 	}
 
 	// 페이지네이션 및 필터링 처리
-	public List<FileBoardResDto> getContents(int page, int limit, String univName, String univDept, String category, String keywords) {
+	public List<FileBoardResDto> getContents(int page, int limit, String univName, String univDept, String category, String keywords, Long id) {
 		Pageable pageable = PageRequest.of(page - 1, limit, Sort.by("univ.univName").ascending());
 		try {
-			Page<FileBoard> fileBoardPage = selectOption(univName, univDept, pageable, category, keywords);
+			Page<FileBoard> fileBoardPage = selectOption(univName, univDept, pageable, category, keywords, id);
 			List<FileBoardResDto> fileBoardResDtoList = convertEntityToDto(fileBoardPage.getContent());
 			return fileBoardResDtoList;
 		} catch (Exception e) {
@@ -55,7 +59,8 @@ public class FileBoardService {
 		}
 	}
 
-	private Page<FileBoard> selectOption(String univName, String univDept, Pageable pageable, String category, String keywords) {
+	private Page<FileBoard> selectOption(String univName, String univDept, Pageable pageable, String category, String keywords, Long id) {
+		if(id != 0) return fileBoardRepository.findByMember_MemberIdAndFileCategory(id, FileCategory.fromString(category), pageable);
 		// 키워드가 제공되면 키워드를 기준으로 검색
 		if (keywords != null && !keywords.isEmpty()) {
 			// 키워드를 포함하는 파일을 검색
@@ -83,10 +88,11 @@ public class FileBoardService {
 
 	public List<FileBoardResDto> getUploadedData(Long memberId, FileCategory fileCategory) {
 		// 파일 카테고리와 회원 ID를 기준으로 업로드된 파일들을 조회합니다.
-		List<FileBoard> fileBoards = fileBoardRepository.findByMember_MemberIdAndFileCategory(memberId, fileCategory);
+		List<FileBoard> fileBoards = fileBoardRepository.findByMember_MemberIdAndFileCategory(memberId, fileCategory, Sort.by(Sort.Order.desc("regDate")));
 
 		// 조회된 파일 데이터를 DTO로 변환하여 반환
 		return fileBoards.stream().map(fileBoard -> new FileBoardResDto(
+				fileBoard.getFileId(),
 				fileBoard.getTitle(), // 파일 제목
 				fileBoard.getPrice(), // 파일 금액
 				fileBoard.getRegDate(), // 업로드 날짜
@@ -135,7 +141,7 @@ public class FileBoardService {
 			fileBoard.setPrice(price);
 			fileBoard.setFileCategory(fileCategory);
 			fileBoard.setKeywords(String.join(", ", keywords)); // List<String>을 문자열로 변환하여 저장
-
+			
 			// 대학 정보 조회
 			Univ univ = univRepository.findByUnivNameAndUnivDept(univName, univDept);
 			if (univ == null) {
@@ -154,6 +160,35 @@ public class FileBoardService {
 			log.error("파일 처리 중 오류 : {}", e.getMessage());
 		}
 	}
+	
+	public FileBoardResDto getBoard(Long boardId, String token) {
+		Member member = null;
+		if(!Objects.equals(token, "")) member = memberService.convertTokenToEntity(token);
+		
+		FileBoard fileBoard = fileBoardRepository.findById(boardId)
+			.orElseThrow(() -> new RuntimeException("해당 품목이 없습니다."));
+		
+		FileBoardResDto fileBoardResDto = new FileBoardResDto();
+		fileBoardResDto.setUnivId(fileBoard.getUniv().getUnivId());
+		fileBoardResDto.setUnivName(fileBoard.getUniv().getUnivName());
+		fileBoardResDto.setUnivDept(fileBoard.getUniv().getUnivDept());
+		fileBoardResDto.setUnivImg(fileBoard.getUniv().getUnivImg());
+		fileBoardResDto.setMemberId(fileBoard.getMember().getMemberId());
+		fileBoardResDto.setMemberName(fileBoard.getMember().getName());
+		fileBoardResDto.setMemberEmail(fileBoard.getMember().getEmail());
+		fileBoardResDto.setSummary(fileBoard.getSummary());
+		fileBoardResDto.setKeywords(fileBoard.getKeywords());
+		fileBoardResDto.setMainFile(fileBoard.getMainFile());
+		fileBoardResDto.setPreview(fileBoard.getPreview());
+		fileBoardResDto.setPrice(fileBoard.getPrice());
+		fileBoardResDto.setFileId(fileBoard.getFileId());
+		fileBoardResDto.setFileTitle(fileBoard.getTitle());
+		fileBoardResDto.setFileCategory(fileBoard.getFileCategory());
+		fileBoardResDto.setRegDate(fileBoard.getRegDate());
+		fileBoardResDto.setPurchase(payRepository.existsByMemberAndFileBoard(member, fileBoard));
+		return fileBoardResDto;
+	}
+	
 
 
 	private List<FileBoardResDto> convertEntityToDto(List<FileBoard> fileBoardList) {
@@ -172,7 +207,7 @@ public class FileBoardService {
 			fileBoardResDto.setMainFile(fileBoard.getMainFile());
 			fileBoardResDto.setPreview(fileBoard.getPreview());
 			fileBoardResDto.setPrice(fileBoard.getPrice());
-			fileBoardResDto.setFileBoardId(fileBoard.getFileId());
+			fileBoardResDto.setFileId(fileBoard.getFileId());
 			fileBoardResDto.setFileTitle(fileBoard.getTitle());
 			fileBoardResDto.setFileCategory(fileBoard.getFileCategory());
 			fileBoardResDto.setRegDate(fileBoard.getRegDate());
@@ -202,4 +237,5 @@ public class FileBoardService {
 			return "";
 		}
 	}
+	
 }

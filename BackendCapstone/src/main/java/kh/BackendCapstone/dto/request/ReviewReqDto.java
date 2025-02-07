@@ -13,6 +13,6 @@ import lombok.Setter;
 public class ReviewReqDto {
 
     private Long memberId;
-    private Long fileBoardId;
+    private Long fileId;
     private String reviewContent;
 }

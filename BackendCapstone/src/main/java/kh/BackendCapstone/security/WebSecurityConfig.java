@@ -6,6 +6,7 @@ import kh.BackendCapstone.service.OAuth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -67,40 +68,45 @@ public class WebSecurityConfig implements WebMvcConfigurer {  // WebMvcConfigure
 @Bean
 public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 	http
-			.cors().configurationSource(request -> {
-				CorsConfiguration corsConfig = new CorsConfiguration();
-				corsConfig.setAllowedOrigins(List.of("http://localhost:3000")); // 프론트엔드 도메인
-				corsConfig.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-				corsConfig.setAllowCredentials(true); // 쿠키 허용
-				corsConfig.addAllowedHeader("*");
-				return corsConfig;
-			})
-			.and()
-			.httpBasic()
-			.and()
-			.csrf().disable()
-			.sessionManagement()
-			.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
-			.and()
-			.exceptionHandling()
-			.authenticationEntryPoint(jwtAuthenticationEntryPoint)
-			.accessDeniedHandler(jwtAccessDeniedHandler)
-			.and()
-			.authorizeRequests()
-			.antMatchers("/", "/static/**", "/auth/**", "/ws/**", "/oauth2/**", "/api/v1/auth/**", "/api/v1/payments/**", "/chat/**", "/flask/**", "/file/**", "/univ/**", "/board/**","/pay/**","/static/**").permitAll()
-			.antMatchers("/v2/api-docs", "/swagger-resources/**", "/swagger-ui.html", "/webjars/**", "/swagger/**", "/sign-api/exception").permitAll()
-			.antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-			.antMatchers("/favicon.ico", "/manifest.json").permitAll()
-			.anyRequest().authenticated()
-			.and()
-			.oauth2Login(oauth2 -> oauth2
-					.authorizationEndpoint(endpoint -> endpoint.baseUri("/api/v1/auth/oauth2"))
-					.redirectionEndpoint(endpoint -> endpoint.baseUri("/oauth2/callback/*"))
-					.userInfoEndpoint(endpoint -> endpoint.userService(oauth2UserService))
-					.successHandler(oAuth2SuccessHandler)
-			)
-			.apply(new JwtSecurityConfig(tokenProvider));
-
-		return http.build();  // 설정을 적용한 http 객체 반환
+		.cors().configurationSource(request -> {
+			CorsConfiguration corsConfig = new CorsConfiguration();
+			corsConfig.setAllowedOrigins(List.of("http://localhost:3000")); // 프론트엔드 도메인
+			corsConfig.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+			corsConfig.setAllowCredentials(true); // 쿠키 허용
+			corsConfig.addAllowedHeader("*");
+			corsConfig.setExposedHeaders(List.of(HttpHeaders.CONTENT_DISPOSITION));  // Content-Disposition 헤더 노출
+			return corsConfig;
+		})
+		.and()
+		.httpBasic()
+		.and()
+		.csrf().disable()
+		.sessionManagement()
+		.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+		.and()
+		.exceptionHandling()
+		.authenticationEntryPoint(jwtAuthenticationEntryPoint)
+		.accessDeniedHandler(jwtAccessDeniedHandler)
+		.and()
+		.authorizeRequests()
+		.antMatchers(
+			"/", "/static/**", "/auth/**", "/ws/**", "/oauth2/**",
+			"/api/v1/auth/**", "/api/v1/payments/**", "/chat/**", "/flask/**", "/review/**",
+			"/file/**", "/univ/**", "/**/public/**", "/pay/**", "/write/**", "/firebase/**",
+			"/favicon.ico", "/manifest.json", "/logo192.png", "/logo512.png"
+		).permitAll()
+		.antMatchers("/v2/api-docs", "/swagger-resources/**", "/swagger-ui.html", "/webjars/**", "/swagger/**", "/sign-api/exception").permitAll()
+		.antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+		.anyRequest().authenticated()
+		.and()
+		.oauth2Login(oauth2 -> oauth2
+			.authorizationEndpoint(endpoint -> endpoint.baseUri("/api/v1/auth/oauth2"))
+			.redirectionEndpoint(endpoint -> endpoint.baseUri("/oauth2/callback/*"))
+			.userInfoEndpoint(endpoint -> endpoint.userService(oauth2UserService))
+			.successHandler(oAuth2SuccessHandler)
+		)
+		.apply(new JwtSecurityConfig(tokenProvider));
+	
+	return http.build();
 	}
 }

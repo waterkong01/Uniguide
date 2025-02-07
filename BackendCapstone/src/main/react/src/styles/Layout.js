@@ -2,12 +2,11 @@ import styled from "styled-components";
 import TopNavBar from "../component/TopNavBar";
 import ChatModal from "../pages/chat/ChatModal";
 import MobileTopNavBar from "../component/MobileTopNavBar";
-import {useContext, useEffect} from "react";
-import AuthApi from "../api/AuthApi";
-import {useDispatch, useSelector} from "react-redux";
-import {logout, setAccessToken, setRefreshToken, setRole} from "../context/redux/PersistentReducer";
+import {useEffect} from "react";
+import {fetchUserStatus} from "../function/fetchUserStatus";
+import {useLocation} from "react-router-dom";
 
-
+const isMobileWeb = typeof navigator !== "undefined" && /Mobi|Android/i.test(navigator.userAgent);
 
 const Background = styled.div`
   width: 100%;
@@ -39,31 +38,6 @@ const Mobile = styled.div`
 
 
 const Layout = () => {
-  const accessToken = useSelector((state) => state.persistent.accessToken);
-  const refreshToken = useSelector((state) => state.persistent.refreshToken);
-  const dispatch = useDispatch();
-  
-  useEffect(() => {
-    const fetchUserStatus = async () => {
-      try{
-        console.log("유저정보 패치")
-        const rsp = await AuthApi.IsLogin();
-        if(rsp)
-        {
-          console.log(rsp);
-          dispatch(setRole(rsp.data))
-          return
-        }
-        dispatch(logout())
-      } catch (error) {
-        console.log(error);
-        dispatch(logout())
-      }
-    }
-    fetchUserStatus();
-  }, [dispatch, accessToken, refreshToken]);
-  
-  
   
   return (
     <Background>

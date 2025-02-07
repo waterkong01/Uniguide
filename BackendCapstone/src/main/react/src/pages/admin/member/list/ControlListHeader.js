@@ -45,7 +45,6 @@ const SearchIcon = styled(Search)`
 const RightContainer = styled.div`
     display: flex;
     align-items: center;
-    min-width: 500px;
 		width: 60%;
 `;
 

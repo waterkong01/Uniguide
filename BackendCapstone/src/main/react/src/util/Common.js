@@ -1,13 +1,13 @@
 import moment from "moment"; // 시간을 경과 시간 형태로 표시
 import "moment/locale/ko";
 import axios from "axios";
+import axiosInstance from "../api/AxiosInstance";
+
 moment.locale("ko"); // 한국 시간 적용
 
 const Commons = {
   Capstone: "",
-  // Capstone_URL: "ws://localhost:8111/ws/chat",
-  Capstone_URL: "ws://퍼블릭 IPv4 주소:8111/ws/chat",
-  // Capstone_URL: "ws://도메인/ws/chat",
+  Capstone_URL: "ws://localhost:8111/ws/chat",
   timeFromNow: (timestamp) => {
     return moment(timestamp).fromNow();
   },
@@ -77,48 +77,14 @@ const Commons = {
   },
 
   getTokenByMemberId: async () => {
-    const accessToken = Commons.getAccessToken();
-    try {
-      return await axios.get(Commons.Capstone + `/auth/getMemberId`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + accessToken,
-        },
-      });
-    } catch (e) {
-      if (e.response.status === 401) {
-        await Commons.handleUnauthorized();
-        const newToken = Commons.getAccessToken();
-        if (newToken !== accessToken) {
-          return await axios.get(Commons.Capstone + `/auth/getMemberId`, {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: "Bearer " + newToken,
-            },
-          });
-        }
-      }
-    }
+    return await axiosInstance.get( `/member/memberId`);
   },
 
   // 로그인 여부 확인 함수
   isLoggedIn: () => {
-    const accessToken = Commons.getAccessToken();
-    return accessToken !== null; // 액세스 토큰이 있으면 로그인된 상태
+    return localStorage.getItem("accessToken") || false;
   },
 };
 
-// 	IsLogin: async () => {
-// 		const accessToken = Commons.getAccessToken();
-// 		return await axiosApi.get(
-// 		  Commons.Capstone + `/auth/isLogin/${accessToken}`,
-// 		  {
-// 			headers: {
-// 			  "Content-Type": "application/json",
-// 			  Authorization: "Bearer " + accessToken,
-// 			},
-// 		  }
-// 		);
-// 	  },
 
 export default Commons;

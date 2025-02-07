@@ -1,6 +1,7 @@
 import axios from "axios";
 import Commons from "../util/Common";
-const Capstone = "http://localhost:8111";
+import AxiosInstance from "./AxiosInstance";
+const Capstone = "";
 
 // return 값을 반환할때 객체를 풀어서 반환하지말고 component 개별적으로 객체를 풀어서 사용할 것
 const PsWriteApi = {
@@ -48,13 +49,9 @@ const PsWriteApi = {
             }));
             console.log(psContentsReqDtoList);
 
-            const response = await axios.post(Capstone + `/write/save/${psWriteId}`, {
+            const response = await AxiosInstance.post(Capstone + `/write/save/${psWriteId}`, {
                 psWriteReqDto: psWriteReqDto,
                 psContentsReqDtoList: psContentsReqDtoList
-            }, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                },
             });
             return response.data;
         } catch (error) {
@@ -63,37 +60,14 @@ const PsWriteApi = {
         }
     },
     loadPsWrite : async (psWriteId) => {
-        const token = localStorage.getItem("accessToken");
-        return await axios.get(Capstone + `/write/load/${psWriteId}`, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }})
+        return await AxiosInstance.get(Capstone + `/write/load/${psWriteId}`)
     },
     newPsWrite : async () => {
-        const token = localStorage.getItem("accessToken");
-        return await axios.get(Capstone + `/write/make`, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }})
+        return await AxiosInstance.get(Capstone + `/write/make`)
     },
 
-/*    getMyPs: async (memberId) => {
-        try {
-            const response = await axios.get(Capstone + `/write/myPs/${memberId}`);
-            // 성공 시 데이터 반환
-            return response.data;
-        } catch (error) {
-            console.error("Error fetching chat rooms:", error);
-            throw new Error("Failed to fetch chat rooms.");
-        }
-    },*/
-
     getPsList : async () => {
-        const token = localStorage.getItem("accessToken");
-        return await axios.get(Capstone + `/write/list/get`, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }})
+        return await AxiosInstance.get(Capstone + `/write/list/get`)
     },
 
     delPs: async (psWriteId) => {
