@@ -22,11 +22,11 @@ const SlideBanner = styled.div`
     border-radius: 30px;
     transition: all 1s ease-in-out;
     transform: ${({ isVisible, direction }) =>
-    isVisible
-        ? "translateX(0)"
-        : direction === "left"
-            ? "translateX(-100%)"
-            : "translateX(100%)"};
+            isVisible
+                    ? "translateX(0)"
+                    : direction === "left"
+                            ? "translateX(-100%)"
+                            : "translateX(100%)"};
     &.firstBanner {
         height: 30dvh;
         margin-top: 0;
@@ -207,7 +207,10 @@ const HalfBox = styled.div`
     justify-content: center;
     gap: 2vw;
     position: relative;
-    &.first{ align-items: center; }
+    &.first{
+        align-items: center;
+        z-index: 100;
+    }
     &.txt {
         width: 30%;
         @media (max-width: 768px) {
@@ -327,13 +330,13 @@ const TopShape = styled.img`
     width: 100px;
     height: auto;
     animation: ${floatAnimation} 4s ease-in-out infinite;
-    &:nth-child(3) { top: 20px; left: 10%; transform: rotate(15deg); }
-    &:nth-child(4) { top: 50%; left: 30px; transform: rotate(-10deg); }
-    &:nth-child(5) { bottom: 20px; left: 20%; transform: rotate(30deg); }
-    &:nth-child(6) { top: 90px; left: 50%; transform: rotate(-25deg); }
-    &:nth-child(7) { bottom: 30px; right: 25%; transform: rotate(5deg); }
-    &:nth-child(8) { top: 40%; right: 30px; transform: rotate(-10deg); }
-    &:nth-child(9) { top: 20px; right: 15%; transform: rotate(15deg); }
+    &:nth-child(2) { top: 60px; left: 15%; transform: rotate(15deg); }
+    &:nth-child(3) { top: 50%; left: 30px; transform: rotate(-10deg); }
+    &:nth-child(4) { bottom: 20px; left: 25%; transform: rotate(30deg); }
+    &:nth-child(5) { top: 10px; left: 45%; transform: rotate(-25deg); }
+    &:nth-child(6) { bottom: 10px; right: 25%; transform: rotate(5deg); }
+    &:nth-child(7) { top: 50%; right: 30px; transform: rotate(-10deg); }
+    &:nth-child(8) { top: 70px; right: 15%; transform: rotate(15deg); }
     @media (max-width: 1220px) {
         width: 80px;
     }
@@ -414,14 +417,13 @@ const Main = () => {
         <Container>
             <SlideBanner className="firstBanner" ref={bannerRefs[0]} isVisible={visibleBanners[0]} direction="left">
                 <BgGradient />
-                <TopShape src={"https://firebasestorage.googleapis.com/v0/b/ipsi-f2028.firebasestorage.app/o/firebase%2Fmainicon%Books.png?alt=media"}/>
-                <TopShape src={"https://firebasestorage.googleapis.com/v0/b/ipsi-f2028.firebasestorage.app/o/firebase%2Fmainicon%Chatting.png?alt=media"}/>
-                <TopShape src={"https://firebasestorage.googleapis.com/v0/b/ipsi-f2028.firebasestorage.app/o/firebase%2Fmainicon%Document.png?alt=media"}/>
-                <TopShape src={"https://firebasestorage.googleapis.com/v0/b/ipsi-f2028.firebasestorage.app/o/firebase%2Fmainicon%Download Files.png?alt=media"}/>
-                <TopShape src={"https://firebasestorage.googleapis.com/v0/b/ipsi-f2028.firebasestorage.app/o/firebase%2Fmainicon%Folder.png?alt=media"}/>
-                <TopShape src={"https://firebasestorage.googleapis.com/v0/b/ipsi-f2028.firebasestorage.app/o/firebase%2Fmainicon%Graduation Cap.png?alt=media"}/>
-                <TopShape src={"https://firebasestorage.googleapis.com/v0/b/ipsi-f2028.firebasestorage.app/o/firebase%2Fmainicon%Document.png?alt=media"}/>
-
+                <TopShape src={"https://firebasestorage.googleapis.com/v0/b/ipsi-f2028.firebasestorage.app/o/firebase%2Fmainicon%2FBooks.png?alt=media"}/>
+                <TopShape src={"https://firebasestorage.googleapis.com/v0/b/ipsi-f2028.firebasestorage.app/o/firebase%2Fmainicon%2FChatting.png?alt=media"}/>
+                <TopShape src={"https://firebasestorage.googleapis.com/v0/b/ipsi-f2028.firebasestorage.app/o/firebase%2Fmainicon%2FDocument.png?alt=media"}/>
+                <TopShape src={"https://firebasestorage.googleapis.com/v0/b/ipsi-f2028.firebasestorage.app/o/firebase%2Fmainicon%2FDownload%20Files.png?alt=media"}/>
+                <TopShape src={"https://firebasestorage.googleapis.com/v0/b/ipsi-f2028.firebasestorage.app/o/firebase%2Fmainicon%2FFolder.png?alt=media"}/>
+                <TopShape src={"https://firebasestorage.googleapis.com/v0/b/ipsi-f2028.firebasestorage.app/o/firebase%2Fmainicon%2FGraduation%20Cap.png?alt=media"}/>
+                <TopShape src={"https://firebasestorage.googleapis.com/v0/b/ipsi-f2028.firebasestorage.app/o/firebase%2Fmainicon%2FDocument.png?alt=media"}/>
                 <HalfBox className="first">
                     <BannerTxt>대학교 입학 가이드<br />UniGuide</BannerTxt>
                     <StartBtn>
@@ -448,7 +450,7 @@ const Main = () => {
                 <HalfBox>
                     <BgBox>
                         <BgBoxInner>
-                            <Icon src={"https://firebasestorage.googleapis.com/v0/b/ipsi-f2028.firebasestorage.app/o/firebase%2Fmainicon%Legal.png?alt=media"} />
+                            <Icon src={"https://firebasestorage.googleapis.com/v0/b/ipsi-f2028.firebasestorage.app/o/firebase%2Fmainicon%2FLegal.png?alt=media"} />
                         </BgBoxInner>
                     </BgBox>
                 </HalfBox>
@@ -466,7 +468,7 @@ const Main = () => {
                 <HalfBox>
                     <BgBox>
                         <BgBoxInner>
-                            <Icon src={"https://firebasestorage.googleapis.com/v0/b/ipsi-f2028.firebasestorage.app/o/firebase%2Fmainicon%Download Files.png?alt=media"} />
+                            <Icon src={"https://firebasestorage.googleapis.com/v0/b/ipsi-f2028.firebasestorage.app/o/firebase%2Fmainicon%2FDownload Files.png?alt=media"} />
                         </BgBoxInner>
                     </BgBox>
                 </HalfBox>
@@ -476,7 +478,7 @@ const Main = () => {
                 <HalfBox>
                     <BgBox>
                         <BgBoxInner>
-                            <Icon src={"https://firebasestorage.googleapis.com/v0/b/ipsi-f2028.firebasestorage.app/o/firebase%2Fmainicon%Chatting.png?alt=media"} />
+                            <Icon src={"https://firebasestorage.googleapis.com/v0/b/ipsi-f2028.firebasestorage.app/o/firebase%2Fmainicon%2FChatting.png?alt=media"} />
                         </BgBoxInner>
                     </BgBox>
                 </HalfBox>
@@ -495,7 +497,7 @@ const Main = () => {
                     {copyMessage && <Message>{copyMessage}</Message>}
                     <CopyButton onClick={handleCopyLink}>
                         <p>링크 복사하기</p>
-                        <ShareIcon src={"https://firebasestorage.googleapis.com/v0/b/ipsi-f2028.firebasestorage.app/o/firebase%2Fmainicon%share.png?alt=media"}/>
+                        <ShareIcon src={"https://firebasestorage.googleapis.com/v0/b/ipsi-f2028.firebasestorage.app/o/firebase%2Fmainicon%2Fshare.png?alt=media"}/>
                     </CopyButton>
                 </LastBannerInner>
                 <Shape src={"https://firebasestorage.googleapis.com/v0/b/ipsi-f2028.firebasestorage.app/o/firebase%2Fmainicon%2Fshape1.png?alt=media"}/>
