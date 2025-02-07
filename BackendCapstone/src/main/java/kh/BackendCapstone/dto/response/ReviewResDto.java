@@ -15,15 +15,18 @@ import java.time.LocalDateTime;
 
 public class ReviewResDto {
 
+    private Long reviewId;
     private String reviewContent;
     private LocalDateTime reviewRegDate;
     private String memberName;
     private Long memberId;
-    private Long fileBoardId;
+    private Long fileId;
 
-    public ReviewResDto(String reviewContent, LocalDateTime reviewRegDate, String memberName) {
+    public ReviewResDto(Long reviewId, String reviewContent, LocalDateTime reviewRegDate, String memberName, Long memberId) {
+        this.reviewId = reviewId;
         this.reviewContent = reviewContent;
         this.reviewRegDate = reviewRegDate;
         this.memberName = memberName;
+        this.memberId = memberId;
     }
 }

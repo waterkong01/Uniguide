@@ -361,7 +361,6 @@ const PersonalStatementDetail = ({type}) => {
   const [reject, setReject] = useState({});
 	const [flag, setFlag] = useState(false);
   const [memberId, setMemberId] = useState("");
-  
 
   // 리뷰 페이지네이션 상태 관리
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지 번호
@@ -496,6 +495,7 @@ const PersonalStatementDetail = ({type}) => {
       setReject({label: "댓글 삭제에 실패했습니다.", onClose: () =>  setReject({})});
     }
   };
+
 
   // 구매 후 파일 다운로드 로직
   const handleFileDowloadClick = async (fileUrl) => {
