@@ -2,9 +2,13 @@ import { Outlet } from "react-router-dom";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import {useEffect, useState} from "react";
-import {useSelector} from "react-redux";
 import RejectModal from "./Modal/RejectModal";
 import {fetchUserStatus} from "../function/fetchUserStatus";
+import {useDispatch, useSelector} from "react-redux";
+import AuthApi from "../api/AuthApi";
+import {logout} from "../context/redux/PersistentReducer";
+
+
 
 const Background = styled.div`
   width: 100%;
@@ -118,6 +122,7 @@ const MyPageNavBar = () => {
   const navigate = useNavigate(); // 페이지 전환 훅
   const role = useSelector(state => state.persistent.role)
   const [reject, setReject] = useState({});
+  const dispatch = useDispatch()
   useEffect(() => {
     if(role === "REST_USER" || role === "" ) {
       setReject({value: true, label: "해당 기능은 로그인 후 사용 가능 합니다."})
@@ -127,6 +132,18 @@ const MyPageNavBar = () => {
   useEffect(() => {
     fetchUserStatus();
   }, []);
+
+
+  const deleteId = async () => {
+    try {
+      const rsp = await AuthApi.deleteId();
+      if(rsp.status === 200) {
+        dispatch(logout())
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   return (
     <>
@@ -141,6 +158,7 @@ const MyPageNavBar = () => {
               <p onClick={() => navigate("memberEdit")}>회원정보수정</p>
               <p onClick={() => navigate("permission")}>업로드 권한 확인</p>
               <p onClick={() => navigate("withdrawal")}>수익금 정산</p>
+              <p onClick={()=>deleteId()}>계정탈퇴</p>
             </SubTitle1>
 
             <SubTitle2>

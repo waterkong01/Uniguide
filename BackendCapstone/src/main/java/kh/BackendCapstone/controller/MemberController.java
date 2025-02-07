@@ -67,9 +67,10 @@ public class MemberController {
 		}
 	}
 
-	@PostMapping("/deleteUser/{email}")
-	public ResponseEntity<Boolean> deleteMember(@PathVariable String email) {
-		boolean isSuccess = memberService.deleteMember(email);
+	@GetMapping("/deleteUser")
+	public ResponseEntity<Boolean> deleteMember(@RequestHeader("Authorization") String token ) {
+		Long memberId = memberService.getMemberId(token);
+		boolean isSuccess = memberService.deleteMember(memberId);
 		log.info("삭제 성공 여부 : {}", isSuccess);
 		return ResponseEntity.ok(isSuccess);
 	}
@@ -146,6 +147,5 @@ public class MemberController {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
 		}
 	}
-	
 }
 

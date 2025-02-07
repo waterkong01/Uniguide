@@ -2,6 +2,7 @@ package kh.BackendCapstone.dto.request;
 
 
 import kh.BackendCapstone.constant.Authority;
+import kh.BackendCapstone.constant.Membership;
 import kh.BackendCapstone.entity.Member;
 import lombok.*;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -38,6 +39,8 @@ public class MemberReqDto {
 				.phone(phone)
 				.regDate(LocalDateTime.now()) // 가입 날짜 자동 설정
 				.authority(Authority.ROLE_USER) // 기본 권한 설정
+				.membership(Membership.ACCESSION)
+
 				.build();
 	}
 	public UsernamePasswordAuthenticationToken toAuthentication() {

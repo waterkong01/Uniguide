@@ -1,14 +1,14 @@
 import axios from "axios";
 import Commons from "../util/Common";
-import AxiosInstance from "./AxiosInstance";
-
+import axiosInstance from "./AxiosInstance";
+const baseUrl = ""
 const Capstone = Commons.Capstone;
 axios.defaults.withCredentials = true; // 쿠키를 요청에 포함
 const AuthApi = {
 	sendPw: async (email) => {
 		return await axios.post(`${Capstone}/auth/sendPw`, {email: email}); // email을 객체로 감싸서 전달
 	},
-	
+
 	// 로그인
 	login: async (email, pwd) => {
 		console.log("로그인 진입 : " + email);
@@ -18,7 +18,7 @@ const AuthApi = {
 		};
 		return await axios.post(Capstone + "/auth/login", data);
 	},
-	
+
 	// 아이디 중복 체크
 	emailCheck: async (inputEmail) => {
 		return await axios.get(`${Capstone}/auth/exist/${inputEmail}`);
@@ -27,7 +27,7 @@ const AuthApi = {
 	phoneCheck: async (phone) => {
 		return await axios.get(`${Capstone}/auth/phone/${phone}`);
 	},
-	
+
 	// 회원가입
 	signup: async (nickname, email, pwd, name, phone, regDate) => {
 		const signupData = {
@@ -37,7 +37,7 @@ const AuthApi = {
 			name: name,
 			phone: phone,
 			regDat: regDate
-			
+
 		};
 		return await axios.post(`${Capstone}/auth/signup`, signupData);
 	},
@@ -67,7 +67,7 @@ const AuthApi = {
 			phone: phone,
 		})
 	},
-	
+
 	nickNameCheck: async (nickname) => {
 		try {
 			return await axios.get(`${Capstone}/auth/nickname/${nickname}`);
@@ -75,14 +75,14 @@ const AuthApi = {
 			console.error("중복체크 실패")
 		}
 	},
-	
+
 	changeNickName: async (inputNickName) => {
 		try {
 			const token = localStorage.getItem("accessToken"); // 토큰 가져오기
 			return await axios.post(
 				`${Capstone}/member/changeNickName`,
 				{
-					
+
 					nickname: inputNickName
 				},
 				{
@@ -95,11 +95,11 @@ const AuthApi = {
 			console.log("수정 중 오류 발생", error);
 		}
 	},
-	
+
 	findEmailByPhone: async (phone) => {
 		return await axios.get(`${Capstone}/member/email/${phone}`);
 	},
-	
+
 	// 휴대폰 인증 코드 확인
 	verifyEmialToken: async (inputEmail, inputCode) => {
 		try {
@@ -113,7 +113,7 @@ const AuthApi = {
 			throw new Error(error.response.data);
 		}
 	},
-	
+
 	checkIdMail: async (email) => {
 		const checkData = {
 			email: email,
@@ -128,8 +128,8 @@ const AuthApi = {
 			throw error;
 		}
 	},
-	
-	
+
+
 	changePassword: async (newPassword) => {
 		try {
 			const response = await axios.post(`${Capstone}/auth/change-password`, {
@@ -153,15 +153,15 @@ const AuthApi = {
 				throw new Error("토큰이 존재하지 않습니다.");
 			}
 			// 회원 정보 요청
-			const response = await AxiosInstance.get(`${Capstone}/member/details`, );
-			
+			const response = await axiosInstance.get(`${Capstone}/member/details`,);
+
 			return response.data
-			
+
 		} catch (error) {
 			console.error("회원 정보 요청 실패:", error.message || error);
 		}
 	},
-	
+
 	fetchUserData: async (token) => {
 		try {
 			const response = await axios.get(`${Capstone}/member/permission`, {
@@ -173,7 +173,7 @@ const AuthApi = {
 			throw error;
 		}
 	},
-	
+
 	getRevenue: async (token) => {
 		try {
 			const response = await axios.get(`${Capstone}/member/revenue`, {
@@ -200,8 +200,8 @@ const AuthApi = {
 			throw error;
 		}
 	},
-	
-	
+
+
 	changeBankInfo: async (memberId, bankName, bankAccount) => {
 		try {
 			const response = await axios.post(`${Capstone}/auth/changeBankInfo`, {
@@ -214,12 +214,12 @@ const AuthApi = {
 			console.log(error)
 		}
 	},
-	
-	
+
+
 	isLogin: async () => {
-		return await AxiosInstance.get(Capstone + `/member/role`)
+		return await axiosInstance.get(Capstone + `/member/role`)
 	},
-	
+
 	savePermission: async (permissionUrl) => {
 		try {
 			const token = localStorage.getItem("accessToken");
@@ -237,8 +237,8 @@ const AuthApi = {
 			console.error("파일 업로드 오류:", error);
 		}
 	},
-	
-	
+
+
 	getBankList: async () => {
 		try {
 			const response = await axios.get(`${Capstone}/auth/banklist`); // 은행 목록 API 호출
@@ -248,7 +248,7 @@ const AuthApi = {
 			throw error; // 에러를 호출한 쪽에서 처리할 수 있도록 던짐
 		}
 	},
-	
+
 	checkCurrentPassword: async (currentPassword) => {
 		console.log(currentPassword)
 		try {
@@ -262,15 +262,22 @@ const AuthApi = {
 				}
 			);
 			console.log(response.data)
-			
+
 			// 서버 응답에서 성공 여부만 반환
 			return response.data; // response.data가 true/false인 경우 이를 그대로 반환
-			
+
 		} catch (error) {
 			console.error("에러 발생", error);
 			throw error; // 에러가 발생하면 다시 throw하여 상위에서 처리
 		}
 	},
+
+
+	deleteId: () => {
+		return axiosInstance.get(baseUrl + `/member/deleteUser`);
+	}
+
 }
+
 
 export default AuthApi

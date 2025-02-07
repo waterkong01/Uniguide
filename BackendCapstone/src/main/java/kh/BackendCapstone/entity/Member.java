@@ -1,6 +1,7 @@
 package kh.BackendCapstone.entity;
 
 import kh.BackendCapstone.constant.Authority;
+import kh.BackendCapstone.constant.Membership;
 import lombok.*;
 
 import javax.persistence.*;
@@ -55,9 +56,11 @@ public class Member {
     @JoinColumn(name = "userbank_id")
     private UserBank userBank;
 
+    @Enumerated(EnumType.STRING)
+    private Membership membership;
 
     @Builder
-    public Member(String nickName, String email, String pwd, String name, String phone, LocalDateTime regDate, Authority authority, Univ univ, UserBank userBank) {
+    public Member(String nickName, String email, String pwd, String name, String phone, LocalDateTime regDate, Authority authority, Univ univ, UserBank userBank,Membership membership) {
         this.nickName = nickName;
         this.email = email;
         this.pwd = pwd;
@@ -65,10 +68,11 @@ public class Member {
         this.phone = phone;
         this.regDate = regDate;
         this.authority = authority; // Enum 타입
+        this.membership = membership;
         this.univ = univ;
         this.userBank = userBank;
     }
-  public Member(String userId, String email, String type,String phone,String name,String nickName) {
+  public Member(String userId, String email, String type,String phone,String name,String nickName,LocalDateTime regDate) {
 				this.userId = userId;
                 this.phone = phone;
                 this.name = name;
@@ -76,6 +80,8 @@ public class Member {
 				this.pwd = "password";
 				this.email = email;
 				this.type = type;
+                this.regDate = regDate;
+                this.membership = Membership.valueOf("ACCESSION");
 				this.authority = Authority.valueOf("ROLE_USER");
 
 			}

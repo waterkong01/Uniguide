@@ -1,5 +1,6 @@
 		package kh.BackendCapstone.service;
 		
+		import kh.BackendCapstone.constant.Membership;
 		import kh.BackendCapstone.dto.AccessTokenDto;
 		import kh.BackendCapstone.dto.TokenDto;
 		import kh.BackendCapstone.dto.request.MemberReqDto;
@@ -77,6 +78,16 @@
 
 			public TokenDto login(MemberReqDto memberReqDto) {
 				try {
+					Member member = memberRepository.findByEmail(memberReqDto.getEmail())
+							.orElseThrow(() -> new RuntimeException("존재하지 않는 이메일입니다."));
+
+					// 회원의 membership 상태 확인
+					if (member.getMembership() == Membership.SECESSION) {
+						// 탈퇴된 회원일 경우 예외 처리
+						throw new RuntimeException("탈퇴한 회원입니다.");
+
+					}
+
 					UsernamePasswordAuthenticationToken authenticationToken = memberReqDto.toAuthentication();
 					log.info("authenticationToken : {}", authenticationToken);
 
@@ -87,8 +98,7 @@
 					TokenDto token = tokenProvider.generateTokenDto(authentication);
 
 					//refreshToken DB에 저장
-					Member member = memberRepository.findByEmail(memberReqDto.getEmail())
-							.orElseThrow(() -> new RuntimeException("존재하지 않는 이메일입니다."));
+
 					
 					refreshTokenSave(member, token);
 					

@@ -9,6 +9,7 @@ import {useDispatch} from "react-redux";
 import RejectModal from "../../../component/Modal/RejectModal";
 import {fetchUserStatus} from "../../../function/fetchUserStatus";
 import Commons from "../../../util/Common";
+import {Google} from "@mui/icons-material";
 
 
 // 도메인 및 API URL 설정
@@ -63,6 +64,24 @@ const KakaoButton = styled.button`
   > p {
     font-size: 16px;
     color: #3e2723; // 카카오 로고에서 스포이드로 가져옴
+  }
+`;
+
+const GoogleButton = styled.button`
+  width: 100%;
+  height: 45px;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  margin-top: 10px;
+  background-color: white;    // 카카오에서 스포이드로 가져옴
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2vw;
+  > p {
+    font-size: 16px;
+    color: black; // 카카오 로고에서 스포이드로 가져옴
   }
 `;
 
@@ -308,6 +327,10 @@ const LoginModal = ({ closeModal }) => {
               <LogoImg src={"https://firebasestorage.googleapis.com/v0/b/ipsi-f2028.firebasestorage.app/o/firebase%2Flogo%2Fkakao_logo.png?alt=media"}/>
               <p>카카오 로그인</p>
             </KakaoButton>
+            <GoogleButton onClick={() => onSnsSignInButtonClickHandler('google')}>
+              <LogoImg src={"https://firebasestorage.googleapis.com/v0/b/ipsi-f2028.firebasestorage.app/o/firebase%2Flogo%2Fgoogle_logo.png?alt=media"}/>
+              <p>구글 로그인</p>
+            </GoogleButton>
           </SocialButtonsContainer>
         </form>
       </ModalContent>

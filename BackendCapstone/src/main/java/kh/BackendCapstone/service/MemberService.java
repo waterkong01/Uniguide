@@ -1,6 +1,7 @@
 package kh.BackendCapstone.service;
 
 import kh.BackendCapstone.constant.Active;
+import kh.BackendCapstone.constant.Membership;
 import kh.BackendCapstone.dto.request.MemberReqDto;
 import kh.BackendCapstone.dto.response.MemberPermissionResDto;
 import kh.BackendCapstone.dto.response.MemberResDto;
@@ -80,14 +81,17 @@ public class MemberService {
 
 		return false;  // 이메일이 존재하지 않으면 false 반환
 	}
-	public boolean deleteMember(String email) {
+	public boolean deleteMember(Long memberId) {
 		try {
-			Member member = memberRepository.findByEmail(email)
+			Member member = memberRepository.findById(memberId)
 					.orElseThrow(() -> new RuntimeException("해당 회원이 존재하지 않습니다."));
-			memberRepository.delete(member);
+
+			// 회원 상태를 SECESSION으로 변경
+			member.setMembership(Membership.SECESSION);
+			memberRepository.save(member);
 			return true;
 		} catch (Exception e) {
-			log.error("회원 삭제에 실패 했습니다 : {}", e.getMessage());
+			log.error("회원 탈퇴 처리에 실패 했습니다 : {}", e.getMessage());
 			return false;
 		}
 	}

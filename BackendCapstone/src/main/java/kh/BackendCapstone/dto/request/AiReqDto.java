@@ -5,6 +5,7 @@ import lombok.*;
 @Getter @Setter @ToString
 @NoArgsConstructor @AllArgsConstructor
 public class AiReqDto {
-	private Long psWriteId;
+	private Long psContentsId;
 	private Long payId;
+	private String prompt;
 }
