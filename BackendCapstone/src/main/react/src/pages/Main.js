@@ -21,15 +21,27 @@ const SlideBanner = styled.div`
     margin: 3vw auto;
     border-radius: 30px;
     transition: all 1s ease-in-out;
+        /*    transform: ${({ isVisible, direction }) =>
+            isVisible
+                    ? "translateX(0)"
+                    : direction === "left"
+                            ? "translateX(-100%)"
+                            : "translateX(100%)"};*/
     transform: ${({ isVisible, direction }) =>
             isVisible
                     ? "translateX(0)"
                     : direction === "left"
                             ? "translateX(-100%)"
                             : "translateX(100%)"};
+    opacity: ${({ isVisible }) => (isVisible ? 1 : 0)};
     &.firstBanner {
+        width: 100%;
         height: 30dvh;
         margin-top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        opacity: 1;
+        border-radius: 0;
     }
     @media (max-width: 768px) {
         justify-content: space-around;
@@ -375,35 +387,31 @@ const Shape = styled.img`
 
 const Main = () => {
     const navigate = useNavigate();
-    const bannerRefs = [useRef(null), useRef(null), useRef(null)];
-    const [visibleBanners, setVisibleBanners] = useState([true, false, false, false]);
     const [copyMessage, setCopyMessage] = useState("");
 
+    const bannerRefs = useRef([]);
+    const [visibleBanners, setVisibleBanners] = useState([]);
+
     useEffect(() => {
-        const observers = bannerRefs.map((ref, index) => {
-            return new IntersectionObserver(
-                ([entry]) => {
-                    if (entry.isIntersecting) {
-                        setVisibleBanners((prev) => {
-                            const newState = [...prev];
-                            newState[index + 1] = true;
-                            return newState;
-                        });
+        const handleScroll = () => {
+            const newVisibleBanners = [];
+            bannerRefs.current.forEach((banner, index) => {
+                if (banner) {
+                    const rect = banner.getBoundingClientRect();
+                    if (rect.top < window.innerHeight * 0.9 && rect.bottom > 0) {
+                        newVisibleBanners[index] = true;
+                    } else {
+                        newVisibleBanners[index] = false;
                     }
-                },
-                { threshold: 1.0 }
-            );
-        });
-
-        bannerRefs.forEach((ref, index) => {
-            if (ref.current) observers[index].observe(ref.current);
-        });
-
-        return () => {
-            bannerRefs.forEach((ref, index) => {
-                if (ref.current) observers[index].unobserve(ref.current);
+                }
             });
+            setVisibleBanners(newVisibleBanners);
         };
+        window.addEventListener('scroll', handleScroll);
+
+        window.addEventListener("scroll", handleScroll);
+        handleScroll();
+        return () => window.removeEventListener("scroll", handleScroll);
     }, []);
 
     const handleCopyLink = () => {
@@ -415,7 +423,7 @@ const Main = () => {
 
     return (
         <Container>
-            <SlideBanner className="firstBanner" ref={bannerRefs[0]} isVisible={visibleBanners[0]} direction="left">
+            <SlideBanner className="firstBanner">
                 <BgGradient />
                 <TopShape src={"https://firebasestorage.googleapis.com/v0/b/ipsi-f2028.firebasestorage.app/o/firebase%2Fmainicon%2FBooks.png?alt=media"}/>
                 <TopShape src={"https://firebasestorage.googleapis.com/v0/b/ipsi-f2028.firebasestorage.app/o/firebase%2Fmainicon%2FChatting.png?alt=media"}/>
@@ -446,7 +454,11 @@ const Main = () => {
                 </HalfBox>
             </SlideBanner>
 
-            <SlideBanner ref={bannerRefs[1]} isVisible={visibleBanners[1]} direction="left">
+            <SlideBanner
+                ref={(el) => (bannerRefs.current[0] = el)}
+                isVisible={visibleBanners[0]}
+                direction="left"
+            >
                 <HalfBox>
                     <BgBox>
                         <BgBoxInner>
@@ -460,7 +472,12 @@ const Main = () => {
                 </HalfBox>
             </SlideBanner>
 
-            <SlideBanner className="reverse" ref={bannerRefs[2]} isVisible={visibleBanners[2]} direction="right">
+            <SlideBanner
+                className="reverse"
+                ref={(el) => (bannerRefs.current[1] = el)}
+                isVisible={visibleBanners[1]}
+                direction="right"
+            >
                 <HalfBox className="txt">
                     <Title>믿을 수 있는 자기소개서 & 생활기록부</Title>
                     <Content>합격증명서를 통해 인증된 합격자들의 자기소개서와 생활기록부만 게시돼요.</Content>
@@ -474,7 +491,11 @@ const Main = () => {
                 </HalfBox>
             </SlideBanner>
 
-            <SlideBanner isVisible={visibleBanners[3]} direction="left">
+            <SlideBanner
+                ref={(el) => (bannerRefs.current[2] = el)}
+                isVisible={visibleBanners[2]}
+                direction="left"
+            >
                 <HalfBox>
                     <BgBox>
                         <BgBoxInner>
