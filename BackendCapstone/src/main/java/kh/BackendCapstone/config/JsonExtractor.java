@@ -1,5 +1,6 @@
 package kh.BackendCapstone.config;
 
+
 import org.json.JSONObject;
 
 public class JsonExtractor {
