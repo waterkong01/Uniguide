@@ -157,7 +157,13 @@ const FileDownloadButton = styled.button`
   &:hover {
     background-color: #3700b3;
   }
-`;
+
+  &:disabled {
+    background-color: #b0bec5;  /* 비활성화 시 회색 색상 */
+    color: #78909c;  /* 비활성화 텍스트 색상 */
+    cursor: not-allowed;  /* 비활성화된 상태에서 마우스 커서 변경 */
+  }
+`
 
 const BuyButton = styled.button`
   background-color: #6200ea;

@@ -195,8 +195,10 @@ const Contents = styled.div`
 
   @media (max-width:768px) {
     width: 100%;
+    margin-left: 10%;
   }
 `;
+
 
 const ContentsBox = styled.div`
   width: 15%;
