@@ -178,7 +178,7 @@ const ChatModal = () => {
             <main className="body">
                 <Outlet />
             </main>
-            <ConfirmModal open={confirm} onConfirm={() => dispatch(setLoginModalOpen(true))} message={confirm} onCancel={() => setConfirm("")} />
+            <ConfirmModal open={confirm} onConfirm={() => {dispatch(setLoginModalOpen(true)); setConfirm("")}} message={confirm} onCancel={() => setConfirm("")} />
         </Container>
     );
 };

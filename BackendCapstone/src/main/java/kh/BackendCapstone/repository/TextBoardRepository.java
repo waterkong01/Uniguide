@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -18,4 +19,5 @@ public interface TextBoardRepository extends JpaRepository<TextBoard, Long> {
 	Page<TextBoard> findByActiveAndTextCategoryAndMember(Active active, TextCategory textCategory, Member member, Pageable pageable);
 	Page<TextBoard> findByActiveAndTextCategoryAndMember_NickNameContaining(Active active, TextCategory textCategory, String nickName, Pageable pageable);
 	Optional<TextBoard> findByTextId(Long id);
+	List<TextBoard> findByTextCategory(TextCategory textCategory);
 }

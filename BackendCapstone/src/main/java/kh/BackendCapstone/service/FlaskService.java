@@ -1,8 +1,11 @@
 package kh.BackendCapstone.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nimbusds.jose.shaded.json.JSONObject;
 import kh.BackendCapstone.constant.Active;
 import kh.BackendCapstone.constant.Authority;
 import kh.BackendCapstone.constant.TextCategory;
+import kh.BackendCapstone.dto.ApiResponse;
 import kh.BackendCapstone.dto.request.AiReqDto;
 import kh.BackendCapstone.dto.request.TextBoardReqDto;
 import kh.BackendCapstone.dto.request.UnivReqDto;
@@ -17,10 +20,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 @RequiredArgsConstructor @Service @Slf4j
@@ -33,84 +43,152 @@ public class FlaskService {
 	private final PsWriteRepository psWriteRepository;
 	private final PayRepository payRepository;
 	private final PsContentsRepository psContentsRepository;
+	private final BankRepository bankRepository;
 	
 	@Transactional
-	public ResponseEntity<List<Boolean>> convertCsvToUniv(List<UnivReqDto> univReqDtoList) {
+	public ResponseEntity<List<Boolean>> convertCsvToUniv(MultipartFile file) {
 		List<Boolean> resultList = new ArrayList<>();
-		try {
-			if (univReqDtoList == null || univReqDtoList.isEmpty()) {
-				log.error("입력된 대학 데이터가 비어있습니다.");
-				return ResponseEntity.badRequest().body(null); // 400 Bad Request
+		
+		try (BufferedReader reader = new BufferedReader(new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8))) {
+			List<Univ> univList = new ArrayList<>();
+			String line;
+			boolean isFirstLine = true;
+			
+			while ((line = reader.readLine()) != null) {
+				if (isFirstLine) { // 첫 번째 줄은 헤더이므로 스킵
+					isFirstLine = false;
+					continue;
+				}
+				
+				String[] data = line.split(",");
+				if (data.length < 3) {
+					log.error("잘못된 CSV 형식: {}", line);
+					resultList.add(false);
+					continue;
+				}
+				
+				Univ univ = new Univ();
+				univ.setUnivName(data[0].trim());
+				univ.setUnivDept(data[1].trim());
+				univ.setUnivImg(data[2].trim());
+				
+				univList.add(univ);
 			}
 			
-			// Univ 데이터 저장
-			for (UnivReqDto univReqDto : univReqDtoList) {
+			// 저장 처리
+			for (Univ univ : univList) {
 				try {
-					Univ univ = new Univ();
-					univ.setUnivName(univReqDto.getUnivName());
-					univ.setUnivDept(univReqDto.getUnivDept());
-					univ.setUnivImg(univReqDto.getUnivImg());
-					boolean isSaved = univService.saveUniv(univ);
-					resultList.add(isSaved);
-					if (!isSaved) {
-						log.error("대학 정보 저장 실패: UnivReqDto={} -> Univ={} (이유: 저장 실패)", univReqDto, univ);
-					}
+					univRepository.save(univ);
+					resultList.add(true);
 				} catch (Exception e) {
-					log.error("대학 정보 처리 중 오류 발생: UnivReqDto={} (오류 메시지: {})", univReqDto, e.getMessage(), e);
+					log.error("대학 정보 저장 실패: {}", univ, e);
 					resultList.add(false);
 				}
-			}
-			
-			// 일부라도 실패했다면 로그를 남기고, 성공/실패 결과를 반환
-			long failedCount = resultList.stream().filter(success -> !success).count();
-			if (failedCount > 0) {
-				log.error("{}개의 대학 정보 저장 실패", failedCount);
 			}
 			
 			return ResponseEntity.ok(resultList);
 			
 		} catch (Exception e) {
-			// 모든 예외를 포괄적으로 처리하고, 상세한 오류 메시지 기록
-			log.error("대학 정보 입력 중 전체 오류 발생: {}", e.getMessage(), e);
-			return ResponseEntity.status(500).body(null); // 500 Internal Server Error
+			log.error("CSV 파일 처리 중 오류 발생: {}", e.getMessage(), e);
+			return ResponseEntity.status(500).body(null);
+		}
+	}
+	
+	
+	@Transactional
+	public ResponseEntity<List<Boolean>> convertCsvToTextBoard(MultipartFile file) {
+		List<Boolean> resultList = new ArrayList<>();
+		
+		try (BufferedReader reader = new BufferedReader(new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8))) {
+			List<TextBoard> textBoardList = new ArrayList<>();
+			String line;
+			boolean isFirstLine = true;
+			
+			while ((line = reader.readLine()) != null) {
+				if (isFirstLine) { // 첫 번째 줄은 헤더이므로 스킵
+					isFirstLine = false;
+					continue;
+				}
+				
+				String[] data = line.split(",");
+				if (data.length < 3) {
+					log.error("잘못된 CSV 형식: {}", line);
+					resultList.add(false);
+					continue;
+				}
+				
+				TextBoard textBoard = new TextBoard();
+				textBoard.setActive(Active.ACTIVE);
+				textBoard.setTitle(data[0].trim());
+				textBoard.setContent(data[1].trim());
+				textBoard.setTextCategory(TextCategory.fromString(data[2].trim()));
+				
+				textBoardList.add(textBoard);
+			}
+			
+			// 저장 처리
+			for (TextBoard textBoard : textBoardList) {
+				try {
+					textBoardRepository.save(textBoard);
+					resultList.add(true);
+				} catch (Exception e) {
+					log.error("게시글 저장 실패: {}", textBoard, e);
+					resultList.add(false);
+				}
+			}
+			
+			return ResponseEntity.ok(resultList);
+			
+		} catch (Exception e) {
+			log.error("CSV 파일 처리 중 오류 발생: {}", e.getMessage(), e);
+			return ResponseEntity.status(500).body(null);
 		}
 	}
 	
 	@Transactional
-	public ResponseEntity<List<Boolean>> convertCsvToTextBoard(List<TextBoardReqDto> textBoardReqDtoList) {
+	public ResponseEntity<List<Boolean>> convertCsvToBank(MultipartFile file) {
 		List<Boolean> resultList = new ArrayList<>();
-		try {
-			if (textBoardReqDtoList == null || textBoardReqDtoList.isEmpty()) {
-				log.error("입력된 대학 데이터가 비어있습니다.");
-				return ResponseEntity.badRequest().body(null); // 400 Bad Request
+		
+		try (BufferedReader reader = new BufferedReader(new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8))) {
+			List<Bank> bankList = new ArrayList<>();
+			String line;
+			boolean isFirstLine = true;
+			
+			while ((line = reader.readLine()) != null) {
+				if (isFirstLine) { // 첫 번째 줄은 헤더이므로 스킵
+					isFirstLine = false;
+					continue;
+				}
+				
+				String[] data = line.split(",");
+				if (data.length < 1) {
+					log.error("잘못된 CSV 형식: {}", line);
+					resultList.add(false);
+					continue;
+				}
+				
+				Bank bank = new Bank();
+				bank.setBankName(data[0].trim());
+				
+				bankList.add(bank);
 			}
 			
-			// Univ 데이터 저장
-			for (TextBoardReqDto textBoardReqDto : textBoardReqDtoList) {
+			// 저장 처리
+			for (Bank bank : bankList) {
 				try {
-					TextBoard textBoard = new TextBoard();
-					textBoard.setActive(Active.ACTIVE);
-					textBoard.setContent(textBoardReqDto.getContent());
-					textBoard.setTitle(textBoardReqDto.getTitle());
-					textBoard.setTextCategory(TextCategory.fromString(textBoardReqDto.getTextCategory()));
-					textBoardRepository.save(textBoard);
+					bankRepository.save(bank);
 					resultList.add(true);
-					log.error("대학 정보 저장 실패: TextBoardReqDto={} -> TextBoard={} (이유: 저장 실패)", textBoardReqDto, textBoard);
 				} catch (Exception e) {
-					log.error("대학 정보 처리 중 오류 발생: TextBoardReqDto={} (오류 메시지: {})", textBoardReqDto, e.getMessage(), e);
+					log.error("은행 정보 저장 실패: {}", bank, e);
 					resultList.add(false);
 				}
 			}
-			// 일부라도 실패했다면 로그를 남기고, 성공/실패 결과를 반환
-			long failedCount = resultList.stream().filter(success -> !success).count();
-			if (failedCount > 0) {
-				log.error("{}개의 대학 정보 저장 실패", failedCount);
-			}
+			
 			return ResponseEntity.ok(resultList);
+			
 		} catch (Exception e) {
-			// 모든 예외를 포괄적으로 처리하고, 상세한 오류 메시지 기록
-			log.error("대학 정보 입력 중 전체 오류 발생: {}", e.getMessage(), e);
-			return ResponseEntity.status(500).body(null); // 500 Internal Server Error
+			log.error("CSV 파일 처리 중 오류 발생: {}", e.getMessage(), e);
+			return ResponseEntity.status(500).body(null);
 		}
 	}
 	
@@ -167,11 +245,56 @@ public class FlaskService {
 			return false;
 		}
 	}
+	
+	
+	
+	@Transactional
+	public AiResDto getMessage(String message) {
+		String URL = "https://1869-39-117-57-245.ngrok-free.app/generate";
 		
+		List<TextBoard> textBoardList = textBoardRepository.findByTextCategory(TextCategory.FAQ);
 		
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		headers.add("Content-Type", "application/json; charset=UTF-8");
 		
+		// JSON 변환
+		Map<String, Object> body = new HashMap<>();
+		body.put("prompt", message + "를 만족시키는 정보를 여기에서 찾아줘" + textBoardList);
+		body.put("stream", false);
+		body.put("model", "Llama3.2-Korean:latest");
 		
+		HttpEntity<Map<String, Object>> entity = new HttpEntity<>(body, headers);
 		
+		ResponseEntity<String> responseEntity = restTemplate.exchange(
+			URL,
+			HttpMethod.POST,
+			entity,
+			String.class
+		);
+		
+		String responseBody = responseEntity.getBody();
+		
+		try {
+			// JSON 문자열을 ApiResponse 객체로 변환
+			ObjectMapper objectMapper = new ObjectMapper();
+			ApiResponse apiResponse = objectMapper.readValue(responseBody, ApiResponse.class);
+			
+			// "response" 필드를 리턴
+			
+			return new AiResDto(message, false, LocalDateTime.now());
+		} catch (Exception e) {
+			log.error("Error parsing response body", e);
+			return new AiResDto("사용중 에러가 생겼습니다.", false, LocalDateTime.now());
+		}
+	
+	}
+	
+	
+	
+	
+	
+	
 	
 }
 

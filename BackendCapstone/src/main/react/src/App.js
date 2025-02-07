@@ -39,6 +39,7 @@ import MemberControlMain from "./pages/admin/member/list/MemberControlMain";
 import BoardControlMain from "./pages/admin/board/BoardControlMain";
 import MemberItemDetail from "./pages/admin/member/item/MemberItemDetail";
 import AdminMain from "./pages/admin/AdminMain";
+import Main from "./pages/Main";
 
 
 
@@ -52,6 +53,7 @@ function App() {
           <Routes>
             {/* 메인 레이아웃 적용 */}
             <Route path="/" element={<ChatStore><Layout/></ChatStore>}>
+              <Route path="" element={<Main/>}/>
               <Route path="personalStatement/:id?" element={<PersonalStatement />} />
               <Route path="personalStatementDetail/:id" element={<PersonalStatementDetail type="ps" />} />
               <Route path="personalStatementWrite/:id?" element={<PersonalStatementWrite />} />
