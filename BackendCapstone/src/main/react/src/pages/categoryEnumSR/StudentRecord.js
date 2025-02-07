@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { useState, useEffect } from "react";
 import DocumentsApi from "../../api/DocumentsApi";
-import { useNavigate } from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 
 const Background = styled.div`
   width: 100%;
@@ -340,7 +340,9 @@ const StudentRecord = () => {
   const [contentsError, setContentsError] = useState(null); // 자소서 데이터 에러 상태
   const [purchasedFileIds, setPurchasedFileIds] = useState([]); // 해당 유저가 구매한 자료 현황
   const [keywords, setKeywords] = useState(""); // 키워드 검색 밸류
-
+  
+  const {id} = useParams()
+  
   // 페이지네이션 상태 관리
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지 번호
   const [itemsPerPage, setItemsPerPage] = useState(12); // 페이지당 항목 수
@@ -430,6 +432,8 @@ const StudentRecord = () => {
         params.univName,
         params.univDept,
         params.keywords,
+        "sr",
+        id || 0
       );
 
       console.log(response);
@@ -518,7 +522,7 @@ const StudentRecord = () => {
   }
 
   const handleTopClick = (selectedData) => {
-    navigate("/StudentRecordDetail", { state: { item: selectedData, purchasedFileIds : purchasedFileIds } } );
+    navigate(`/StudentRecordDetail/${selectedData.fileId}`);
   };
 
     // 입력시 Dropdown 검색 disabled
@@ -556,9 +560,9 @@ const formatPrice = (price) => {
     <Background>
       <Top>
         <Title>생활기록부</Title>
-        <Search>
+        { id || <Search>
           <DropdownContainer>
-            <Dropdown onChange={handleUnivChange} value={selectedUniv} disabled={!!keywords} >
+            <Dropdown onChange={handleUnivChange} value={selectedUniv} disabled={!!keywords}>
               <option value="">대학명</option>
               {uniqueUnivNames.map((univName, index) => (
                 <option key={index} value={univName}>
@@ -566,7 +570,7 @@ const formatPrice = (price) => {
                 </option>
               ))}
             </Dropdown>
-
+            
             <Dropdown
               onChange={handleDeptChange}
               value={selectedDept}
@@ -583,13 +587,13 @@ const formatPrice = (price) => {
                 <option value="">선택된 대학에 학과가 없습니다</option>
               )}
             </Dropdown>
-            <DropdownSearchButton onClick={handleDropdownSearch} disabled={!!keywords} />
+            <DropdownSearchButton onClick={handleDropdownSearch} disabled={!!keywords}/>
           </DropdownContainer>
           <KeyWordSearchContainer>
-            <KeywordSearchInput  placeholder="키워드를 검색하세요" onChange={handleKeywordChange} disabled={!!selectedUniv}/>
+            <KeywordSearchInput placeholder="키워드를 검색하세요" onChange={handleKeywordChange} disabled={!!selectedUniv}/>
             <KeywordSearchButton onClick={handleKeywordSearch} disabled={!!selectedUniv}/>
           </KeyWordSearchContainer>
-        </Search>
+        </Search>}
       </Top>
       <Line />
       <Contents>

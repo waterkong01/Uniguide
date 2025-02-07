@@ -1,13 +1,13 @@
-import { useLocation, useNavigate} from "react-router-dom";
+import { useNavigate, useParams} from "react-router-dom";
 import styled from "styled-components";
 import { useState, useEffect } from "react";
 import DocumentsApi from "../../api/DocumentsApi";
 import {useDispatch, useSelector} from "react-redux";
-import MemberInfoModal from "../../component/Modal/CursorModal";
 import ConfirmModal from "../../component/Modal/ConfirmModal";
 import {setLoginModalOpen} from "../../context/redux/ModalReducer";
 import CursorModal from "../../component/Modal/CursorModal";
 import Commons from "../../util/Common";
+import RejectModal from "../../component/Modal/RejectModal";
 
 const Background = styled.div`
   width: 100%;
@@ -172,10 +172,6 @@ const BuyButton = styled.button`
     background-color: #3700b3;
   }
 `;
-
-const PrivateChat = styled.button`
-
-`
 
 const Bottom = styled.div`
   width: 70%;
@@ -352,17 +348,19 @@ const PaginationButton = styled.button`
   }
 `;
 
-const PersonalStatementDetail = () => {
+const PersonalStatementDetail = ({type}) => {
   const navigate = useNavigate(); // 페이지 이동을 위한 훅
-  const location = useLocation();
   const [review, setReview] = useState([]); // 댓글
   const [inputReview, setInputReview] = useState(""); // 입력 값 상태 관리
-  const { item, purchasedFileIds, myUploadedFile, myPurchasedFile } = location.state || {}; // 전달받은 데이터
-  const [userId, setUserId] = useState(""); // 로그인한 사용자 ID
   const role = useSelector(state => state.persistent.role);
   const [confirm, setConfirm] = useState({});
   const [info, setInfo] = useState({});
   const dispatch = useDispatch();
+  const {id} = useParams();
+  const [fileBoard, setFileBoard] = useState({})
+  const [reject, setReject] = useState({});
+	const [flag, setFlag] = useState(false);
+  const [memberId, setMemberId] = useState("");
 
   // 리뷰 페이지네이션 상태 관리
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지 번호
@@ -394,143 +392,123 @@ const PersonalStatementDetail = () => {
       setCurrentPage(currentPage - 1);
     }
   };
+  
+  useEffect(() => {
+    const fetchFileBoard = async  () => {
+      try{
+        console.log(Commons.isLoggedIn())
+        const rsp = await DocumentsApi.getFileBoard(id, Commons.isLoggedIn())
+        console.log(rsp)
+        switch(rsp.data.fileCategory){
+          case "PERSONAL_STATEMENT":
+            if (type !== "ps") navigate(`/personalStatementDetail/${id}`)
+            break
+          case "STUDENT_RECORD":
+            if (type !== "sr") navigate(`/studentRecord/Detail${id}`)
+            break
+        }
+        setFileBoard(rsp.data)
+      } catch (error) {
+        console.error(error)
+        setReject({label: "해당 품목을 불러오는데 실패 했습니다. ", onClose: () => {setReject({}); navigate(-1)}})
+      }
+    }
+		fetchFileBoard()
+	  return (
+      () => setFileBoard({})
+	  )
+  }, [id,flag]);
+  
+  
 
 
   useEffect(() => {
-    if (item?.fileId) {
       const fetchReview = async () => {
         try {
-          const response = await DocumentsApi.getReview(item.fileId, currentPage, itemsPerPage);
+          const response = await DocumentsApi.getReview(id, currentPage, itemsPerPage);
           setReview(response.data.content ? response.data.content : []); // 빈 배열로 초기화
           setTotalPages(response.data.totalPages); // totalPages가 없으면 1로 설정
         } catch (error) {
           console.error("댓글을 불러오는 중 오류 발생:", error);
+          setReject({label: "댓글을 불러오는데 실패했습니다.", onClose : () => {setReject({})}})
         }
       };
       fetchReview();
-    }
-  }, [item?.fileId, currentPage, itemsPerPage]);
+			return(
+        () => setReview([])
+			)
+  }, [id, flag]);
 
 // 댓글 저장 함수
-const handleSubmit = async () => {
-  if (!inputReview.trim()) {
-    alert("댓글을 입력해주세요.");
-    return;
-  }
-
-  try {
-    const response = await DocumentsApi.postReview({
-      fileId: item.fileId,
-      reviewContent: inputReview,
-    });
-
-    if (response.status === 200) {
-      // 댓글을 등록한 후, 리뷰 목록을 다시 불러옴
-      setReview((prevReview) => [
-        ...prevReview,
-        { reviewContent: inputReview, reviewId: response.data.reviewId, memberName: "현재 사용자" } // 실제 사용자명 및 reviewId 추가
-      ]);
-      setInputReview(""); // 입력창 초기화
-
-      // 댓글 목록을 다시 가져오는 fetchReview 함수 호출
-      const fetchReview = async () => {
-        try {
-          const response = await DocumentsApi.getReview(item.fileId, currentPage, itemsPerPage);
-          setReview(response.data.content ? response.data.content : []); // 빈 배열로 초기화
-          setTotalPages(response.data.totalPages); // totalPages 갱신
-        } catch (error) {
-          console.error("댓글을 불러오는 중 오류 발생:", error);
-        }
-      };
-      fetchReview(); // 댓글 갱신을 위한 호출
+  const handleSubmit = async () => {
+    if (!inputReview.trim()) {
+      setReject({value: "댓글을 입력해주세요.", onClose: () => {setReject({})}});
+      return;
     }
-  } catch (error) {
-    console.error("댓글 저장 중 오류 발생:", error);
-    alert("댓글 저장에 실패했습니다.");
-  }
-};
-
+    try {
+      const response = await DocumentsApi.postReview({
+        fileId: id,
+        reviewContent: inputReview,
+      });
+  
+      if (response.status === 200) {
+        // 댓글을 등록한 후, 리뷰 목록을 다시 불러옴
+        setFlag(!flag)
+        setInputReview(""); // 입력창 초기화
+      }
+    } catch (error) {
+      console.error("댓글 저장 중 오류 발생:", error);
+      setReject({label:"댓글 저장에 실패했습니다.", onClose: () => {setReject({})}});
+    }
+  };
+  
  // 로그인 현재 사용 유저ID 가져오기기
   useEffect(() => {
     // 로그인 상태 확인 및 사용자 ID 가져오기
-    const fetchUserId = async () => {
-      const isLoggedIn = Commons.isLoggedIn(); // 로그인 여부 확인
-      let memberId = 0; // 기본값은 0으로 설정
+    const fetchMemberId = async () => {
+      try{
+        const rsp = await Commons.getTokenByMemberId()
+        console.log(rsp)
+        setMemberId(rsp.data)
+      } catch (error) {
+        console.log(error);
+        setMemberId(null)
+      }
+    }
+      if (Commons.isLoggedIn()) fetchMemberId();
+  }, [id, role]); // 빈 배열을 넣어 한 번만 실행되도록 설정
 
-      if (isLoggedIn) {
-        try {
-          const response = await Commons.getTokenByMemberId();
-          if (response && response.data) {
-            memberId = response.data; // memberId를 백엔드에서 가져옴
-            setUserId(memberId); // 상태에 memberId 저장
-          } else {
-            console.error("로그인 상태이지만 memberId를 가져오지 못했습니다.");
-          }
-        } catch (error) {
-          console.error("회원 ID를 가져오는 중 오류 발생:", error);
-        }
+
+   // 댓글 삭제 함수
+  const handleDeleteButton = async (reviewId) => {
+    try {
+      const response = await DocumentsApi.deleteReview(reviewId);
+      if (response.status === 200) {
+        setReview((prevReview) =>
+          prevReview.filter((reviewItem) => reviewItem.reviewId !== reviewId)
+        );
       } else {
-        console.log("로그인되지 않은 상태입니다.");
+        console.error("댓글 삭제 실패");
       }
-    };
-
-    fetchUserId(); // 로그인 ID 가져오기 함수 호출
-  }, []); // 빈 배열을 넣어 한 번만 실행되도록 설정
-
-
- // 댓글 삭제 함수
-const handleDeleteButton = async (reviewId) => {
-  if (!window.confirm("정말로 이 댓글을 삭제하시겠습니까?")) return;
-
-  try {
-    const response = await DocumentsApi.deleteReview(reviewId);
-
-    if (response.status === 200) {
-      setReview((prevReview) =>
-        prevReview.filter((reviewItem) => reviewItem.reviewId !== reviewId)
-      );
-    } else {
-      console.error("댓글 삭제 실패");
+    } catch (error) {
+      console.error("댓글 삭제 중 오류 발생:", error);
+      setReject({label: "댓글 삭제에 실패했습니다.", onClose: () =>  setReject({})});
     }
-  } catch (error) {
-    console.error("댓글 삭제 중 오류 발생:", error);
-    alert("댓글 삭제에 실패했습니다.");
-  }
-};
-
-
-  // console.log("Selected Item:", item);
-  // console.log("Purchased File IDs:", purchasedFileIds);
-  // 파일 구매 확인
-  const verifyPurchasedFileIds = (item, purchasedFileIds) => {
-     // 마이페이지에서 Page전환 했을시 1, TopNavBar에서 Page 전환시 조건문 진행행
-     if (myUploadedFile !== 1 && myPurchasedFile !== 1) {
-      // purchasedFileIds 배열이 비어 있지 않고 item.fileId와 일치하는 파일 ID가 있는지 확인
-      for (let i = 0; i < purchasedFileIds.length; i++) {
-        if (item.fileId === purchasedFileIds[i].fileId) {
-          // 파일 ID가 일치하면 purchased 값이 true인지 확인하여 true 또는 false 반환
-          return purchasedFileIds[0].purchased; // purchased 값이 true이면 true, false이면 false 반환
-        }
-      }
-      return false; // 일치하지 않거나 배열이 비어 있으면 false 반환
-    }
-    return true;
   };
 
-  // 구매 후 파일 다운로드 로직직
-  const handleFileDownloadClick = async (fileUrl) => {
+
+  // 구매 후 파일 다운로드 로직
+  const handleFileDowloadClick = async (fileUrl) => {
     console.log("Item preview URL:", fileUrl);
     if (!fileUrl) {
       alert("파일 URL이 제공되지 않았습니다.");
       return;
     }
-
     try {
       const params = {
         fileUrl, // Firebase 파일 URL
         fileName: "", // 파일 이름을 보내지 않음, 백엔드에서 처리
       };
-
       // 서버에 다운로드 요청
       const response = await DocumentsApi.download(params);
 
@@ -565,8 +543,10 @@ const handleDeleteButton = async (reviewId) => {
   };
 
   const handlePurchaseClick = (productData) => {
-    if(role === "REST_USER" || role === "" ) {
-      setConfirm({value: true, label: "해당기능은 로그인 후 가능합니다. \n로그인 하시겠습니까?"})
+    if(!Commons.isLoggedIn()) {
+      setConfirm({value: true, label: "해당기능은 로그인 후 가능합니다. \n로그인 하시겠습니까?"
+        , onConfirm: () => {dispatch(setLoginModalOpen(true)); setConfirm({});
+        }})
       return
     }
     console.log("선택된 상품:", productData);
@@ -587,12 +567,12 @@ const handleDeleteButton = async (reviewId) => {
   };
 
     // keywords가 배열인지 확인하고, 배열이 아닐 경우 대체 방법 처리
-  const formattedKeywords = Array.isArray(item?.keywords)
-    ? item.keywords
+  const formattedKeywords = Array.isArray(fileBoard?.keywords)
+    ? fileBoard.keywords
       .map((keyword) => (typeof keyword === "string" ? keyword.replace(/[\[\]"\s,]/g, "") : ""))
       .join("  ")
-    : typeof item?.keywords === "string"
-      ? item.keywords.replace(/[\[\]"\s,]/g, "")
+    : typeof fileBoard?.keywords === "string"
+      ? fileBoard.keywords.replace(/[\[\]"\s,]/g, "")
       : "";
 
   // 날짜만 추출하는 로직
@@ -624,12 +604,13 @@ const handleDeleteButton = async (reviewId) => {
 
   const onChangeComment = (e) => {
     if(role === "REST_USER" || role === "" ) {
-      setConfirm({value: true, label: "해당기능은 로그인 후 가능합니다. \n로그인 하시겠습니까?"});
+      setConfirm({value: true, label: "해당기능은 로그인 후 가능합니다. \n로그인 하시겠습니까?", onConfirm: () => {dispatch(setLoginModalOpen(true)); setConfirm({});
+        }});
       return
     }
     setInputReview(e.target.value)
   }
-  //item.memberId
+  //fileBoard.memberId
   const options = [
     {label: "작성 글", value: "text"},
     {label: "작성 이용후기", value: "review"},
@@ -638,19 +619,19 @@ const handleDeleteButton = async (reviewId) => {
     {label: "올린 생기부 보기", value: "sr"}
   ]
 
-  const onOption = (value) => {
+  const onOption = (value, id) => {
     switch (value) {
       case "text":
-        navigate("#");
+        navigate(`/post/list/default/${id}/member`);
         break;
       case "review":
-        navigate("#");
+        navigate(`/post/list/review/${id}/member`);
         break;
       case "ps":
-        navigate("#");
+        navigate(`/personalStatement/${id}`);
         break;
       case "sr":
-        navigate("#");
+        navigate(`/studentRecord/${id}`);
         break;
       case "chat":
         navigate("#");
@@ -664,61 +645,57 @@ const handleDeleteButton = async (reviewId) => {
   const onClickName = (event) => {
     // 역할이 "REST_USER" 또는 빈 문자열인 경우 반환
     if (role === "REST_USER" || role === "") return;
-
     // 클릭한 위치를 받아오기
     const { clientX, clientY } = event;
-
     // setInfo 호출 시 클릭한 위치 정보도 포함시키기
     setInfo({
       value: true,
       options: options,
       position: { x: clientX, y: clientY },  // 클릭한 위치 정보 추가
+      id: event.target.value
     });
   };
   return (
-    <>
       <Background>
         <Top>
           <Title>
             <UnivLogo>
-              <img src={item.univImg} alt="" />
+              <img src={fileBoard.univImg} alt="" />
             </UnivLogo>
             <DetailBox>
               <DetailBoxTitle>
-                {item.univName} {item.univDept} ({item.fileTitle})
+                {fileBoard.univName} {fileBoard.univDept} ({fileBoard.fileTitle})
               </DetailBoxTitle>
               <DetailBoxInfo>
-                <span onClick={onClickName} value={item.memberId}>{replaceMiddleName(item.memberName)}</span> <span>|</span>
-                <span>{titleDate(item.regDate)}</span> <span>|</span>
+                <span onClick={onClickName} value={fileBoard.memberId}>{replaceMiddleName(fileBoard.memberName)}</span> <span>|</span>
+                <span>{titleDate(fileBoard.regDate)}</span> <span>|</span>
                 <span>{formattedKeywords}</span>
               </DetailBoxInfo>
               <DetailBoxPrice>
-                가격: {formatPrice(item.price)}원
+                가격: {formatPrice(fileBoard.price)}원
                 <FileDownloadButton
                   onClick={() => {
-                  handleFileDownloadClick(item.preview);
+                  handleFileDowloadClick(fileBoard.preview);
                   }}
-                  disabled={!item.preview} // preview 파일이 없으면 버튼 비활성화
+                  disabled={!fileBoard.preview} // preview 파일이 없으면 버튼 비활성화
                   >
                   미리보기
                 </FileDownloadButton>
-                {verifyPurchasedFileIds(item, purchasedFileIds) && (
+                { fileBoard.purchase ?
                   <FileDownloadButton
                     onClick={() => {
-                      handleFileDownloadClick(item.mainFile);
+                      handleFileDowloadClick(fileBoard.mainFile);
                     }}
                   >
                     다운로드
                   </FileDownloadButton>
-                )}
-                {!verifyPurchasedFileIds(item, purchasedFileIds) && (
+                :
                   <BuyButton
-                    $BuyButton
-                    onClick={() => handlePurchaseClick(item)}
+                    onClick={() => handlePurchaseClick(fileBoard)}
                   >
                     구매하기
                   </BuyButton>
-                )}
+                }
               </DetailBoxPrice>
             </DetailBox>
           </Title>
@@ -726,7 +703,7 @@ const handleDeleteButton = async (reviewId) => {
         <Line />
         <Middle>
           <MiddleTitle>자료소개</MiddleTitle>
-          <MiddleWrite> {item.summary} </MiddleWrite>
+          <MiddleWrite> {fileBoard.summary} </MiddleWrite>
         </Middle>
         <Bottom>
           <BottomTitle>댓글</BottomTitle>
@@ -754,7 +731,7 @@ const handleDeleteButton = async (reviewId) => {
                 </ReviewListTop>
                 <ReviewListBottom>
                     <ReviewContent>{reviewItem.reviewContent}</ReviewContent>
-                    {userId === reviewItem.memberId && (
+                    {memberId === reviewItem.memberId && (
                     <ReviewDelete onClick={() => handleDeleteButton(reviewItem.reviewId, reviewItem.memberId)}>
                     삭제
                     </ReviewDelete>
@@ -763,8 +740,7 @@ const handleDeleteButton = async (reviewId) => {
                 <ReviewLine />
               </ReviewListBox>
               ))
-            )
-            }
+            )}
           </BottomContainer>
         </Bottom>
 
@@ -802,12 +778,10 @@ const handleDeleteButton = async (reviewId) => {
             {">>"}
           </PaginationButton>
         </PaginationContainer>
-        <ConfirmModal open={confirm.value} message={confirm.label} onConfirm={() => {
-          dispatch(setLoginModalOpen(true));
-          setConfirm({})}} onCancel={() => setConfirm({})} />
-        <CursorModal open={info.value} message={null} position={info.position} onCancel={() => setInfo({})} onOption={(e) => onOption(e)} options={info.options} />
+        <RejectModal open={reject.label} onClose={reject.onClose} message={reject.label}/>
+        <ConfirmModal open={confirm.value} message={confirm.label} onConfirm={confirm.onConfirm} onCancel={() => setConfirm({})} />
+        <CursorModal open={info.value} message={null} position={info.position} onCancel={() => setInfo({})} onOption={(e, id) => onOption(e, id)} options={info.options} />
       </Background>
-    </>
   );
 };
 

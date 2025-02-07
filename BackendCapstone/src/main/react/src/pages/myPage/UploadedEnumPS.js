@@ -140,8 +140,8 @@ const UploadedEnumPS = () => {
     return `${d.getFullYear()}-${(d.getMonth() + 1).toString().padStart(2, '0')}-${d.getDate().toString().padStart(2, '0')} ${hours}:${minutes}`;
   };
 
-  const handleCLick = (selectedData,myUploadedFile) => {
-    navigate("/PersonalStateMentDetail", {state : {item : selectedData, myUploadedFile}})
+  const handleCLick = (selectedData) => {
+    navigate(`/personalStatementDetail/${selectedData.fileId}`)
   };
 
   return (
@@ -159,7 +159,7 @@ const UploadedEnumPS = () => {
           </SortingBox>
           {/* 데이터를 반복 렌더링 */}
           {items.length > 0 ? (items.map((item, index) => (
-            <ItemRow onClick={() => handleCLick(item,myUploadedFile)} key={index}>
+            <ItemRow onClick={() => handleCLick(item)} key={index}>
              <ItemColumn>{item.univName}{" "}{item.univDept}{" "}({item.fileTitle})</ItemColumn>
               <ItemColumn>{formatPrice(item.price)}</ItemColumn>
               <ItemColumn>{formatDate(item.regDate)}</ItemColumn>

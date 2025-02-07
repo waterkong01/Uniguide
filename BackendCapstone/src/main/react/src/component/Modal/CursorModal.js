@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 
-const CursorModal = ({ open, message, options, onOption, onCancel, position }) => {
+const CursorModal = ({ open, message, options, onOption, onCancel, position, id }) => {
 	if (!open || !position) return null;
 	
 	return (
@@ -15,7 +15,7 @@ const CursorModal = ({ open, message, options, onOption, onCancel, position }) =
 				<ModalContent>
 					{message && <MessageText>{message}</MessageText>}
 					{options.map((option, index) => (
-						<ModalButton key={index} onClick={() => onOption(option.value)}>
+						<ModalButton key={index} onClick={() => onOption(option.value, id)}>
 							{option.label}
 						</ModalButton>
 					))}

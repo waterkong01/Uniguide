@@ -151,10 +151,8 @@ const PurchasedEnumPS = () => {
       .padStart(2, "0")} ${hours}:${minutes}`;
   };
 
-  const handleCLick = (selectedData, myPurchasedFile) => {
-    navigate("/PersonalStateMentDetail", {
-      state: { item: selectedData, myPurchasedFile },
-    });
+  const handleCLick = (selectedData) => {
+    navigate(`/personalStatementDetail/${selectedData.fileId}`);
   };
 
   return (

@@ -116,19 +116,19 @@ const Comments = () => {
 		{label: "올린 생기부 보기", value: "sr"}
 	]
 	
-	const onOption = (value) => {
+	const onOption = (value, id) => {
 		switch (value) {
 			case "text":
-				navigate("#");
+				navigate(`/post/list/default/${id}/member`);
 				break;
 			case "review":
-				navigate("#");
+				navigate(`/post/list/review/${id}/member`);
 				break;
 			case "ps":
-				navigate("#");
+				navigate(`/personalStatement/${id}`);
 				break;
 			case "sr":
-				navigate("#");
+				navigate(`/studentRecord/${id}`);
 				break;
 			case "chat":
 				navigate("#");
@@ -287,9 +287,9 @@ const Comments = () => {
 				</PaginationButton>
 			</PaginationContainer>
 			<RejectModal open={reject.value} message={reject.label} onClose={() => setReject({})}/>
-			<CursorModal open={info.value} message={null} position={info.position} onCancel={() => setInfo({})} onOption={(e) => onOption(e)} options={info.options} />
+			<CursorModal open={info.value} message={null} position={info.position} onCancel={() => setInfo({})} onOption={(e) => onOption(e)} options={info.options} id={id} />
 			<ConfirmModal message={confirm.label} open={confirm.value} onConfirm={() => {dispatch(setLoginModalOpen(true)); setConfirm({})}} onCancel={() => setConfirm({})}/>
-			<SubmitModal open={submit.value} message={submit.label} onCancel={() => setSubmit({})} onSubmit={(e) => onClickEditSubmit(e)} initial={submit.initial} restriction={submit.restriction} />
+			<SubmitModal open={submit.value} message={submit.label} onCancel={() => setSubmit({})} onSubmit={(e) => onClickEditSubmit(e)} initial={submit.initial} restriction={submit.restriction}  />
 		</Box>
 	)
 }

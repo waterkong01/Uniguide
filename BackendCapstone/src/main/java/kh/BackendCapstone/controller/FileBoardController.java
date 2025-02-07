@@ -37,8 +37,9 @@ public class FileBoardController {
 	private final ReviewService reviewService;
 
 	// 자기소개서 자료 목록 Item
-	@GetMapping("/psList")
+	@GetMapping("/psList/{id}")
 	public ResponseEntity<ContentsItemPageResDto> getPersonalStatementList(
+			@PathVariable Long id,
 			@RequestParam int page,
 			@RequestParam int limit,
 			@RequestParam(required = false) String univName,
@@ -48,8 +49,8 @@ public class FileBoardController {
 	) {
 		try {
 			// keyword를 검색에 반영하도록 수정
-			List<FileBoardResDto> fileBoardResDtos = fileBoardService.getContents(page, limit, univName, univDept, "ps", keywords);
-			int totalPages = fileBoardService.getPageSize(limit, univName, univDept, "ps", keywords);
+			List<FileBoardResDto> fileBoardResDtos = fileBoardService.getContents(page, limit, univName, univDept, "ps", keywords, id);
+			int totalPages = fileBoardService.getPageSize(limit, univName, univDept, "ps", keywords, id);
 
 			List<FilePurchaseStatusResDto> filePurchaseStatus = new ArrayList<>();
 			if (memberId != null && memberId > 0) {
@@ -69,18 +70,18 @@ public class FileBoardController {
 	}
 
 	// 생활기록부 자료 목록 Item
-	@GetMapping("/srList")
+	@GetMapping("/srList/{id}")
 	public ResponseEntity<ContentsItemPageResDto> getStudentRecordList(
-			@RequestParam int page,
-			@RequestParam int limit,
-			@RequestParam(required = false) String univName,
-			@RequestParam(required = false) String univDept,
-			@RequestParam(required = false) Long memberId, // 요청 파라미터로 memberId 받기
-			@RequestParam(required = false) String keywords // 추가된 파라미터 keyword
-	) {
+		@RequestParam int page,
+		@RequestParam int limit,
+		@RequestParam(required = false) String univName,
+		@RequestParam(required = false) String univDept,
+		@RequestParam(required = false) Long memberId, // 요청 파라미터로 memberId 받기
+		@RequestParam(required = false) String keywords, // 추가된 파라미터 keyword
+		@PathVariable Long id) {
 		try {
-			List<FileBoardResDto> fileBoardResDtos = fileBoardService.getContents(page, limit, univName, univDept, "sr",keywords);
-			int totalPages = fileBoardService.getPageSize(limit, univName, univDept, "sr",keywords);
+			List<FileBoardResDto> fileBoardResDtos = fileBoardService.getContents(page, limit, univName, univDept, "sr",keywords, id);
+			int totalPages = fileBoardService.getPageSize(limit, univName, univDept, "sr",keywords, id);
 
 			List<FilePurchaseStatusResDto> filePurchaseStatus = new ArrayList<>();
 			if (memberId != null && memberId > 0) {
@@ -219,6 +220,18 @@ public class FileBoardController {
 				.contentType(MediaType.APPLICATION_OCTET_STREAM)
 				.header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition)
 				.body(resource);
+	}
+	
+	@GetMapping("/board/{id}")
+	public ResponseEntity<FileBoardResDto> getBoard(@PathVariable("id") Long fileId, @RequestHeader(value = "Authorization") String token) {
+		FileBoardResDto fileBoardResDto = fileBoardService.getBoard(fileId, token);
+		return ResponseEntity.ok(fileBoardResDto);
+	}
+	
+	@GetMapping("/board/public/{id}")
+	public ResponseEntity<FileBoardResDto> getBoardPublic(@PathVariable("id") Long fileId) {
+		FileBoardResDto fileBoardResDto = fileBoardService.getBoard(fileId, "");
+		return ResponseEntity.ok(fileBoardResDto);
 	}
 
 }
