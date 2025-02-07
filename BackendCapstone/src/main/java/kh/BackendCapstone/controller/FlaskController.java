@@ -37,17 +37,17 @@ public class FlaskController {
 		return ResponseEntity.ok(flaskService.getMessage(message));
 	}
 	
-	@PostMapping("/univ")
+	@PostMapping("/csv/univ")
 	public ResponseEntity<List<Boolean>> uploadUnivCsv(@RequestParam("file") MultipartFile file) {
 		return flaskService.convertCsvToUniv(file);
 	}
 	
-	@PostMapping("/textBoard")
+	@PostMapping("/csv/textBoard")
 	public ResponseEntity<List<Boolean>> uploadTextBoardCsv(@RequestParam("file") MultipartFile file) {
 		return flaskService.convertCsvToTextBoard(file);
 	}
 	
-	@PostMapping("/bank")
+	@PostMapping("/csv/bank")
 	public ResponseEntity<List<Boolean>> uploadBankCsv(@RequestParam("file") MultipartFile file) {
 		return flaskService.convertCsvToBank(file);
 	}

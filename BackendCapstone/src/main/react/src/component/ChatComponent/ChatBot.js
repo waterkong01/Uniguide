@@ -107,7 +107,7 @@ const ChatBot = () => {
     ]);
     const rsp = await ChattingApi.getMessage(message);
     console.log(rsp);
-    setChat([...chat, { ...rsp.data, regDate: formatTime(new Date()) }]);
+    setChat([...chat, { message, user: true, regDate: formatTime(currentTime) }, { ...rsp.data, regDate: formatTime(new Date()) }]);
     setMessage("");
   };
   

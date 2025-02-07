@@ -121,7 +121,7 @@ public class FlaskService {
 				textBoard.setActive(Active.ACTIVE);
 				textBoard.setTitle(data[0].trim());
 				textBoard.setContent(data[1].trim());
-				textBoard.setTextCategory(TextCategory.fromString(data[2].trim()));
+				textBoard.setTextCategory(TextCategory.FAQ);
 				
 				textBoardList.add(textBoard);
 			}
