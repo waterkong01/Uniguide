@@ -14,7 +14,7 @@ const PasswordModal = ({ closeModal }) => {
 
   const handlePasswordReset = async () => {
     if (newPassword !== confirmPassword) {
-      setErrorMessage("비밀번호가 일치하지 않습니다.");     
+      setErrorMessage("비밀번호가 일치하지 않습니다.");
       return;
     }
 
@@ -36,35 +36,35 @@ const PasswordModal = ({ closeModal }) => {
   };
 
   return (
-    <ModalOverlay>
-      <ModalContainer>
-        <h2>비밀번호 변경</h2>
-        <InputContainer>
-          <label>새 비밀번호</label>
-          <input
-            type="password"
-            value={newPassword}
-            onChange={(e) => handleInputChange(e, setNewPassword)}
-            placeholder="새 비밀번호를 입력하세요"
-          />
-        </InputContainer>
-        <InputContainer>
-          <label>비밀번호 확인</label>
-          <input
-            type="password"
-            value={confirmPassword}
-            onChange={(e) => handleInputChange(e, setConfirmPassword)}
-            placeholder="비밀번호를 확인하세요"
-          />
-        </InputContainer>
-        {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
-        {successMessage && <SuccessMessage>{successMessage}</SuccessMessage>}
-        <ButtonContainer>
-          <Button onClick={handlePasswordReset}>비밀번호 변경</Button>
-          <CancelButton onClick={closeModal}>취소</CancelButton>
-        </ButtonContainer>
-      </ModalContainer>
-    </ModalOverlay>
+      <ModalOverlay>
+        <ModalContainer>
+          <h2>비밀번호 변경</h2>
+          <InputContainer>
+            <label>새 비밀번호</label>
+            <StyledInput
+                type="password"
+                value={newPassword}
+                onChange={(e) => handleInputChange(e, setNewPassword)}
+                placeholder="새 비밀번호를 입력하세요"
+            />
+          </InputContainer>
+          <InputContainer>
+            <label>비밀번호 확인</label>
+            <StyledInput
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => handleInputChange(e, setConfirmPassword)}
+                placeholder="비밀번호를 확인하세요"
+            />
+          </InputContainer>
+          {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
+          {successMessage && <SuccessMessage>{successMessage}</SuccessMessage>}
+          <ButtonContainer>
+            <StyledButton onClick={handlePasswordReset}>비밀번호 변경</StyledButton>
+            <CancelButton onClick={closeModal}>취소</CancelButton>
+          </ButtonContainer>
+        </ModalContainer>
+      </ModalOverlay>
   );
 };
 
@@ -95,6 +95,7 @@ const ModalContainer = styled.div`
 
 const InputContainer = styled.div`
   margin-bottom: 15px;
+  text-align: left;
 
   label {
     display: block;
@@ -102,13 +103,20 @@ const InputContainer = styled.div`
     color: #333;
     margin-bottom: 5px;
   }
+`;
 
-  input {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 16px;
+const StyledInput = styled.input`
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: border-color 0.3s;
+
+  &:focus {
+    border-color: #a16eff;
+    outline: none;
+    box-shadow: 0 0 4px rgba(161, 110, 255, 0.5);
   }
 `;
 
@@ -127,29 +135,31 @@ const SuccessMessage = styled.div`
 const ButtonContainer = styled.div`
   display: flex;
   justify-content: space-between;
+  margin-top: 10px;
 `;
 
-const Button = styled.button`
-  background: black;
+const StyledButton = styled.button`
+  background: #a16eff;
   color: white;
   border: none;
-  padding: 10px 15px;
+  padding: 12px;
   font-size: 16px;
-  border-radius: 5px;
+  border-radius: 8px;
   cursor: pointer;
   flex: 1;
   margin-right: 5px;
+  transition: background 0.3s;
 
   &:hover {
-    background: #444;
+    background: #dccafc;
   }
 `;
 
-const CancelButton = styled(Button)`
-  background: #ccc;
-  color: black;
+const CancelButton = styled(StyledButton)`
+  background:  #dccafc;
+  color: white;
 
   &:hover {
-    background: #999;
+    background:  #a16eff;
   }
 `;

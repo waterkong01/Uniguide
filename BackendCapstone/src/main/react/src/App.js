@@ -70,6 +70,7 @@ function App() {
                 <Route path="memberEdit" element={<MemberEdit />} />
                 <Route path="permission" element={<Permission />} />
                 <Route path="withdrawal" element={<Withdrawal/>}/>
+                <Route path="list/:category/:search/:option" element={<PostListMain active="ACTIVE" />} />
               </Route>
 
               {/* 테스트 페이지 */}

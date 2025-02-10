@@ -4,6 +4,7 @@
 	import kh.BackendCapstone.dto.TokenDto;
 	import kh.BackendCapstone.dto.request.MemberReqDto;
 	import kh.BackendCapstone.dto.request.PermissionReqDto;
+	import kh.BackendCapstone.dto.request.UserBankReqDto;
 	import kh.BackendCapstone.dto.response.MemberResDto;
 	import kh.BackendCapstone.entity.Bank;
 	import kh.BackendCapstone.entity.Member;
@@ -32,9 +33,9 @@
 		private final AuthService authService;
 		private final SmsService smsService;
 		private final EmailService emailService;
-		private final MemberService memberService;
 		private final PasswordEncoder passwordEncoder;
 		private  final TokenProvider tokenProvider;
+		private final MemberService memberService;
 
 
 		@GetMapping("/getMemberId")
@@ -221,6 +222,21 @@
 				return ResponseEntity.ok(bankList);
 			} catch (RuntimeException e) {
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(false);
+			}
+		}
+
+		@PostMapping("/changeBankInfo")
+		public ResponseEntity<?> changeBankInfo(@RequestBody UserBankReqDto userBankReqDto) {
+			try {
+				boolean isUpdated = memberService.updateBankInfo(userBankReqDto.getMemberId(), userBankReqDto.getBankName(), userBankReqDto.getBankAccount());
+
+				if (isUpdated) {
+					return ResponseEntity.ok().body("{\"message\": \"은행 정보가 성공적으로 변경되었습니다.\"}");
+				} else {
+					return ResponseEntity.status(404).body("{\"message\": \"사용자를 찾을 수 없습니다.\"}");
+				}
+			} catch (Exception e) {
+				return ResponseEntity.status(500).body("{\"message\": \"서버 오류가 발생했습니다.\"}");
 			}
 		}
 

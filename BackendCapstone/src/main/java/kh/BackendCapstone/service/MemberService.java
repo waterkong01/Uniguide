@@ -260,11 +260,39 @@ public class MemberService {
 		}
 	}
 
+	public boolean updateBankInfo(Long memberId, String bankName, String bankAccount) {
+		// memberId를 기반으로 UserBank 엔티티 조회
+		Optional<UserBank> optionalUserBank = userBankRepository.findByMember_MemberId(memberId);
+
+		if (optionalUserBank.isPresent()) {
+			// 기존 UserBank 정보가 있는 경우 업데이트
+			UserBank userBank = optionalUserBank.get();
+			userBank.setBankName(bankName);
+			userBank.setBankAccount(bankAccount);
+			userBankRepository.save(userBank);
+			return true;
+		} else {
+			// 기존 데이터가 없으면 새로 생성
+			Optional<Member> optionalMember = memberRepository.findById(memberId);
+			if (optionalMember.isPresent()) {
+				Member member = optionalMember.get();
+				UserBank newUserBank = new UserBank();
+				newUserBank.setMember(member);
+				newUserBank.setBankName(bankName);
+				newUserBank.setBankAccount(bankAccount);
+				newUserBank.setWithdrawal(0L); // 초기 인출 금액 설정 (기본값)
+				userBankRepository.save(newUserBank);
+				return true;
+			}
+		}
+		return false;
+	}
 
 
 
 
-	
+
+
 	// Member Entity -> 회원 정보 DTO
 	private MemberResDto convertEntityToDto(Member member) {
 		MemberResDto memberResDto = new MemberResDto();

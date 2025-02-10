@@ -204,7 +204,7 @@ const AuthApi = {
 
 	changeBankInfo: async (memberId, bankName, bankAccount) => {
 		try {
-			const response = await axios.post(`${Capstone}/auth/changeBankInfo`, {
+				const response = await axios.post(`${Capstone}/auth/changeBankInfo`, {
 				memberId: memberId,
 				bankName: bankName,
 				bankAccount: bankAccount

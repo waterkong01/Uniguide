@@ -212,7 +212,7 @@ public class FlaskService {
 			}
 			
 			// 5. Flask API URL 설정
-			String flaskUrl = "http://localhost:5000/spring/ai/ps";
+			String flaskUrl = "https://1869-39-117-57-245.ngrok-free.app/spring/ai/ps";
 			
 			// 6. HTTP 헤더 및 바디 설정
 			HttpHeaders headers = new HttpHeaders();
@@ -282,7 +282,7 @@ public class FlaskService {
 			
 			// "response" 필드를 리턴
 			
-			return new AiResDto(message, false, LocalDateTime.now());
+			return new AiResDto(apiResponse.getResponse(), false, LocalDateTime.now());
 		} catch (Exception e) {
 			log.error("Error parsing response body", e);
 			return new AiResDto("사용중 에러가 생겼습니다.", false, LocalDateTime.now());

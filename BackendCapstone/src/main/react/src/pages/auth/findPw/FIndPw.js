@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import AuthApi from "../../../api/AuthApi"; // API 요청 함수
+import PasswordModal from "./PasswordModal"; // PasswordModal 컴포넌트 import
 
 const ModalOverlay = styled.div`
   position: fixed;
@@ -83,6 +84,7 @@ const FindPw = ({ closeModal }) => {
   const [errorMessage, setErrorMessage] = useState("");
   const [isSendingCode, setIsSendingCode] = useState(false);
   const [countdown, setCountdown] = useState(0); // 5분 타이머 (초 단위)
+  const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false); // PasswordModal 상태
 
   useEffect(() => {
     let timer;
@@ -131,7 +133,7 @@ const FindPw = ({ closeModal }) => {
       if (response === true) {
         setErrorMessage("");
         setIsCodeSent(false);
-        // 비밀번호 재설정 로직 추가
+        setIsPasswordModalOpen(true); // 인증 성공 시 PasswordModal 열기
       } else {
         setErrorMessage("잘못된 인증번호입니다.");
       }
@@ -145,45 +147,57 @@ const FindPw = ({ closeModal }) => {
   const formattedTime = `${Math.floor(countdown / 60)}:${String(countdown % 60).padStart(2, "0")}`;
 
   return (
-    <ModalOverlay onClick={closeModal}>
-      <ModalContent onClick={(e) => e.stopPropagation()}>
-        <h2>비밀번호 찾기</h2>
-        <InputField
-          type="email"
-          placeholder="등록된 이메일을 입력하세요"
-          value={inputEmail}
-          onChange={(e) => setInputEmail(e.target.value)}
-          disabled={isCodeSent}
-        />
-        <Button onClick={handleSendVerificationCode} disabled={!isEmailValid || isSendingCode}>
-          {isSendingCode ? "인증번호 보내는 중..." : "인증번호 보내기"}
-        </Button>
-        {isSendingCode && <MessageText>인증번호 보내는 중...</MessageText>}
-        {isCodeSent && (
-          <>
+      <>
+        <ModalOverlay onClick={closeModal}>
+          <ModalContent onClick={(e) => e.stopPropagation()}>
+            <h2>비밀번호 찾기</h2>
             <InputField
-              type="text"
-              placeholder="인증번호 입력"
-              value={inputCode}
-              onChange={(e) => setInputCode(e.target.value)}
-              disabled={countdown === 0}
+                type="email"
+                placeholder="등록된 이메일을 입력하세요"
+                value={inputEmail}
+                onChange={(e) => setInputEmail(e.target.value)}
+                disabled={isCodeSent}
             />
-            {countdown > 0 ? (
-              <TimerText>남은 시간: {formattedTime}</TimerText>
-            ) : (
-              <MessageText error>인증번호가 만료되었습니다. 다시 요청하세요.</MessageText>
-            )}
-            <Button onClick={handleVerifyCode} disabled={countdown === 0}>
-              인증하기
+            <Button onClick={handleSendVerificationCode} disabled={!isEmailValid || isSendingCode}>
+              {isSendingCode ? "인증번호 보내는 중..." : "인증번호 보내기"}
             </Button>
-            {countdown === 0 && (
-              <Button onClick={handleSendVerificationCode}>인증번호 재전송</Button>
+            {isSendingCode && <MessageText>인증번호 보내는 중...</MessageText>}
+            {isCodeSent && (
+                <>
+                  <InputField
+                      type="text"
+                      placeholder="인증번호 입력"
+                      value={inputCode}
+                      onChange={(e) => setInputCode(e.target.value)}
+                      disabled={countdown === 0}
+                  />
+                  {countdown > 0 ? (
+                      <TimerText>남은 시간: {formattedTime}</TimerText>
+                  ) : (
+                      <MessageText error>인증번호가 만료되었습니다. 다시 요청하세요.</MessageText>
+                  )}
+                  <Button onClick={handleVerifyCode} disabled={countdown === 0}>
+                    인증하기
+                  </Button>
+                  {countdown === 0 && (
+                      <Button onClick={handleSendVerificationCode}>인증번호 재전송</Button>
+                  )}
+                </>
             )}
-          </>
+            {errorMessage && <MessageText error>{errorMessage}</MessageText>}
+          </ModalContent>
+        </ModalOverlay>
+
+        {/* PasswordModal 추가 */}
+        {isPasswordModalOpen && (
+            <PasswordModal
+                closeModal={() => {
+                  setIsPasswordModalOpen(false); // PasswordModal 닫기
+                  closeModal(); // FindPw 모달도 닫기
+                }}
+            />
         )}
-        {errorMessage && <MessageText error>{errorMessage}</MessageText>}
-      </ModalContent>
-    </ModalOverlay>
+      </>
   );
 };
 

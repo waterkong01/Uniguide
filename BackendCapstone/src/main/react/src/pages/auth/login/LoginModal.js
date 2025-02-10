@@ -67,27 +67,30 @@ const KakaoButton = styled.button`
   }
 `;
 
+
 const GoogleButton = styled.button`
   width: 100%;
+  
   height: 45px;
-  border: none;
+  border: 1px solid black;  // 테두리 검은색 설정
   border-radius: 20px;
   cursor: pointer;
   margin-top: 10px;
-  background-color: white;    // 카카오에서 스포이드로 가져옴
+  background-color: white;  // 카카오에서 스포이드로 가져옴
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 2vw;
   > p {
     font-size: 16px;
-    color: black; // 카카오 로고에서 스포이드로 가져옴
+    color: black;  // 카카오 로고에서 스포이드로 가져옴
   }
 `;
 
+
 const LogoImg = styled.img`
-    width: 25px;
-    cursor: pointer;
+  width: 25px;
+  cursor: pointer;
 `
 
 // 모달 콘텐츠
@@ -105,7 +108,7 @@ const ModalContent = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 550px; // 높이 조정
+  height: 600px; // 높이 조정
 `;
 
 // 입력 필드 스타일
@@ -117,9 +120,9 @@ const InputField = styled.input`
   border-radius: 20px;
   box-sizing: border-box;
   font-size: 16px;
-    
-
-   &:focus {
+  
+  
+  &:focus {
     border-color: #a16eff; /* 클릭 시 변경할 테두리 색상 */
     outline: none; /* 기본 파란색 아웃라인 제거 */
     box-shadow: 0 0 5px rgba(161, 110, 255, 0.5); /* 클릭 시 부드러운 그림자 효과 */
@@ -138,7 +141,7 @@ const Button = styled.button`
   font-size: 16px;
   margin-top: 10px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); // 쉐도우 추가
-
+  
   &:hover {
     background-color: #dccafc;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); // Hover 시 쉐도우 강조
@@ -162,7 +165,7 @@ const TextButton = styled.button`
   font-size: 12px; // Reduced font size
   text-decoration: underline;
   margin-right: 8px; // Space between 아이디 찾기 and 비밀번호 찾기
-
+  
   &:hover {
     color: #c1c1c1;
   }
@@ -181,7 +184,7 @@ const SignupTextButton = styled.button`
   cursor: pointer;
   font-size: 12px; // Reduced font size
   text-decoration: underline;
-
+  
   &:hover {
     color: #c1c1c1;
   }
@@ -208,7 +211,7 @@ const LoginModal = ({ closeModal }) => {
   const DOMAIN = 'http://uniguide.shop'; // 도메인 수정
   const API_DOMAIN = `${DOMAIN}/api/v1`;
   const SNS_SIGN_IN_URL = (type) => `${API_DOMAIN}/auth/oauth2/${type}`;
-
+  
   const [inputEmail, setInputEmail] = useState("");
   const [inputPw, setInputPw] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -216,14 +219,14 @@ const LoginModal = ({ closeModal }) => {
   const [isFindIdModalOpen, setIsFindIdModalOpen] = useState(false);
   const [isFindPwModalOpen, setIsFindPwModalOpen] = useState(false);
   const [reject, setReject] = useState({});
-
+  
   // 로그인시 MainPage 이동(로그인시 자료구매현황을 확인해서 구매한자료인지 아닌지 파악하기위함)
   const navigate = useNavigate();
-
+  
   const handleInputChange = (e, setState) => {
     setState(e.target.value);
   };
- 
+  
   const onClickLogin = async () => {
     try {
       const res = await AuthApi.login(inputEmail, inputPw);
@@ -250,36 +253,36 @@ const LoginModal = ({ closeModal }) => {
   };
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
-
+      
       e.preventDefault(); // 엔터 키가 눌렸을 때
       onClickLogin();          // 로그인 버튼 클릭 함수 실행
     }
   };
-
+  
   const openSignupModal = () => {
     setIsSignupModalOpen(true);
   };
-
+  
   const closeSignupModal = () => {
     setIsSignupModalOpen(false);
   };
-
+  
   const openFindIdModal = () => {
     setIsFindIdModalOpen(true);
   };
-
+  
   const closeFindIdModal = () => {
     setIsFindIdModalOpen(false);
   };
-
+  
   const openFindPwModal = () => {
     setIsFindPwModalOpen(true);
   };
-
+  
   const closeFindPwModal = () => {
     setIsFindPwModalOpen(false);
   };
-
+  
   return (
     <>
       <ModalOverlay onClick={closeModal} />
@@ -304,7 +307,7 @@ const LoginModal = ({ closeModal }) => {
             로그인
           </Button>
           {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
-
+          
           {/* 아이디찾기 / 비밀번호 찾기 */}
           <TextButtonContainer>
             <div>
@@ -314,7 +317,7 @@ const LoginModal = ({ closeModal }) => {
             </div>
             <SignupTextButton onClick={openSignupModal}>회원가입</SignupTextButton>
           </TextButtonContainer>
-
+          
           {/* 라인 및 SNS 로그인 섹션 */}
           <Line />
           <SnsLoginText>SNS 계정 간편 로그인</SnsLoginText>
@@ -334,7 +337,7 @@ const LoginModal = ({ closeModal }) => {
           </SocialButtonsContainer>
         </form>
       </ModalContent>
-
+      
       {isSignupModalOpen && <SignupModal closeModal={closeSignupModal} />}
       {isFindIdModalOpen && <FindIdByPhone closeModal={closeFindIdModal} />}
       {isFindPwModalOpen && <FindPw closeModal={closeFindPwModal} />}

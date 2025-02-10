@@ -7,6 +7,7 @@ import {fetchUserStatus} from "../function/fetchUserStatus";
 import {useDispatch, useSelector} from "react-redux";
 import AuthApi from "../api/AuthApi";
 import {logout} from "../context/redux/PersistentReducer";
+import Commons from "../util/Common";
 
 
 
@@ -151,8 +152,6 @@ const MyPageNavBar = () => {
         <Container>
           <Left>
             <LeftTitle>마이 페이지</LeftTitle>
-            <p onClick={() => navigate("")}>닉네임</p>
-
             <SubTitle1>
               나의 계정정보
               <p onClick={() => navigate("memberEdit")}>회원정보수정</p>
@@ -169,8 +168,8 @@ const MyPageNavBar = () => {
 
             <SubTitle3>
               내가 작성한 글
-              <p onClick={() => navigate("")}>게시글</p>
-              <p onClick={() => navigate("")}>이용후기</p>
+              <p onClick={() => navigate(`post/list/default/${Commons.getTokenByMemberId()}/member`)}>게시글</p>
+              <p onClick={() => navigate(`post/list/review/${Commons.getTokenByMemberId()}/member`)}>이용후기</p>
             </SubTitle3>
             
             <SubTitle4>

@@ -412,6 +412,9 @@ const MemberEdit = () => {
                     fullWidth
                     sx={{ mb: 2 }}
                 />
+                <Typography variant="h6" sx={{ mb: 2 }}>
+                  비밀번호 확인
+                </Typography>
                 <TextField
                     type="password"
                     value={confirmPassword}
