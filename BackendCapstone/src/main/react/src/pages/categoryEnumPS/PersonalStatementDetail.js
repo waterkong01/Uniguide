@@ -407,10 +407,10 @@ const PersonalStatementDetail = ({type}) => {
         console.log(rsp)
         switch(rsp.data.fileCategory){
           case "PERSONAL_STATEMENT":
-            if (type !== "ps") navigate(`/personalStatementDetail/${id}`)
+            if (type !== "ps") navigate(`/studentRecordDetail/${id}`)
             break
           case "STUDENT_RECORD":
-            if (type !== "sr") navigate(`/studentRecord/Detail${id}`)
+            if (type !== "sr") navigate(`/personalStatementDetail/${id}`)
             break
         }
         setFileBoard(rsp.data)

@@ -111,7 +111,7 @@ public class FlaskService {
 				}
 				
 				String[] data = line.split(",");
-				if (data.length < 3) {
+				if (data.length < 2) {
 					log.error("잘못된 CSV 형식: {}", line);
 					resultList.add(false);
 					continue;
@@ -212,7 +212,7 @@ public class FlaskService {
 			}
 			
 			// 5. Flask API URL 설정
-			String flaskUrl = "https://1869-39-117-57-245.ngrok-free.app/spring/ai/ps";
+			String flaskUrl = "https://6704-39-117-57-245.ngrok-free.app/spring/ai/ps";
 			
 			// 6. HTTP 헤더 및 바디 설정
 			HttpHeaders headers = new HttpHeaders();
@@ -250,7 +250,7 @@ public class FlaskService {
 	
 	@Transactional
 	public AiResDto getMessage(String message) {
-		String URL = "https://1869-39-117-57-245.ngrok-free.app/generate";
+		String URL = "https://6704-39-117-57-245.ngrok-free.app/generate";
 		
 		List<TextBoard> textBoardList = textBoardRepository.findByTextCategory(TextCategory.FAQ);
 		

@@ -93,7 +93,7 @@ const PostListMain = ({active}) => {
 	
 	return (
 		<Box sx={styles.container}>
-			<PostListHeader  />
+			<PostListHeader />
 			<TextListComponent list={postList} />
 			<PageComponent
 				maxPage={maxPage}
