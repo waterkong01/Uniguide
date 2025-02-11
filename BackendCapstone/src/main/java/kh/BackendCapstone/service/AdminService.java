@@ -242,14 +242,13 @@ public class AdminService {
 				while ((line = reader.readLine()) != null) {
 					// CSV 파일 한 줄씩 파싱 (쉼표 기준으로 split)
 					String[] values = line.split(",");
-					if (values.length >= 3) {
+					if (values.length >= 2) {
 						try {
 							TextBoard textBoard = new TextBoard();
 							textBoard.setActive(Active.ACTIVE);
 							textBoard.setTitle(values[0].trim());
 							textBoard.setContent(values[1].trim());
-							textBoard.setTextCategory(TextCategory.fromString(values[2].trim())); // textCategory는 CSV 3번째 필드에 해당
-							
+							textBoard.setTextCategory(TextCategory.FAQ); // textCategory는 CSV 3번째 필드에 해당
 							textBoardRepository.save(textBoard);
 							resultList.add(true);
 						} catch (Exception e) {
@@ -298,7 +297,7 @@ public class AdminService {
 				while ((line = reader.readLine()) != null) {
 					// CSV 파일 한 줄씩 파싱 (쉼표 기준으로 split)
 					String[] values = line.split(",");
-					if (values.length >= 3) {
+					if (values.length >= 1) {
 						try {
 							Bank bank = new Bank();
 							bank.setBankName(values[0].trim());

@@ -57,12 +57,16 @@ const AdminApi = {
 		
 		switch (type) {
 			case "univ.csv":
+				console.log("대학 올리기")
 				return AxiosInstance.post(baseUrl + `/admin/csv/univ`, formData, config);
 			case "textboard.csv":
+				console.log("faq 올리기")
 				return AxiosInstance.post(baseUrl + `/admin/csv/textBoard`, formData, config);
 			case "bank.csv":
+				console.log("은행 올리기")
 				return AxiosInstance.post(baseUrl + `/admin/csv/bank`, formData, config);
 			default:
+				console.log("코딩 에러")
 				return null;
 		}
 	}

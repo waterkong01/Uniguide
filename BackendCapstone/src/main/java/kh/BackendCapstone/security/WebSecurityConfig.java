@@ -70,7 +70,7 @@ public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 	http
 		.cors().configurationSource(request -> {
 			CorsConfiguration corsConfig = new CorsConfiguration();
-			corsConfig.setAllowedOrigins(List.of("http://localhost:3000")); // 프론트엔드 도메인
+			corsConfig.setAllowedOrigins(List.of("https://uniguide.shop")); // 프론트엔드 도메인
 			corsConfig.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
 			corsConfig.setAllowCredentials(true); // 쿠키 허용
 			corsConfig.addAllowedHeader("*");
