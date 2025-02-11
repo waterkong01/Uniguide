@@ -38,7 +38,7 @@ public class FirebaseUploadService {
     */
 	public String handleFileUpload(MultipartFile file, String folderPath) {
 		// Flask API로 요청 보내기
-		String flaskUrl = "https://6704-39-117-57-245.ngrok-free.app/spring/upload/firebase";
+		String flaskUrl = "https://0711-39-117-57-245.ngrok-free.app/spring/upload/firebase";
 
 		// 파일을 포함한 멀티파트 데이터 전송을 위한 HttpHeaders 설정
 		HttpHeaders headers = new HttpHeaders();
@@ -65,7 +65,7 @@ public class FirebaseUploadService {
 	}
 	public String handleFileUploadWithName(MultipartFile file, String folderPath, String fileName) {
 		// Flask API로 요청 보내기
-		String flaskUrl = "https://6704-39-117-57-245.ngrok-free.app/spring/upload/firebase";
+		String flaskUrl = "https://0711-39-117-57-245.ngrok-free.app/spring/upload/firebase";
 
 		// 파일을 포함한 멀티파트 데이터 전송을 위한 HttpHeaders 설정
 		HttpHeaders headers = new HttpHeaders();

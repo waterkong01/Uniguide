@@ -122,7 +122,7 @@ public class FlaskService {
 				textBoard.setTitle(data[0].trim());
 				textBoard.setContent(data[1].trim());
 				textBoard.setTextCategory(TextCategory.FAQ);
-				
+				log.warn("해당 textBoard: {}", textBoard);
 				textBoardList.add(textBoard);
 			}
 			
@@ -212,7 +212,7 @@ public class FlaskService {
 			}
 			
 			// 5. Flask API URL 설정
-			String flaskUrl = "https://6704-39-117-57-245.ngrok-free.app/spring/ai/ps";
+			String flaskUrl = "https://0711-39-117-57-245.ngrok-free.app/spring/ai/ps";
 			
 			// 6. HTTP 헤더 및 바디 설정
 			HttpHeaders headers = new HttpHeaders();
@@ -250,7 +250,7 @@ public class FlaskService {
 	
 	@Transactional
 	public AiResDto getMessage(String message) {
-		String URL = "https://6704-39-117-57-245.ngrok-free.app/generate";
+		String URL = "https://0711-39-117-57-245.ngrok-free.app/generate";
 		
 		List<TextBoard> textBoardList = textBoardRepository.findByTextCategory(TextCategory.FAQ);
 		
