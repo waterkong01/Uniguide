@@ -38,7 +38,7 @@ public class FirebaseUploadService {
     */
 	public String handleFileUpload(MultipartFile file, String folderPath) {
 		// Flask API로 요청 보내기
-		String flaskUrl = "https://0711-39-117-57-245.ngrok-free.app/spring/upload/firebase";
+		String flaskUrl = "http://localhost:5000/spring/upload/firebase";
 
 		// 파일을 포함한 멀티파트 데이터 전송을 위한 HttpHeaders 설정
 		HttpHeaders headers = new HttpHeaders();
@@ -65,7 +65,7 @@ public class FirebaseUploadService {
 	}
 	public String handleFileUploadWithName(MultipartFile file, String folderPath, String fileName) {
 		// Flask API로 요청 보내기
-		String flaskUrl = "https://0711-39-117-57-245.ngrok-free.app/spring/upload/firebase";
+		String flaskUrl = "http://localhost:5000/spring/upload/firebase";
 
 		// 파일을 포함한 멀티파트 데이터 전송을 위한 HttpHeaders 설정
 		HttpHeaders headers = new HttpHeaders();
@@ -102,29 +102,13 @@ public class FirebaseUploadService {
 			
 			// Flask API에 파일 업로드 요청을 보내고 응답 받음
 			String rspFlask = handleFileUploadWithName(file, folderPath, fileName);
+			log.warn("!!!!!!!!!!!로그 확인!!!!!!!!!!!!! : {}", rspFlask);
 			
-			// 응답을 JSON 형식으로 파싱하여 URL 추출
-			ObjectMapper objectMapper = new ObjectMapper();
-			JsonNode jsonResponse = objectMapper.readTree(rspFlask);
-			String message = jsonResponse.get("message").asText();
-			String error = jsonResponse.get("error").asText();
-			String url = jsonResponse.get("url").asText();
 			
-			// 성공적인 파일 업로드 확인
-			if ("File uploaded successfully".equals(message)) {
-				// 파일 업로드가 성공하면 Permission 객체 생성
-				Permission permission = new Permission();
-				permission.setMember(member);
-				permission.setActive(Active.INACTIVE);
-				permission.setPermissionUrl(url); // URL 설정
-				permissionRepository.save(permission);
-				return "파일을 업로드 하는데 성공했습니다.";
-			} else {
-				return "파일을 업로드 하는데 실패했습니다.: " + message + "or" + error;
-			}
+			return rspFlask;
 		} catch (Exception e) {
 			log.error("파일 업로드 중 오류 발생: ", e);
-			return "파일 업로드 중 오류가 발생했습니다.";
+			return null;
 		}
 	}
 	

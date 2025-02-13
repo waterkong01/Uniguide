@@ -1,6 +1,8 @@
 import styled from "styled-components";
-import { useState } from "react";
+import {useContext, useEffect, useState} from "react";
 import ChattingApi from "../../api/ChattingApi";
+import {useNavigate} from "react-router-dom";
+import {ChatContext} from "../../context/ChatStore";
 
 const ChattingRoomBg = styled.div`
   width: 100%;
@@ -85,6 +87,18 @@ const SendButton = styled.button`
 const ChatBot = () => {
   const [chat, setChat] = useState([]);
   const [message, setMessage] = useState("");
+  const isAi = false
+  const navigator = useNavigate();
+  const {setSelectedPage, setIsMenuOpen, isMenuOpen} = useContext(ChatContext);
+  
+  useEffect(() => {
+    if(!isAi) {
+      navigator("/post/list/faq")
+      setSelectedPage("chatList");
+      setIsMenuOpen(!isMenuOpen);
+    }
+  }, []);
+  
   
   const formatTime = (date) => {
     return new Intl.DateTimeFormat("ko-KR", {
@@ -118,7 +132,7 @@ const ChatBot = () => {
         {chat.map((msg, index) => (
           <MessageBox key={index} isSender={msg.user}>
             <Message isSender={msg.user}>{msg.message}</Message>
-            <div style={{ fontSize: "0.8em", color: "#666", marginTop: "5px" }}>
+            <div style={{fontSize: "0.8em", color: "#666", marginTop: "5px"}}>
               {msg.regDate}
             </div>
           </MessageBox>

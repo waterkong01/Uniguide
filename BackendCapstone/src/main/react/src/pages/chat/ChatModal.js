@@ -15,6 +15,7 @@ import RejectModal from "../../component/Modal/RejectModal";
 import ConfirmModal from "../../component/Modal/ConfirmModal";
 import {setLoginModalOpen} from "../../context/redux/ModalReducer";
 import {useDispatch} from "react-redux";
+import Footer from "../../styles/Footer";
 
 const defaultBackgroundColor = "#9aa06";
 const sideMenuBackgroundColor = "#eee";
@@ -126,8 +127,7 @@ export const StyledLink = styled(Link)`
 `;
 
 const ChatModal = () => {
-    const [isMenuOpen, setIsMenuOpen] = useState(true);    // Side Bar 메뉴 열고 닫기
-    const {selectedPage, setSelectedPage, roomId} = useContext(ChatContext);
+    const {selectedPage, setSelectedPage, roomId, isMenuOpen, setIsMenuOpen} = useContext(ChatContext);
     const [confirm, setConfirm] = useState("");
     const dispatch = useDispatch();
 
@@ -165,9 +165,9 @@ const ChatModal = () => {
         <Container>
             <ChatIconBox onClick={toggleMenu}>
                 {isMenuOpen ? (
-                    <ChatIcon src={"https://firebasestorage.googleapis.com/v0/b/ipsi-f2028.firebasestorage.app/o/firebase%2Fchaticon%2Fchat.png?alt=media"} alt="Open"/>
+                    <ChatIcon src={"https://firebasestorage.googleapis.com/v0/b/uniguide-3d422.firebasestorage.app/o/firebase%2Fchaticon%2Fchat.png?alt=media"} alt="Open"/>
                 ) : (
-                    <ChatIcon src={"https://firebasestorage.googleapis.com/v0/b/ipsi-f2028.firebasestorage.app/o/firebase%2Fchaticon%2Fclose.png?alt=media"} alt="Close"/>
+                    <ChatIcon src={"https://firebasestorage.googleapis.com/v0/b/uniguide-3d422.firebasestorage.app/o/firebase%2Fchaticon%2Fclose.png?alt=media"} alt="Close"/>
                 )}
             </ChatIconBox>
             <StyledSideMenu isOpen={isMenuOpen}>
@@ -175,7 +175,7 @@ const ChatModal = () => {
                 <ChatMenuBar setSelectedPage={setSelectedPage} selectedPage={selectedPage}/>
             </StyledSideMenu>
             {/* <Dummy /> */}
-            <main className="body">
+            <main className="body" style={{minHeight: "100vh"}}>
                 <Outlet />
             </main>
             <ConfirmModal open={confirm} onConfirm={() => {dispatch(setLoginModalOpen(true)); setConfirm("")}} message={confirm} onCancel={() => setConfirm("")} />

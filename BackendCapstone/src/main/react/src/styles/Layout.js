@@ -2,18 +2,20 @@ import styled from "styled-components";
 import TopNavBar from "../component/TopNavBar";
 import ChatModal from "../pages/chat/ChatModal";
 import MobileTopNavBar from "../component/MobileTopNavBar";
-import {useEffect} from "react";
-import {fetchUserStatus} from "../function/fetchUserStatus";
-import {useLocation} from "react-router-dom";
+import Footer from "./Footer";
+import {Platform} from "react-native-web";
 
-const isMobileWeb = typeof navigator !== "undefined" && /Mobi|Android/i.test(navigator.userAgent);
+const isExpo = Platform.OS !== "web"; // Expo 환경 감지
 
 const Background = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
+  overflow-x: hidden;
+  position: relative;
 `;
+
 const Header = styled.div`
   width: 100%;
   height: 100px;
@@ -22,7 +24,6 @@ const Header = styled.div`
 `;
 
 const PC = styled.div`
-
   @media (max-width: 768px) {
     display: none;
   }
@@ -30,26 +31,27 @@ const PC = styled.div`
 
 const Mobile = styled.div`
   display: none;
-
+  
   @media (max-width: 768px) {
     display: flex;
   }
 `;
 
-
 const Layout = () => {
-  
   return (
     <Background>
-      <Header>
-        <PC>
-          <TopNavBar/>
-        </PC>
-        <Mobile>
-          <MobileTopNavBar/>
-        </Mobile>
-      </Header>
+      {!isExpo && ( // Expo 환경에서는 내비게이션을 숨김
+        <Header>
+          <PC>
+            <TopNavBar />
+          </PC>
+          <Mobile>
+            <MobileTopNavBar />
+          </Mobile>
+        </Header>
+      )}
       <ChatModal />
+      <Footer />
     </Background>
   );
 };

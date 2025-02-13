@@ -44,7 +44,7 @@ const LogoImage = styled.div`
     width: 200px;
     height: 100px;
     margin-left: 10%;
-    background-image: url("https://firebasestorage.googleapis.com/v0/b/ipsi-f2028.firebasestorage.app/o/firebase%2Flogo%2Flogo.png?alt=media");
+    background-image: url("https://firebasestorage.googleapis.com/v0/b/uniguide-3d422.firebasestorage.app/o/firebase%2Flogo%2Flogo.png?alt=media");
     background-size: contain; /* 이미지를 컨테이너에 맞게 조정 */
     background-position: center; /* 이미지 중앙 정렬 */
     background-repeat: no-repeat; /* 반복 방지 */

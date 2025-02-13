@@ -116,8 +116,8 @@ const TopNavBar = () => {
   const materialOpenModal = () => dispatch(setIsMaterialModalOpen(true)); // 입시자료 모달창 ON
   const materialCloseModal = () => dispatch(setIsMaterialModalOpen(false)); // 입시자료 모달창 OFF
   
-  const IMG_URL = ["https://firebasestorage.googleapis.com/v0/b/ipsi-f2028.firebasestorage.app/o/firebase%2Flogo%2Flogo.png?alt=media"
-    , "https://firebasestorage.googleapis.com/v0/b/ipsi-f2028.firebasestorage.app/o/firebase%2Flogo%2FProfile_Purple.png?alt=media"]
+  const IMG_URL = ["https://firebasestorage.googleapis.com/v0/b/uniguide-3d422.firebasestorage.app/o/firebase%2Flogo%2Flogo.png?alt=media"
+    , "https://firebasestorage.googleapis.com/v0/b/uniguide-3d422.firebasestorage.app/o/firebase%2Flogo%2FProfile_Purple.png?alt=media"]
   
   // 입시자료 클릭 시 모달 닫고 페이지 전환
   const handleMaterialNavigate = (path) => {

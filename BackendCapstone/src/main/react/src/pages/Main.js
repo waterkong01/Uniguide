@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 // Container 스타일
 const Container = styled.div`
     width: 100%;
+    overflow-x: hidden;
     //background-color: #EEE;
 `;
 

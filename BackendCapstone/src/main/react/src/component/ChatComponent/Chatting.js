@@ -383,9 +383,9 @@ const Chatting = ({ setSelectedPage }) => {
     return (
         <ChattingRoomBg>
             <ChattingTitle>
-                <ChattingIcon src={"https://firebasestorage.googleapis.com/v0/b/ipsi-f2028.firebasestorage.app/o/firebase%2Fchaticon%2Fback.svg?alt=media"} alt="Back" onClick={onClickExit} />
+                <ChattingIcon src={"https://firebasestorage.googleapis.com/v0/b/uniguide-3d422.firebasestorage.app/o/firebase%2Fchaticon%2Fback.svg?alt=media"} alt="Back" onClick={onClickExit} />
                 {roomName}
-                <ChattingIcon src={"https://firebasestorage.googleapis.com/v0/b/ipsi-f2028.firebasestorage.app/o/firebase%2Fchaticon%2Fexit.svg?alt=media"} alt="Exit" onClick={ExitChatRoom} />
+                <ChattingIcon src={"https://firebasestorage.googleapis.com/v0/b/uniguide-3d422.firebasestorage.app/o/firebase%2Fchaticon%2Fexit.svg?alt=media"} alt="Exit" onClick={ExitChatRoom} />
             </ChattingTitle>
             <MessagesContainer ref={ChatContainerRef}>
                 {chatList?.map((chat, index) => {
@@ -424,7 +424,7 @@ const Chatting = ({ setSelectedPage }) => {
                     onKeyUp={onEnterKey}
                 />
                 <SendButton
-                    src={"https://firebasestorage.googleapis.com/v0/b/ipsi-f2028.firebasestorage.app/o/firebase%2Fchaticon%2Fsend_color.png?alt=media"} alt="Send"
+                    src={"https://firebasestorage.googleapis.com/v0/b/uniguide-3d422.firebasestorage.app/o/firebase%2Fchaticon%2Fsend_color.png?alt=media"} alt="Send"
                     onClick={onClickMsgSend}
                     disabled={!inputMsg.trim()}
                 />
