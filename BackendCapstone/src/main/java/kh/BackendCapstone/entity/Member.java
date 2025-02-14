@@ -2,6 +2,8 @@ package kh.BackendCapstone.entity;
 
 import kh.BackendCapstone.constant.Authority;
 import kh.BackendCapstone.constant.Membership;
+import kh.BackendCapstone.constant.Membership;
+import kotlin.reflect.jvm.internal.impl.descriptors.Visibilities;
 import lombok.*;
 
 import javax.persistence.*;
@@ -26,9 +28,9 @@ public class Member {
     private String userId; // 고유 사용자 ID (소셜 또는 직접 가입)
     @Column(name = "nick_name")
     private String nickName;
-    @Column(nullable = false, unique = true)
+    @Column( unique = true)
     private String email;
-    @Column(nullable = false)
+    @Column
     private String pwd;
     @Column(length = 50)
     private String name;

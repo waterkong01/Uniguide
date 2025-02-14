@@ -38,7 +38,7 @@ const ModalTextLink = styled.span`
   cursor: pointer;
   color: black;
   text-decoration: none;
-  
+
   &:hover {
     color: #007bff; /* 링크에 hover 효과 추가 */
   }
@@ -47,7 +47,7 @@ const ModalTextLink = styled.span`
 const ModalLoginPage = ({ isOpen, closeModal, handleModalLinkClick }) => {
   // 모달이 열리지 않은 경우 아무것도 렌더링하지 않음
   if (!isOpen) return null;
-  
+
   return (
     <>
       {/* 모달 오버레이 클릭 시 모달 닫기 */}

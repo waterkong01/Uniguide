@@ -1,6 +1,6 @@
 import React from 'react';
 
-const DOMAIN = 'http://uniguide.shop'; // 도메인 수정
+const DOMAIN = 'https://uniguide.shop'; // 도메인 수정
 const API_DOMAIN = `${DOMAIN}/api/v1`;
 
 const SNS_SIGN_IN_URL = (type) => `${API_DOMAIN}/auth/oauth2/${type}`;

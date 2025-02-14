@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
 @Service
-public class EmailService {
+public class    EmailService {
 
     private final JavaMailSender mailSender;
     private final EmailAuthTokenRepository emailAuthTokenRepository;
@@ -53,11 +53,9 @@ public class EmailService {
         int token = (int) (Math.random() * 900000) + 100000;
         return String.valueOf(token);
     }
-
     private void storeToken(String email, String token) {
         Optional<email_auth_token> existingToken = emailAuthTokenRepository.findByEmail(email);
         emailAuthTokenRepository.deleteByEmail(email);
-
         if(existingToken.isPresent()) {
             emailAuthTokenRepository.delete(existingToken.get());
         }
@@ -97,17 +95,17 @@ public class EmailService {
     @Transactional
 
     public void changePassword(String newPassword, PasswordEncoder passwordEncoder) {
-        Long memberId = (Long) request.getSession().getAttribute("memberId"); // 수정된 세션 접근 방식
-        System.out.println("세션 ID: " + request.getSession().getId());
-        if (memberId == null) {
+        String email = (String) request.getSession().getAttribute("email"); // 수정된 세션 접근 방식
+        System.out.println("세션 ID: " + request.getSession().getId() + " --- " + email);
+        if (email == null) {
             throw new RuntimeException("정보가 만료 되었습니다. 인증을 다시 진행해주세요.");
         }
-        Optional<Member> memberOptional = memberRepository.findById(memberId);
+        Optional<Member> memberOptional = memberRepository.findByEmail(email);
         Member member = memberOptional.orElseThrow(() -> new RuntimeException("이메일에 해당하는 회원이 존재하지 않습니다."));
 
         String encodedPassword = passwordEncoder.encode(newPassword);
         member.setPwd(encodedPassword);
         memberRepository.save(member);
-        request.getSession().removeAttribute("memberId"); // 세션에서 이메일 제거
+        request.getSession().removeAttribute("email"); // 세션에서 이메일 제거
     }
 }

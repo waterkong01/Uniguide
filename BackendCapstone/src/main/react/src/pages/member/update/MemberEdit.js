@@ -176,7 +176,7 @@ const MemberEdit = () => {
     }
 
     try {
-      const response = await AuthApi.changePassword(newPassword);
+      const response = await AuthApi.updatePassword(newPassword);
       if (response) {
         alert("비밀번호가 성공적으로 변경되었습니다.");
         setOpenNewPasswordModal(false);

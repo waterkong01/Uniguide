@@ -3,9 +3,7 @@ import TopNavBar from "../component/TopNavBar";
 import ChatModal from "../pages/chat/ChatModal";
 import MobileTopNavBar from "../component/MobileTopNavBar";
 import Footer from "./Footer";
-import {Platform} from "react-native-web";
 
-const isExpo = Platform.OS !== "web"; // Expo 환경 감지
 
 const Background = styled.div`
   width: 100%;
@@ -40,7 +38,6 @@ const Mobile = styled.div`
 const Layout = () => {
   return (
     <Background>
-      {!isExpo && ( // Expo 환경에서는 내비게이션을 숨김
         <Header>
           <PC>
             <TopNavBar />
@@ -49,7 +46,6 @@ const Layout = () => {
             <MobileTopNavBar />
           </Mobile>
         </Header>
-      )}
       <ChatModal />
       <Footer />
     </Background>

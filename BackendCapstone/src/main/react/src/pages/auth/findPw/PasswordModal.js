@@ -17,7 +17,6 @@ const PasswordModal = ({ closeModal }) => {
       setErrorMessage("비밀번호가 일치하지 않습니다.");
       return;
     }
-
     try {
       const response = await AuthApi.changePassword(newPassword); // 비밀번호 변경 API 호출
       if (response) {

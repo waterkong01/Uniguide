@@ -8,6 +8,8 @@ import {useDispatch, useSelector} from "react-redux";
 import AuthApi from "../api/AuthApi";
 import {logout} from "../context/redux/PersistentReducer";
 import Commons from "../util/Common";
+import ConfirmModal from "./Modal/ConfirmModal";
+import {setLoginModalOpen} from "../context/redux/ModalReducer";
 
 
 
@@ -122,11 +124,11 @@ const Right = styled.div`
 const MyPageNavBar = () => {
   const navigate = useNavigate(); // 페이지 전환 훅
   const role = useSelector(state => state.persistent.role)
-  const [reject, setReject] = useState({});
+  const [confirm, setConfirm] = useState({});
   const dispatch = useDispatch()
   useEffect(() => {
     if(role === "REST_USER" || role === "" ) {
-      setReject({value: true, label: "해당 기능은 로그인 후 사용 가능 합니다."})
+      setConfirm({value: true, label: "해당 기능은 로그인 후 사용 가능 합니다. \n 로그인 하시겠습니까?"})
     }
   }, [role]);
   
@@ -187,7 +189,7 @@ const MyPageNavBar = () => {
             <Outlet />
           </Right>
         </Container>
-        <RejectModal message={reject.label} open={reject.value} onClose={() => navigate("/")}/>
+        <ConfirmModal message={confirm.label} open={confirm.value} onCancel={() => navigate("/")} onConfirm={ () => {dispatch(setLoginModalOpen(true)); setConfirm({})}}/>
       </Background>
     </>
   );

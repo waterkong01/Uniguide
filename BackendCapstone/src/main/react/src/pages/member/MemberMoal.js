@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom"; // 페이지 이동을 위한 훅
 import styled from "styled-components";
+import AuthApi from "../../api/AuthApi";
+import {logout} from "../../context/redux/PersistentReducer";
+import {useDispatch} from "react-redux";
 
 export const ModalOverlay = styled.div`
   position: fixed;
@@ -154,7 +157,8 @@ const SubTitle5 = styled.div`
 const MemberModal = ({ isOpen, closeModal, handleModalLinkClick, isAdmin }) => {
   const navigate = useNavigate();
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-
+  const dispatch = useDispatch();
+  
   // 화면 크기 업데이트
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
@@ -164,6 +168,17 @@ const MemberModal = ({ isOpen, closeModal, handleModalLinkClick, isAdmin }) => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+  
+  const deleteId = async () => {
+    try {
+      const rsp = await AuthApi.deleteId();
+      if(rsp.status === 200) {
+        dispatch(logout())
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   if (!isOpen) return null;
 
@@ -197,6 +212,7 @@ const MemberModal = ({ isOpen, closeModal, handleModalLinkClick, isAdmin }) => {
               <p>회원정보수정</p>
               <p onClick={() => {navigate(""); closeModal();}}>게시글</p>
               <p onClick={() => {navigate(""); closeModal();}}>업로드 권한 확인</p>
+              <p onClick={()=>deleteId()}>계정탈퇴</p>
             </SubTitle1>
 
             <SubTitle2>

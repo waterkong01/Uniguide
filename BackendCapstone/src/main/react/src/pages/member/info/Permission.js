@@ -43,13 +43,7 @@ const Permission = () => {
     formData.append("folderPath", "permission");
   
     try {
-      const token = localStorage.getItem("accessToken");
-      const response = await axios.post(Commons.Capstone + "/firebase/upload", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${token}`,
-        },
-      });
+        const response = await AuthApi.uploadPermission(formData);
   
       if (response.data.message === "File uploaded successfully") {
         setUploadStatus("파일 업로드 성공!");

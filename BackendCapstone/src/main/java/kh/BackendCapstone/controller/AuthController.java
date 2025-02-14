@@ -121,11 +121,12 @@
 			}
 		}
 		@PostMapping("/sendSms")
-		public ResponseEntity<Boolean> sendSms(@RequestBody Member member) {
-			boolean result = smsService.sendVerificationCode(member.getPhone());
-			log.info("SMS 전송 결과: {}", result); // 서버에서 반환되는 값 확인
+		public ResponseEntity<String> sendSms(@RequestBody Member member) {
+			String result = smsService.sendVerificationCode(member.getPhone());
+			log.info("SMS 전송 결과: {}", ResponseEntity.ok(result));
 			return ResponseEntity.ok(result);
 		}
+
 
 
 		// SMS 인증 토큰 검증
@@ -195,7 +196,8 @@
 				return ResponseEntity.ok(false); // 실패했음을 false로 반환
 			}
 		}
-		
+
+
 		@PostMapping("/savePermission")
 		public ResponseEntity<Boolean> savePermission(
 				@RequestHeader("Authorization") String token, // 헤더에서 token 받기

@@ -22,7 +22,7 @@ const SignupModal = ({ closeModal }) => {
   const [verificationCode, setVerificationCode] = useState("");
   const [inputVerificationCode, setInputVerificationCode] = useState("");
   const [showVerificationInput, setShowVerificationInput] = useState(false);
-
+  const [errorMessage, setErrorMessage] = useState("");
   const [nicknameMessage, setNicknameMessage] = useState("");
   const [pwMessage, setPwMessage] = useState("");
   const [conPwMessage, setConPwMessage] = useState("");
@@ -162,23 +162,7 @@ const formatTime = (seconds) => {
     }
   };
 
-  const onVerifyCode = async () => {
-    try {
-      // 인증번호 검증을 위한 서버 API 호출
-      const response = await AuthApi.verifyToken(inputEmail, inputVerificationCode);
-  
-      if (response === "토큰이 유효합니다.") {
-        setPhoneVerified(true);
-        alert("인증번호가 확인되었습니다.");
-      } else {
-        setPhoneVerified(false);
-        alert("인증번호가 유효하지 않거나 만료되었습니다.");
-      }
-    } catch (error) {
-      setPhoneVerified(false);
-      alert("인증번호 확인 중 오류가 발생했습니다.");
-    }
-  };
+
 
   const onVerifySmsCode = async () => {
     try {
@@ -247,25 +231,32 @@ const formatTime = (seconds) => {
   const onClickPhoneVerify = async () => {
     if (isRequestInProgress) return; // 중복 요청 방지
     isRequestInProgress = true;
-  
+
     if (isPhone) {
       try {
         const resp = await AuthApi.sendVerificationCode(inputPhone);
-        if (resp.data) {
+        console.log("서버 응답:", resp);
+
+        if (resp === "true") {
           setVerificationCode(resp.data.verificationCode);
           setShowVerificationInput(true);
           alert("인증번호가 발송되었습니다.");
-        } else {
-          alert("인증번호 발송에 실패했습니다2.");
+        } else if (resp === "EXCEED_LIMIT") {
+          setErrorMessage("5시간 후 다시 시도해주세요.");
+          alert("인증번호 발송 횟수를 초과했습니다. 5시간 후 다시 시도해주세요.");
+        } else if (resp === "false") {
+          alert("인증번호 저장에 실패했습니다.");
+        } else if (resp === "error") {
+          alert("서버 오류로 인증번호 발송에 실패했습니다.");
         }
       } catch (error) {
+        console.error("인증번호 발송 요청 중 에러 발생:", error);
         alert("서버 오류로 인증번호 발송에 실패했습니다.");
       } finally {
         isRequestInProgress = false; // 요청 완료 후 플래그 초기화
       }
     }
   };
-
 
  
   const handleOverlayClick = (e) => {
@@ -379,6 +370,9 @@ const formatTime = (seconds) => {
         <p style={{ marginTop: "5px", color: timeLeft < 60 ? "red" : "black" }}>
           남은 시간: {formatTime(timeLeft)}
         </p>
+        {errorMessage && (
+            <p style={{ color: "red", marginTop: "5px" }}>{errorMessage}</p>
+        )}
       </InputContainer>
 )}
         {/* 약관 동의 UI */}
@@ -626,7 +620,6 @@ const TermsContainer = styled.div`
   background-color: ${({ theme }) => theme.inputBackground || "white"};
 `;
 
-
 const termsOfService = `
 **UniGuide 서비스 이용약관**
 
@@ -664,52 +657,61 @@ const termsOfService = `
 1. 이용자는 언제든지 회사에 서비스 이용 해지를 요청할 수 있습니다.  
 2. 회사는 이용자가 약관을 위반하거나 불법 행위를 하는 경우 사전 통보 없이 이용을 제한할 수 있습니다.  
 
-제 7 조 (책임의 한계)  
+제 7 조 (책임의 한계 및 면책 조항)  
 1. 회사는 플랫폼 제공자로서 거래 당사자가 아니며, 이용자가 등록한 콘텐츠의 정확성, 신뢰성 등에 대해 책임지지 않습니다.  
 2. 회사는 천재지변, 시스템 장애 등 불가항력적인 사유로 인한 서비스 중단에 대해 책임지지 않습니다.  
+3. 회사는 이용자의 귀책 사유로 인해 발생한 문제에 대해 책임지지 않습니다.  
+
+제 8 조 (지적재산권)  
+1. 서비스 내의 모든 콘텐츠 및 소프트웨어의 저작권은 회사에 귀속됩니다.  
+2. 이용자는 회사의 사전 동의 없이 서비스 내 자료를 무단으로 사용, 복제, 배포할 수 없습니다.  
+
+제 9 조 (환불 및 취소 정책)  
+1. 디지털 콘텐츠의 특성상 결제 후 단순 변심에 의한 환불은 불가능합니다.  
+2. 단, 이용자가 구매한 콘텐츠가 명백히 제공되지 않거나 오류가 있는 경우 회사는 검토 후 환불을 진행할 수 있습니다.  
+3. 환불 요청은 고객센터를 통해 접수해야 하며, 승인 후 환불 절차가 진행됩니다.  
+
+제 10 조 (커뮤니티 가이드라인)  
+1. 이용자는 서비스 내에서 타인에게 불쾌감을 주는 표현이나 허위 정보를 게시해서는 안 됩니다.  
+2. 저작권을 침해하는 콘텐츠는 즉시 삭제될 수 있으며, 해당 이용자는 서비스 이용이 제한될 수 있습니다.  
+
+제 11 조 (분쟁 해결 및 준거법)  
+1. 본 약관과 관련된 분쟁은 대한민국 법률을 준거법으로 하며, 관할 법원은 서울중앙지방법원으로 합니다.  
+
+
+
+
+
+
 `;
 const privacyPolicy = `
-**UniGuide 개인정보 처리방침**
+**UniGuide 개인정보 처리방침**  
 
-제 1 조 (개인정보의 수집 및 이용 목적)
-회사는 다음과 같은 목적으로 이용자의 개인정보를 수집하고 이용합니다.
+제 1 조 (개인정보의 수집 및 이용 목적)  
+회사는 다음과 같은 목적으로 이용자의 개인정보를 수집하고 이용합니다.  
+1. 회원가입 및 관리: 가입 의사 확인, 본인 인증, 회원 서비스 제공  
+2. 거래 지원: 자기소개서 등록, 구매, 결제 처리  
+3. 서비스 개선: 고객 문의 대응, 서비스 이용 통계 분석  
 
-1. 회원가입 및 관리: 가입 의사 확인, 본인 인증, 회원 서비스 제공
-2. 거래 지원: 자기소개서 등록, 구매, 결제 처리
-3. 서비스 개선: 고객 문의 대응, 서비스 이용 통계 분석
+제 2 조 (수집하는 개인정보 항목)  
+회사는 서비스 제공을 위해 다음과 같은 개인정보를 수집할 수 있습니다.  
+1. 필수정보: 이름, 이메일, 비밀번호, 전화번호  
+2. 선택정보: 자기소개서 내용, 프로필 정보  
+3. 자동 수집 정보: IP 주소, 쿠키, 접속 기록  
 
-제 2 조 (수집하는 개인정보 항목)
-회사는 서비스 제공을 위해 다음과 같은 개인정보를 수집할 수 있습니다.
+제 3 조 (쿠키 및 추적 기술 정책)  
+1. 회사는 이용자 경험 향상을 위해 쿠키 및 기타 추적 기술을 사용할 수 있습니다.  
+2. 이용자는 브라우저 설정을 통해 쿠키 저장을 거부하거나 삭제할 수 있습니다.  
 
-1. 필수정보: 이름, 이메일, 비밀번호, 전화번호
-2. 선택정보: 자기소개서 내용, 프로필 정보
-3. 자동 수집 정보: IP 주소, 쿠키, 접속 기록
+제 4 조 (개인정보 보호 조치)  
+1. 회사는 이용자의 개인정보를 보호하기 위해 기술적, 관리적 보안 조치를 시행합니다.  
+2. 이용자는 자신의 개인정보를 보호할 책임이 있으며, 타인에게 유출되지 않도록 주의해야 합니다.  
 
-제 3 조 (개인정보의 보유 및 이용 기간)
-회사는 이용자의 개인정보를 원칙적으로 회원 탈퇴 시까지 보유하며, 법령에 따라 일정 기간 보관될 수 있습니다.
+제 5 조 (개인정보 보호 책임자)  
+개인정보 보호에 관한 문의 사항은 아래의 담당자에게 연락하시기 바랍니다.  
+- 개인정보 보호 책임자: 김주혁  
+- 이메일: kim1332610@nate.com  
+- 연락처: 010-5221-8948  
 
-제 4 조 (개인정보의 제3자 제공)
-회사는 이용자의 동의 없이 개인정보를 제3자에게 제공하지 않으며, 필요한 경우 사전에 동의를 받습니다.
-
-제 5 조 (개인정보 보호 조치)
-
-1. 회사는 이용자의 개인정보를 보호하기 위해 기술적, 관리적 보안 조치를 시행합니다.
-2. 이용자는 자신의 개인정보를 보호할 책임이 있으며, 타인에게 유출되지 않도록 주의해야 합니다.
-
-제 6 조 (개인정보의 파기 절차 및 방법)
-
-1. 회사는 개인정보의 보유 기간이 경과하거나 처리 목적이 달성된 경우 지체 없이 파기합니다.
-2. 전자적 파일 형태의 정보는 복구할 수 없는 방법으로 영구 삭제하며, 종이 문서는 파쇄하여 폐기합니다.
-
-제 7 조 (이용자의 권리)
-
-1. 이용자는 자신의 개인정보에 대해 열람, 정정, 삭제 요청을 할 수 있습니다.
-2. 개인정보 관련 문의는 고객센터를 통해 접수할 수 있으며, 회사는 신속하게 처리합니다.
-
-제 8 조 (개인정보 보호 책임자)
-개인정보 보호에 관한 문의 사항은 아래의 담당자에게 연락하시기 바랍니다.
-
-- 개인정보 보호 책임자: [김주혁]
-- 이메일: [kim1332610@nate.com]
-- 연락처: [010-5221-8948]
+본 개인정보 처리방침은 2025년 2월 12일부터 적용됩니다.
 `;

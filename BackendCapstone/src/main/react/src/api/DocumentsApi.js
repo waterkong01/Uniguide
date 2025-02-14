@@ -85,6 +85,7 @@ const DocumentsApi = {
         if (res && res.data) {
           console.log(res)
           memberId = res.data; // memberId를 백엔드에서 가져옴
+          const logginId = res.data
         } else {
           console.error("로그인 상태이지만 memberId를 가져오지 못했습니다.");
           return null;

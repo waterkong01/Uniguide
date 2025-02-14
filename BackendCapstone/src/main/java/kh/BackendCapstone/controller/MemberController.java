@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,6 +24,8 @@ public class MemberController {
 
 	private final MemberService memberService;
 	private final AuthService authService;
+	private final PasswordEncoder passwordEncoder;
+
 
 	// 전체 회원 조회
 	@GetMapping("/list")
@@ -123,6 +126,17 @@ public class MemberController {
 			@RequestBody MemberReqDto memberReqDto) {
 		boolean isValid = memberService.checkPassword(token, memberReqDto.getPwd());
 		return ResponseEntity.ok(isValid);  // 로그인 성공 시 true, 실패 시 false 반환
+	}
+
+
+	@PostMapping("/updatePassword")
+	public ResponseEntity<Boolean> changePassword(@RequestBody MemberReqDto memberReqDto) {
+		try {
+			memberService.updatePassword(memberReqDto.getPwd(), passwordEncoder); // 비밀번호 변경 로직 호출
+			return ResponseEntity.ok(true); // 성공적으로 변경되었음을 true로 반환
+		} catch (RuntimeException e) {
+			return ResponseEntity.ok(false); // 실패했음을 false로 반환
+		}
 	}
 
 

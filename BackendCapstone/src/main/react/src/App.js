@@ -85,7 +85,7 @@ function App() {
                 <Route path="auth/:permissionId" element={<PermissionDetailMain />} />
                 <Route path="member/:searchOption/:searchValue" element={<MemberControlMain/>} />
                 <Route path="member/detail/:id" element={<MemberItemDetail/>}/>
-                <Route path="board/:category/:search?/:searchOption?" element={<BoardControlMain/>}/>
+                <Route path="board/:category/:search?/:option?" element={<BoardControlMain/>}/>
               </Route>
 
               {/* 게시판 (text Board) */}

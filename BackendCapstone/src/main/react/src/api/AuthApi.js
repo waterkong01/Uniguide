@@ -1,6 +1,7 @@
 import axios from "axios";
 import Commons from "../util/Common";
 import axiosInstance from "./AxiosInstance";
+import {responsiveFontSizes} from "@mui/material";
 const baseUrl = ""
 const Capstone = Commons.Capstone;
 axios.defaults.withCredentials = true; // 쿠키를 요청에 포함
@@ -63,9 +64,11 @@ const AuthApi = {
 	},
 	sendVerificationCode: async (phone) => {
 		console.log("휴대전화 번호 인증")
-		return await axios.post(`${Capstone}/auth/sendSms`, {
+		const response = await axios.post(`${Capstone}/auth/sendSms`, {
 			phone: phone,
 		})
+		console.log(response)
+		return response.data
 	},
 
 	nickNameCheck: async (nickname) => {
@@ -129,7 +132,6 @@ const AuthApi = {
 		}
 	},
 
-
 	changePassword: async (newPassword) => {
 		try {
 			const response = await axios.post(`${Capstone}/auth/change-password`, {
@@ -145,6 +147,24 @@ const AuthApi = {
 			}
 		}
 	},
+
+	updatePassword: async (newPassword) => {
+		try {
+			const response = await axios.post(`${Capstone}/member/updatePassword`, {
+				pwd: newPassword  // 본문(body)에 `pwd` 필드로 데이터 전송
+			});
+			return response // 비밀번호 변경 성공 메시지
+		} catch (error) {
+			if (error.response) {
+				// 서버에서 반환한 오류 메시지
+				throw new Error(error.response.data);
+			} else {
+				throw new Error('서버에 연결할 수 없습니다.');
+			}
+		}
+	},
+
+
 	getMemberDetails: async () => {
 		try {
 			// 로컬스토리지에서 토큰 가져오기
@@ -275,9 +295,14 @@ const AuthApi = {
 
 	deleteId: () => {
 		return axiosInstance.get(baseUrl + `/member/deleteUser`);
+	},
+	uploadPermission: (formData) => {
+		return axiosInstance.post(baseUrl + "/firebase/upload/test", formData, {
+			headers: {
+				"Content-Type": "multipart/form-data"
+			}
+		});
 	}
+};
 
-}
-
-
-export default AuthApi
+	export default AuthApi
