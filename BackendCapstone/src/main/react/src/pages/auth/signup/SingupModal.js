@@ -328,7 +328,7 @@ const formatTime = (seconds) => {
         {/* 전화번호 입력 및 인증 */}
         <InputContainer>
   <p>전화번호</p>
-  <div style={{ display: "flex", alignItems: "center", width: "415px" }}>
+  <div style={{ display: "flex", alignItems: "center" }}>
     <Input
       type="text"
       placeholder="전화번호 13자리 입력"
@@ -351,7 +351,7 @@ const formatTime = (seconds) => {
 {showVerificationInput && (
       <InputContainer>
         <p>인증번호</p>
-        <div style={{ display: "flex", alignItems: "center", width: "415px" }}>
+        <div style={{ display: "flex", alignItems: "center" }}>
           <Input
             type="text"
             placeholder="인증번호 입력"
@@ -464,7 +464,9 @@ const ModalContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
- 
+  @media (max-width: 768px) {
+    width: 100%;
+  }
 `;
 
 const InputContainer = styled.div`
@@ -494,6 +496,10 @@ const Input = styled.input`
   &::placeholder {
     font-size: 12px;  /* placeholder 텍스트 크기 줄이기 */
     color: ${({ theme }) => theme.placeholderColor || "#aaa"};  /* placeholder 텍스트 색상 */
+  }
+  @media(max-width: 768px) {
+    width: 80%;
+    margin: 2px auto;
   }
 `;
 

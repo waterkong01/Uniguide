@@ -109,6 +109,10 @@ const ModalContent = styled.div`
   flex-direction: column;
   justify-content: space-between;
   height: 600px; // 높이 조정
+  @media (max-width: 768px) {
+    width: 100%;
+    height: 100%;
+  }
 `;
 
 // 입력 필드 스타일
@@ -205,12 +209,12 @@ const SnsLoginText = styled.div`
 
 const LoginModal = ({ closeModal }) => {
   const dispatch = useDispatch();
-  const onSnsSignInButtonClickHandler = (type) => {
-    window.location.href = SNS_SIGN_IN_URL(type);
-  };
   const DOMAIN = 'https://uniguide.shop'; // 도메인 수정
   const API_DOMAIN = `${DOMAIN}/api/v1`;
   const SNS_SIGN_IN_URL = (type) => `${API_DOMAIN}/auth/oauth2/${type}`;
+  const onSnsSignInButtonClickHandler = (type) => {
+    window.location.href = SNS_SIGN_IN_URL(type);
+  };
   
   const [inputEmail, setInputEmail] = useState("");
   const [inputPw, setInputPw] = useState("");
