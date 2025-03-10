@@ -172,6 +172,7 @@ const MemberModal = ({ isOpen, closeModal, handleModalLinkClick, isAdmin }) => {
   const deleteId = async () => {
     try {
       const rsp = await AuthApi.deleteId();
+      console.log(rsp);
       if(rsp.status === 200) {
         dispatch(logout())
       }

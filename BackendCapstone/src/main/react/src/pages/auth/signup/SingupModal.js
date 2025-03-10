@@ -620,7 +620,7 @@ const TermsContainer = styled.div`
   background-color: ${({ theme }) => theme.inputBackground || "white"};
 `;
 
-const termsOfService = `
+export const termsOfService = `
 **UniGuide 서비스 이용약관**
 
 제 1 조 (목적)  
@@ -684,7 +684,7 @@ const termsOfService = `
 
 
 `;
-const privacyPolicy = `
+export const privacyPolicy = `
 **UniGuide 개인정보 처리방침**  
 
 제 1 조 (개인정보의 수집 및 이용 목적)  

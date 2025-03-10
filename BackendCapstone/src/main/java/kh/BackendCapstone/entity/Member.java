@@ -28,7 +28,7 @@ public class Member {
     private String userId; // 고유 사용자 ID (소셜 또는 직접 가입)
     @Column(name = "nick_name")
     private String nickName;
-    @Column( unique = true)
+    @Column(unique = true)
     private String email;
     @Column
     private String pwd;

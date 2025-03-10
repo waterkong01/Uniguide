@@ -2,7 +2,7 @@ import { Outlet } from "react-router-dom";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import {useEffect, useState} from "react";
-import RejectModal from "./Modal/RejectModal";
+
 import {fetchUserStatus} from "../function/fetchUserStatus";
 import {useDispatch, useSelector} from "react-redux";
 import AuthApi from "../api/AuthApi";
@@ -140,7 +140,7 @@ const MyPageNavBar = () => {
   const deleteId = async () => {
     try {
       const rsp = await AuthApi.deleteId();
-      if(rsp.status === 200) {
+      if(rsp.data) {
         dispatch(logout())
       }
     } catch (e) {

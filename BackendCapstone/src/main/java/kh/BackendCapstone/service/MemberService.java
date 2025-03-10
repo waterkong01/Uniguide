@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @Slf4j
@@ -88,13 +89,14 @@ public class MemberService {
 
 			// 회원 상태를 SECESSION으로 변경
 			member.setMembership(Membership.SECESSION);
-			member.setEmail(null);
-			member.setPwd(null);
+			member.setEmail(memberId + "deleted" + UUID.randomUUID());
+			member.setPwd( memberId + "password" + UUID.randomUUID());
 			member.setName(null);
 			member.setPhone(null);
 			member.setRegDate(null);
 			member.setAuthority(null);
 			member.setUserBank(null);
+			member.setUserId(memberId + "deleted" + UUID.randomUUID());
 			member.setUniv(null);  // 기존
 			memberRepository.save(member);
 

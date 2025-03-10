@@ -10,8 +10,7 @@ import {logout} from "../context/redux/PersistentReducer";
 import {setLoginModalOpen, setModalOpen, setSignupModalOpen} from "../context/redux/ModalReducer";
 import PersonIcon from '@mui/icons-material/Person';
 import MenuIcon from '@mui/icons-material/Menu';
-import {Platform} from "react-native-web";
-import AuthApi from "../api/AuthApi";
+
 
 const Background = styled.div`
   width: 100%;
@@ -173,7 +172,6 @@ const MobileTopNavBar = () => {
   const [isSubMenuOpen, setIsSubMenuOpen] = useState(false);
   const role = useSelector((state) => state.persistent.role);
   const dispatch = useDispatch();
-  const isExpo = Platform.OS !== "web"; // Expo 환경 감지
   // MenuBar
   const menuBarOpenModal = () => setIsMenuBarModalOpen(true); // 입시자료 모달창 ON
   const menuBarCloseModal = () => setIsMenuBarModalOpen(false); // 입시자료 모달창 OFF
@@ -228,12 +226,12 @@ const MobileTopNavBar = () => {
     <>
       <Background>
         <ContainerBox>
-          { isExpo ? <Logo>
+           <Logo>
             <LogoImage onClick={() => navigate("/")}/>
-          </Logo> : <></>}
-          { isExpo ? <Info>
+          </Logo>
+           <Info>
             <InfoImage onClick={menuBarOpenModal} sx={{width: "50px", height: "50px"}}/>
-          </Info> : <></>}
+          </Info>
           <MenuBar>
             <MenuBarImage onClick={handleImageClick} sx={{width: "50px", height: "50px"}}/>
           </MenuBar>
@@ -241,7 +239,7 @@ const MobileTopNavBar = () => {
         
         {/* 모달창 */}
         {/* 메뉴바 모달창 */}
-        { isExpo && isMenuBarModalOpen && (
+        {isMenuBarModalOpen && (
           <MenuBarModalBackground onClick={menuBarCloseModal}>
             <MenuBarModalContent
               isOpen={isMenuBarModalOpen} // 상태값 전달

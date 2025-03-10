@@ -55,13 +55,13 @@ public class AdminController {
 		return ResponseEntity.ok(univList);
 	}
 	
-	@GetMapping("/member/{searchOption}/{searchValue}")
+	@GetMapping("/member/list/{searchOption}/{searchValue}")
 	public ResponseEntity<List<Member>> getMemberList(@PathVariable String searchOption, @PathVariable String searchValue) {
 		List<Member> memberList = adminService.getMemberList(searchOption, searchValue);
 		return ResponseEntity.ok(memberList);
 	}
 	
-	@GetMapping("/member/{id}")
+	@GetMapping("/member/detail/{id}")
 	public ResponseEntity<AdminMemberResDto> getMember(@PathVariable Long id) {
 		AdminMemberResDto member = adminService.getMemberById(id);
 		return ResponseEntity.ok(member);

@@ -35,15 +35,16 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
         String userId = null;
         String name = null;
         String phone = null;
-        String email = "email@email.com";
         String type = null;
         String nickName = null;
+        String email = null;
 
         if (oauthClientName.equals("kakao")) {
             userId = "kakao_" + oAuth2User.getAttributes().get("id");
             type = "kakao";
             name = (String) oAuth2User.getAttributes().get("nickname");
             nickName = "kakao_" + oAuth2User.getAttributes().get("id");
+            email = nickName + "@kakao.com";
 
 
         } else if (oauthClientName.equals("naver")) {
@@ -51,9 +52,9 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
             userId = "naver_" + responseMap.get("id").substring(0, 14);
             name = responseMap.get("nickname");
             phone = responseMap.get("mobile");
-            email = responseMap.get("email");
             type = "naver";
             nickName = "naver_" + responseMap.get("id").substring(0, 14);
+            email = nickName + "@naver.com";
 
         }
         System.out.println("userId: " + userId);

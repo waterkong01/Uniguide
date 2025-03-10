@@ -28,11 +28,11 @@ const AdminApi = {
 	},
 	getMemberList: (searchOption, searchValue) => {
 		console.log(`${searchOption} 전체 회원 조회 : ${searchValue}`);
-		return AxiosInstance.get(baseUrl + `/admin/member/${searchValue}/${searchOption}`);
+		return AxiosInstance.get(baseUrl + `/admin/member/list/${searchValue}/${searchOption}`);
 	},
 	getMemberDetails: (memberId) => {
 		console.log(`${memberId}의 회원 세부 내용 확인`)
-		return AxiosInstance.get(baseUrl + `/admin/member/details/${memberId}`);
+		return AxiosInstance.get(baseUrl + `/admin/member/detail/${memberId}`);
 	},
 	editMember(memberId, univId, authority, withdrawal) {
 		console.log(`${memberId}의 정보 변경 : ${univId}-${authority}-${withdrawal}`);

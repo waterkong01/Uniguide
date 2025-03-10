@@ -40,6 +40,7 @@ import BoardControlMain from "./pages/admin/board/BoardControlMain";
 import MemberItemDetail from "./pages/admin/member/item/MemberItemDetail";
 import AdminMain from "./pages/admin/AdminMain";
 import Main from "./pages/Main";
+import Terms from "./styles/Terms";
 
 
 
@@ -95,6 +96,7 @@ function App() {
                 <Route path="create/:category/:id?" element={<PostCreateMain />} />
               </Route>
               <Route path='auth/oauth-response/:token/:expirationTime' element={<OAuth/>}/>
+              <Route path='privacy-policy' element={<Terms/>}/>
             </Route>
             {/* 결제 관련 페이지 */}
             <Route path="checkoutPage" element={<CheckoutPage />} />
