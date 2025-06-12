@@ -29,24 +29,27 @@
 
 
 ## **⚒️ 기술 및 환경**
-> ### 사용 언어
-> ![HTML](https://img.shields.io/badge/html5-%23E34F26.svg?&style=for-the-badge&logo=html5&logoColor=white)
-> ![CSS](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)
-> ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=JavaScript&logoColor=white)
-> ![Java](https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)
-> ### 프론트엔드 라이브러리
-> ![React](https://img.shields.io/badge/react-%2361DAFB.svg?&style=for-the-badge&logo=react&logoColor=black)
-> ### 백엔드 프레임워크
-> ![Spring Boot - JPA](https://img.shields.io/badge/spring-%236DB33F.svg?&style=for-the-badge&logo=spring&logoColor=white)
-> ### RDBMS
-> ![MySQL](https://img.shields.io/badge/mysql-%234479A1.svg?&style=for-the-badge&logo=mysql&logoColor=white)
+> ### 프론트엔드
+> 언어: JavaScript</br>
+> 프레임워크: React.js</br>
+> API통신: Axios / Fetch API (RESTful API 연동)</br>
+> ### 백엔드
+> 언어: Java</br>
+> 프레임워크: Spring Boot</br>
+> 데이터베이스 ORM: JPA
+> API 관리: RESTful API 기반
+> ### 데이터 베이스
+> AWS RDS (MySQL): 클라우드 기반 관리형 DB
+> ### 서버
+> AWS (EC2): 유연한 확장성과 관리 기능 제공
+> ### 도메인
+> AWS (Route 53): AWS 기반 도메인 네임 서비스
 > ### 클라우드 스토리지
-> ![Firebase Storage](https://img.shields.io/badge/firebase-%23FFCA28.svg?&style=for-the-badge&logo=firebase&logoColor=black)
+> Firebase Storage
 > ### IDE
-> ![IntelliJ](https://img.shields.io/badge/IntelliJ_IDEA-000000.svg?style=for-the-badge&logo=intellij-idea&logoColor=white)
-> ![MySQL WorkBench](https://img.shields.io/badge/MySQL%20WorkBench-00000F?style=for-the-badge&logo=mysql&logoColor=white)
+> IntelliJ
 > ### 협업 도구
->![Visual Studio Code](https://img.shields.io/badge/Visual_Studio_Code-0078D4?style=for-the-badge&logo=visual%20studio%20code&logoColor=white) ![github](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)
+> Github, Notion
 
 ## **📃 작품 배경 및 소개**
 > ### 작품 배경
