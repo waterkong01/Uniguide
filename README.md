@@ -33,9 +33,14 @@
 > ### 프론트엔드 라이브러리
 > ![React](https://img.shields.io/badge/react-%2361DAFB.svg?&style=for-the-badge&logo=react&logoColor=black)
 > ### 백엔드 프레임워크
+> ![Spring Boot - JPA](https://img.shields.io/badge/spring-%236DB33F.svg?&style=for-the-badge&logo=spring&logoColor=white)
 > ### RDBMS
+> ![MySQL](https://img.shields.io/badge/mysql-%234479A1.svg?&style=for-the-badge&logo=mysql&logoColor=white)
 > ### 클라우드 스토리지
+> ![Firebase Storage](https://img.shields.io/badge/firebase-%23FFCA28.svg?&style=for-the-badge&logo=firebase&logoColor=black)
 > ### IDE
+> ![IntelliJ]()
+> ![MySQL WorkBench]()
 > ### 협업 도구
 ![Visual Studio Code](https://img.shields.io/badge/Visual_Studio_Code-0078D4?style=for-the-badge&logo=visual%20studio%20code&logoColor=white) ![github](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)
 
