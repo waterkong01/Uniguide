@@ -82,3 +82,5 @@
 ![Image](https://github.com/user-attachments/assets/e907b593-004e-49bd-b64e-881e7d0f62a4)
 ![Image](https://github.com/user-attachments/assets/4da97c77-c59e-4cd7-b7aa-fe3a0960fe9f)
 ![Image](https://github.com/user-attachments/assets/e3b9c83d-238d-40b5-b75d-6f4f7437bbb3)
+
+![footer](https://capsule-render.vercel.app/api?type=waving&height=150&color=6053d5&fontAlign=50&textBg=false&section=footer&fontSize=61&fontAlignY=42)
