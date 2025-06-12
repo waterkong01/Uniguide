@@ -69,11 +69,14 @@
 > 아이콘을 통한 채팅 채팅 모달 open/close, 이름/인원을 지정하여 오픈 채팅방 생성, 실시간 채팅, 채팅방 나가기, 남은 회원 없을 시 채팅방 삭제
 >
 > **자소서 작성 페이지**</br>
-> 자기소개서 추가, 불러오기/수정, 삭제
+> 자기소개서 추가(문항+내용 1세트), 불러오기/수정, 삭제
 >
 > **세부 디테일 총괄**
 
 ## **🔎 기능 구현**
 ### **구현사항(본인 역할)**
-![Image](https://github.com/user-attachments/assets/54776e37-433c-4ae5-872d-9dfe0f91a99f)
 ![Image](https://github.com/user-attachments/assets/13bdaf77-f33e-4465-b0ba-f1b5474995f6)
+![Image](https://github.com/user-attachments/assets/54776e37-433c-4ae5-872d-9dfe0f91a99f)
+![Image](https://github.com/user-attachments/assets/e907b593-004e-49bd-b64e-881e7d0f62a4)
+![Image](https://github.com/user-attachments/assets/4da97c77-c59e-4cd7-b7aa-fe3a0960fe9f)
+![Image](https://github.com/user-attachments/assets/e3b9c83d-238d-40b5-b75d-6f4f7437bbb3)
