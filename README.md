@@ -39,11 +39,12 @@
 > ### 클라우드 스토리지
 > ![Firebase Storage](https://img.shields.io/badge/firebase-%23FFCA28.svg?&style=for-the-badge&logo=firebase&logoColor=black)
 > ### IDE
-> ![IntelliJ]()
+> ![IntelliJ](https://img.shields.io/badge/IntelliJ_IDEA-000000.svg?style=for-the-badge&logo=intellij-idea&logoColor=white)
 > ![MySQL WorkBench](https://img.shields.io/badge/MySQL%20WorkBench-00000F?style=for-the-badge&logo=mysql&logoColor=white)
 > ### 협업 도구
-![Visual Studio Code](https://img.shields.io/badge/Visual_Studio_Code-0078D4?style=for-the-badge&logo=visual%20studio%20code&logoColor=white) ![github](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)
+>![Visual Studio Code](https://img.shields.io/badge/Visual_Studio_Code-0078D4?style=for-the-badge&logo=visual%20studio%20code&logoColor=white) ![github](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)
 
-## **📃 작품 소개**
-> ### 작품 소개
+## **📃 작품 배경 및 소개**
+> ### 작품 배경
+>
 > 
