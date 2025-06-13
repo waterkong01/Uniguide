@@ -30,6 +30,8 @@
 > 주요 기능: 간편 로그인(제3자인증), 대학별/전공별 맞춤형 자료 검색 기능, 결제 기능(토스페이먼츠 API 샌드박스),</br> 입시 경험 공유 및 Q&A를 위한 커뮤니티 기능, 자기소개서 작성 기능, 단체 오픈 채팅 기능(웹소켓)
 >
 > 발표 자료(PDF): https://drive.google.com/file/d/1YqXEI7OhUOOOvQHnb5aQf50CUZZ1jp1t/view?usp=drive_link
+>
+> 더 많은 프로젝트 정보(Notion): https://www.notion.so/UNIGUIDE-2118c659c95f801fa822c8b4aa1c2a86?source=copy_link
 
 
 ## **⚒️ 기술 및 환경**
